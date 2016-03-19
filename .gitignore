@@ -1,3 +1,11 @@
 # ignore class files
 
 *.class
+
+# ignore .DS_Store
+
+.DS_Store
+
+# ignore .mvn-classpath because that is unique to everyone's file system
+
+.mvn-classpath
