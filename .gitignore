@@ -9,3 +9,7 @@
 # ignore .mvn-classpath because that is unique to everyone's file system
 
 .mvn-classpath
+
+# ignore target files
+
+target/*
