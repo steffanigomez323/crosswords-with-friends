@@ -39,16 +39,23 @@ public class Chat {
     webSocket("/chat", ChatWebSocketHandler.class);
     init();
   }
-  
+
   public static String censorMessage(String message) {
+    String cleanedMessage = message.replace("[^a-zA-Z ]", "");
     String[] messageArray = message.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
       if (wordsToCensor.contains(messageArray[i])) {
         messageArray[i] = "*";
+      } else {
+        for (int j = 0; j < messageArray[i].length(); j++) {
+          if (wordsToCensor.contains(messageArray[i].substring(0, j))) {
+            messageArray[i] = "*" + messageArray[i].substring(j, messageArray[i].length());
+          }
+        }
       }
     }
     String censored = "";
-    for (String word : messageArray){
+    for (String word : messageArray) {
       censored += word + " ";
     }
     return censored;
