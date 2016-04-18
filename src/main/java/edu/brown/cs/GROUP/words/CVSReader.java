@@ -1,9 +1,9 @@
 package edu.brown.cs.GROUP.words;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -29,7 +29,7 @@ public class CVSReader {
    * This is the File that holds the file specified in the string.
    */
 
-  private File filename;
+  // private File filename;
 
   /**
    * This is the constructor that begins an instance of this class.
@@ -41,39 +41,45 @@ public class CVSReader {
   /**
    * This method reads information from the cvs file and puts it into the
    * database.
-   * @param file file to read from
+   * @param path path string to read from
    * @param conn the database connection
    * @throws SQLException in case we are unable to add to the database
    * @throws IOException in case we are unable to read from the file
    */
 
-  public void readtoDB(File file, Connection conn)
+  public void readtoDB(String path, Connection conn)
       throws SQLException, IOException {
-    filename = file;
-    reader = new BufferedReader(new FileReader(file));
+
+    FileInputStream fis = new FileInputStream(path);
+    InputStreamReader isr = new InputStreamReader(fis, "UTF8");
+    reader = new BufferedReader(isr);
 
     String line = reader.readLine();
-    List<String> headers = Arrays.asList(line.split(","));
+    if (line != null) {
+      List<String> headers = Arrays.asList(line.split(","));
+      // }
 
-    int nameidx = headers.indexOf("Word");
-    int clueidx = headers.indexOf("Clue");
-    // int ex_idx = headers.indexOf("Example");
+      int nameidx = headers.indexOf("Word");
+      int clueidx = headers.indexOf("Clue");
+      // int ex_idx = headers.indexOf("Example");
 
-    String query = "INSERT INTO cluewords VALUES (?,?,?)";
-    PreparedStatement ps = conn.prepareStatement(query);
+      String query = "INSERT INTO cluewords VALUES (?,?,?)";
+      try (PreparedStatement ps = conn.prepareStatement(query)) {
 
-    while ((line = reader.readLine()) != null) {
-      String[] row = line.split(",");
+        while ((line = reader.readLine()) != null) {
+          String[] row = line.split(",");
 
-      ps.setString(1, row[nameidx]);
-      ps.setInt(2, row[nameidx].length());
-      ps.setString(3, row[clueidx]);
+          ps.setString(1, row[nameidx]);
+          ps.setInt(2, row[nameidx].length());
+          ps.setString(3, row[clueidx]);
 
-      ps.addBatch();
+          ps.addBatch();
 
+        }
+        ps.executeBatch();
+        ps.close();
+      }
     }
-    ps.executeBatch();
-    ps.close();
   }
 
 }
