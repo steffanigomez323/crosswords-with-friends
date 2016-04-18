@@ -35,9 +35,10 @@ public class Database {
     Connection connect = DriverManager.getConnection(urlToDB);
     this.conn = connect;
 
-    Statement stat = conn.createStatement();
-    stat.execute("DROP TABLE IF EXISTS cluewords");
-    stat.close();
+    try (Statement stat = conn.createStatement()) {
+      stat.execute("DROP TABLE IF EXISTS cluewords");
+      stat.close();
+    }
 
     String schema = "CREATE TABLE cluewords (" + "word TEXT, "
         + "length INT, " + "clue TEXT, "
@@ -63,9 +64,10 @@ public class Database {
    */
 
   private void buildTable(String schema) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement(schema);
-    prep.executeUpdate();
-    prep.close();
+    try (PreparedStatement prep = conn.prepareStatement(schema)) {
+      prep.executeUpdate();
+      prep.close();
+    }
 
   }
 

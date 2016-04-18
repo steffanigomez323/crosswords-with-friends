@@ -1,6 +1,5 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -84,8 +83,7 @@ public final class Main {
       assert (db != null);
       CVSReader reader = new CVSReader();
       try {
-        reader.readtoDB(
-            new File(this.arguments[this.arguments.length - 1]),
+        reader.readtoDB(this.arguments[this.arguments.length - 1],
             db.getConnection());
       } catch (SQLException e) {
         System.err
