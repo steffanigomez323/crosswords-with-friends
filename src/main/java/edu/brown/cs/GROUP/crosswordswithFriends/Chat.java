@@ -39,11 +39,11 @@ public class Chat {
     init();
   }
 
-  public static String censorMessage(String message) {
+  public static String censorMessage(List<String> censorList, String message) {
     String cleanedMessage = message.replace("[^a-zA-Z ]", "");
     String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
-      if (wordsToCensor.contains(messageArray[i])) {
+      if (censorList.contains(messageArray[i])) {
         Integer numAstericks = messageArray[i].length();
         String stars = "";
         for (int g = 0; g < numAstericks; g++) {
@@ -51,7 +51,7 @@ public class Chat {
         }
         messageArray[i] = stars;
       } else {
-        for (String word : wordsToCensor) {
+        for (String word : censorList) {
           Integer numToCensor = word.length();
           String wordInArray = messageArray[i];
           String astericks = new String(new char[numToCensor]).replace("\0", "-");
@@ -72,7 +72,7 @@ public class Chat {
       userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
         try {
           session.getRemote().sendString(String.valueOf(new JSONObject()
-              .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(message)))
+              .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor, message)))
               .put("userlist", userUsernameMap.values())
               ));
         } catch (Exception e) {
