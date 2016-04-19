@@ -22,7 +22,6 @@ public class Chat {
   public static void main(String[] args) throws IOException {
     wordsToCensor.add("horse");
     wordsToCensor.add("hair");
-    System.out.println("result of censor message " + censorMessage("I want a horse "));
     BufferedReader reader;
     try {
       reader = new BufferedReader(new FileReader(new File(args[0])));
@@ -42,46 +41,53 @@ public class Chat {
 
   public static String censorMessage(String message) {
     String cleanedMessage = message.replace("[^a-zA-Z ]", "");
-    String[] messageArray = message.split(" ");
+    String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
       if (wordsToCensor.contains(messageArray[i])) {
-        messageArray[i] = "*";
+        Integer numAstericks = messageArray[i].length();
+        String stars = "";
+        for (int g = 0; g < numAstericks; g++) {
+          stars += "*";
+        }
+        messageArray[i] = stars;
       } else {
-        for (int j = 0; j < messageArray[i].length(); j++) {
-          if (wordsToCensor.contains(messageArray[i].substring(0, j))) {
-            messageArray[i] = "*" + messageArray[i].substring(j, messageArray[i].length());
-          }
+        for (String word : wordsToCensor) {
+          Integer numToCensor = word.length();
+          String wordInArray = messageArray[i];
+          String astericks = new String(new char[numToCensor]).replace("\0", "*");
+          String censored = wordInArray.replace(word, astericks);
+          messageArray[i] = censored;
         }
       }
     }
-    String censored = "";
-    for (String word : messageArray) {
-      censored += word + " ";
-    }
-    return censored;
-  }
-
-  //Sends a message from one user to all users, along with a list of current usernames
-  public static void broadcastMessage(String sender, String message) {
-    userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
-      try {
-        session.getRemote().sendString(String.valueOf(new JSONObject()
-            .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(message)))
-            .put("userlist", userUsernameMap.values())
-            ));
-      } catch (Exception e) {
-        e.printStackTrace();
+      String censored = "";
+      for (String word : messageArray) {
+        censored += word + " ";
       }
-    });
-  }
+      return censored;
+    }
 
-  //Builds a HTML element with a sender-name, a message, and a timestamp,
-  private static String createHtmlMessageFromSender(String sender, String message) {
-    return article().with(
-        b(sender + " says:"),
-        p(message),
-        span().withClass("timestamp").withText(new SimpleDateFormat("HH:mm:ss").format(new Date()))
-        ).render();
-  }
+    //Sends a message from one user to all users, along with a list of current usernames
+    public static void broadcastMessage(String sender, String message) {
+      userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
+        try {
+          session.getRemote().sendString(String.valueOf(new JSONObject()
+              .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(message)))
+              .put("userlist", userUsernameMap.values())
+              ));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      });
+    }
 
-}
+    //Builds a HTML element with a sender-name, a message, and a timestamp,
+    private static String createHtmlMessageFromSender(String sender, String message) {
+      return article().with(
+          b(sender + " says:"),
+          p(message),
+          span().withClass("timestamp").withText(new SimpleDateFormat("HH:mm:ss").format(new Date()))
+          ).render();
+    }
+
+  }
