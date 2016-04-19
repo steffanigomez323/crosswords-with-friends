@@ -1,16 +1,16 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.GROUP.database.Database;
 import freemarker.template.Configuration;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -29,6 +29,7 @@ public class GUI {
   private static HashMap<String, Box[][]> crosswordCache;
 
   private Database db;
+  private Crossword puzzle;
 
   /**
    * Constructor starts server on instantiation.
@@ -38,6 +39,10 @@ public class GUI {
    */
   public GUI(int port, Database d) {
     db = d;
+    List<String> words = db.getAllUnderFive();
+    puzzle = new Crossword(words);
+    Box[][] puzzleArray = puzzle.fillPuzzle();
+
     runSparkServer();
     crosswordCache = new HashMap<String, Box[][]>();
 
@@ -101,7 +106,7 @@ public class GUI {
 
       for (int i=0; i<crossword.length; i++){
         for (int j=0; j<crossword[0].length; j++){
-            crossword[i][j] = new Box();
+          crossword[i][j] = new Box();
         }
       }
 
@@ -137,9 +142,9 @@ public class GUI {
 
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
-              .put("crossword", crossword)
-              .put("id", id)
-              .build();
+          .put("crossword", crossword)
+          .put("id", id)
+          .build();
 
       return new ModelAndView(variables, "crossword.ftl");
     }

@@ -7,6 +7,7 @@ public class Box{
   private char letter;
   private ArrayList<Clue> clues;
 
+
   Box(){
     isBox = true;
     clues = new ArrayList<Clue>();
@@ -43,10 +44,15 @@ public class Box{
     } else {
       System.out.print(letter);
     }
-//    if (!clues.isEmpty()){
-//      System.out.print(clues.size());
-//    }
-//    System.out.print(" ");
+    //    if (!clues.isEmpty()){
+    //      System.out.print(clues.size());
+    //    }
+    //    System.out.print(" ");
+  }
+
+  @Override
+  public String toString() {
+    return Character.toString(this.letter);
   }
 
 }
