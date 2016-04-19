@@ -7,10 +7,14 @@ import freemarker.template.Configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import spark.ModelAndView;
+import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
+import spark.Route;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -21,6 +25,8 @@ public class GUI {
   /** For converting to JSON. */
   private static final Gson GSON = new Gson();
 
+  private static HashMap<String, Box[][]> crosswordCache;
+
   /** Constructor starts server on instantiation.
    *
    * @param port Port number specified by command line or 4567 by default
@@ -28,6 +34,7 @@ public class GUI {
   public GUI(int port) {
     Spark.setPort(port);
     runSparkServer();
+    crosswordCache = new HashMap<String, Box[][]>();
 
   }
 
@@ -58,6 +65,7 @@ public class GUI {
     FreeMarkerEngine freeMarker = createEngine();
 
     Spark.get("/home", new FrontHandler(), freeMarker);
+    Spark.get("/check", new CheckHandler());
   }
 
   /** Handler for serving main page. */
@@ -66,19 +74,104 @@ public class GUI {
     @Override
     public ModelAndView handle(Request req, Response res) {
 
-      Box[][] crossword = {
-        {new Box(), new Box("u"), new Box("s"), new Box("a"), new Box()},
-        {new Box("b"), new Box("b"), new Box("a"), new Box("l"), new Box("l")},
-        {new Box("b"), new Box("e"), new Box("l"), new Box("l"), new Box("e")},
-        {new Box("c"), new Box("r"), new Box("u"), new Box("e"), new Box("t")},
-        {new Box(), new Box("s"), new Box("t"), new Box("y"), new Box()}};
+      String id = "abcdef";
+
+      ArrayList<Word> words = new ArrayList<Word>();
+      words.add(new Word("Bruh", 0, 0, Orientation.ACROSS, "\"Dude, cmon ...,\" in modern lingo"));
+      words.add(new Word("Ripen", 1, 0, Orientation.ACROSS, "Turn yellow, as a banana"));
+      words.add(new Word("Apple", 2, 0, Orientation.ACROSS, "Company that tangled with the F.B.I. over encryption"));
+      words.add(new Word("Duels", 3, 0, Orientation.ACROSS, "Burr vs. Hamilton and others"));
+      words.add(new Word("Pros", 4, 1, Orientation.ACROSS, "___ and cons"));
+
+      words.add(new Word("Brad", 0, 0, Orientation.DOWN, "Pitt of \"The Big Short\""));
+      words.add(new Word("Ripup", 0, 1, Orientation.DOWN, "Tear to pieces"));
+      words.add(new Word("Upper", 0, 2, Orientation.DOWN, "Opposite of lower"));
+      words.add(new Word("Hello", 0, 3, Orientation.DOWN, "One meaning of \"aloha\""));
+      words.add(new Word("Ness", 1, 4, Orientation.DOWN, "Loch ___ monster"));
+
+      Box[][] crossword = new Box[5][5];
+
+      for (int i=0; i<crossword.length; i++){
+        for (int j=0; j<crossword[0].length; j++){
+            crossword[i][j] = new Box();
+        }
+      }
+
+      for (Word w : words){
+        String word = w.getWord();
+        int x = w.getXIndex();
+        int y= w.getYIndex();
+        Orientation o = w.getOrientation();
+
+        Box b = crossword[x][y];
+        if (b.getIsBox()){
+          crossword[x][y] = new Box(word.charAt(0), w.getClue(), o);
+        } else {
+          b.addClue(w.getClue(), o);
+        }
+        for (int i=1; i<word.length(); i++){
+          if (o == Orientation.ACROSS){
+            y++;
+          } else {
+            x++;
+          }
+          char c = word.charAt(i);
+          b = crossword[x][y];
+          if (b.getIsBox()){
+            crossword[x][y] = new Box(c);
+          }
+        }
+      }
+
+
+      crosswordCache.put(id, crossword);
+
 
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
-              .put("crossword", crossword).build();
+              .put("crossword", crossword)
+              .put("id", id)
+              .build();
 
       return new ModelAndView(variables, "crossword.ftl");
     }
 
+  }
+
+  private class CheckHandler implements Route {
+    @Override
+    public Object handle(final Request req, final Response res) {
+
+      QueryParamsMap qm = req.queryMap();
+
+      String word = qm.value("word");
+      int x = Integer.valueOf(qm.value("x"));
+      int y = Integer.valueOf(qm.value("y"));
+      Orientation orientation = Orientation.valueOf(qm.value("orientation"));
+      String id = qm.value("id");
+
+      System.out.println("Cool!");
+
+      if (!crosswordCache.containsKey(id)){
+        return "false";
+      }
+      System.out.println("checking : "+word);
+      Box[][] crossword = crosswordCache.get(id);
+      for (int i=0; i<word.length(); i++){
+        Box box = crossword[x][y];
+        box.printLetter();
+        if (!box.checkVal(word.charAt(i))){
+          System.out.println("CHECK : "+word.charAt(i));
+          return "false";
+        }
+        if (orientation == Orientation.ACROSS){
+          y++;
+        } else {
+          x++;
+        }
+      }
+
+      return "true";
+    }
   }
 }
