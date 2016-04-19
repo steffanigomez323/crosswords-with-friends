@@ -3,8 +3,11 @@ package edu.brown.cs.GROUP.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles the initialization of the database connection.
@@ -70,6 +73,24 @@ public class Database {
     }
 
   }
+
+  public List<String> getAllUnderFive() {
+    List<String> words = new ArrayList<String>();
+    String query =
+        "SELECT * FROM cluewords WHERE length<=5 ORDER BY length DESC;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      try (ResultSet rs = prep.executeQuery()) {
+        String word = rs.getString(1);
+        words.add(word);
+      }
+    } catch (SQLException e) {
+      System.out.println("ERROR: Problem querying the database");
+    }
+    System.out.println(words);
+    return words;
+  }
+
+
 
   /**
    * This method closes a connection to this database.

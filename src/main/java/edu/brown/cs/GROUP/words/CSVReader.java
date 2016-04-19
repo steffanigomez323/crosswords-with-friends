@@ -17,7 +17,7 @@ import java.util.List;
  *
  */
 
-public class CVSReader {
+public class CSVReader {
 
   /**
    * This is the reader that reads the file that it is given.
@@ -35,7 +35,7 @@ public class CVSReader {
    * This is the constructor that begins an instance of this class.
    */
 
-  public CVSReader() {
+  public CSVReader() {
   }
 
   /**

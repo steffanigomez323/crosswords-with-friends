@@ -27,6 +27,11 @@ textarea{
 	background-color: yellow;
 }
 
+.inactive{
+	background-color: green;
+}
+
+
 .filled{
 	background-color: black;
 	margin: 0;

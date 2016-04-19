@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.words.CVSReader;
+import edu.brown.cs.GROUP.words.CSVReader;
 
 /**
  * This class handles starting the program, the database, and the GUI.
@@ -20,9 +20,6 @@ public final class Main {
    * @param args the arguments from the command line
    */
   public static void main(String[] args) {
-    // System.out.println("Hi");
-    // new GUI(9999);
-
     try {
       new Main(args).run();
     } catch (IOException e) {
@@ -81,17 +78,17 @@ public final class Main {
         return;
       }
       assert (db != null);
-      CVSReader reader = new CVSReader();
+      CSVReader reader = new CSVReader();
       try {
         reader.readtoDB(this.arguments[this.arguments.length - 1],
             db.getConnection());
       } catch (SQLException e) {
         System.err
-            .println("ERROR: Cannot write information to the database.");
+        .println("ERROR: Cannot write information to the database.");
         return;
       } catch (IOException e) {
         System.err
-            .println("ERROR: Cannot read from the corpus file given.");
+        .println("ERROR: Cannot read from the corpus file given.");
         return;
       }
 
