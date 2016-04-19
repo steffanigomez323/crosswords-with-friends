@@ -47,14 +47,14 @@ public class Chat {
         Integer numAstericks = messageArray[i].length();
         String stars = "";
         for (int g = 0; g < numAstericks; g++) {
-          stars += "*";
+          stars += "-";
         }
         messageArray[i] = stars;
       } else {
         for (String word : wordsToCensor) {
           Integer numToCensor = word.length();
           String wordInArray = messageArray[i];
-          String astericks = new String(new char[numToCensor]).replace("\0", "*");
+          String astericks = new String(new char[numToCensor]).replace("\0", "-");
           String censored = wordInArray.replace(word, astericks);
           messageArray[i] = censored;
         }
