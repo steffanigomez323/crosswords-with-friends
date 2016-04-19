@@ -1,3 +1,24 @@
+function checkWord(word, x, y, o){
+	console.log(word+" "+x+" "+y+" "+o);
+	$.get("/check", {word: word, x: y, y: x, orientation: o, id:"abcdef"}, function(response) {
+        var res = JSON.parse(response);
+        console.log(res);
+        if (res){
+        	console.log("k");
+        	if (orientation == "down"){
+        		console.log("here");
+        		var c = $(".c"+x);
+        		$(c).attr("disabled", "disabled");
+        		$(c).addClass("inactive");
+        	} else {
+        		var r = $(".r"+y);
+        		$(r).attr("disabled", "disabled");
+        		$(r).addClass("inactive");
+        	}
+        }
+    });
+}
+
 function orient(){
 	var classes = $(".active").attr("class").split(" ");
 	$(".wordActive").removeClass("wordActive");
@@ -36,48 +57,94 @@ function prevCol(col){
 function next(dir){
 	var classes = $(".active").attr("class").split(" ");
 	$(".active").removeClass("active");
+	
 	var row = row = parseFloat(classes[2][1]);
 	var col = parseFloat(classes[1][1]);
+	
+	var found = false;
+	var done = true;
+	var word = "";
+	
+	var startX = null;
+	var startY = null;
+	
 	if (orientation == "down"){
-		var col = $(".c"+col);
+		var c = $(".c"+col);
 		var next;
 		if (dir == -1){
 			next = prevRow(row);
 		} else {
 			next = nextRow(row);
 		}
-		for (var i=0; i<numCol; i++){
-			var block = col[i];
-			if ($(block).hasClass("r"+next)){
-				if ($(block).hasClass("filled")){
-					next = nextRow(next);
-					i=-1;
-				} else {
-					$(block).addClass("active");
-					$(block).focus();
-					break;
+		for (var i=0; i<numRow; i++){
+			var block = c[i];
+			if (!found){
+				if ($(block).hasClass("r"+next)){
+					if ($(block).hasClass("filled") || $(block).attr("disabled")=="disabled"){
+						if (dir == -1){
+							next = prevRow(next);
+						} else {
+							next = nextRow(next);
+						}
+						i=-1;
+					} else {
+						$(block).addClass("active");
+						$(block).focus();
+						found = true;
+					}
 				}
 			}
+			if (!$(block).hasClass("filled") && $(block).val() == ""){
+				done = false;
+			}
+			else {
+				if (!$(block).hasClass("filled") && startY == null){
+					startX = col;
+					startY = i;
+				}
+				word+= $(block).val();
+			}
+		}
+		if (done){
+			checkWord(word, startX, startY, "DOWN");
 		}
 	} else if (orientation == "across"){
-		var row = $(".r"+row);
+		var r = $(".r"+row);
 		if (dir == -1){
 			next = prevCol(col);
 		} else {
 			next = nextCol(col);
 		}
-		for (var i=0; i<numRow; i++){
-			var block = row[i];
-			if ($(block).hasClass("c"+next)){
-				if ($(block).hasClass("filled")){
-					next = nextCol(next);
-					i=-1;
-				} else {
-					$(block).addClass("active");
-					$(block).focus();
-					break;
+		for (var i=0; i<numCol; i++){
+			var block = r[i];
+			if (!found){
+				if ($(block).hasClass("c"+next)){
+					if ($(block).hasClass("filled") || $(block).attr("disabled")=="disabled"){
+						if (dir == -1){
+							next = prevCol(next);
+						} else {
+							next = nextCol(next);
+						}
+						i=-1;
+					} else {
+						$(block).addClass("active");
+						$(block).focus();
+						found = true;
+					}
+				} 
+			}
+			if (!$(block).hasClass("filled") && $(block).val() == ""){
+				done = false;
+			} else {
+				if (!$(block).hasClass("filled") && startX == null){
+					startX = i;
+					startY = row;
 				}
-			} 
+				word+= $(block).val();
+			}
+		}
+		if (done){
+			checkWord(word, startX, startY, "ACROSS");
 		}
 	}
 }
@@ -133,6 +200,8 @@ window.onload = function(response) {
 		        	orient();
 	        	}
 	        	break;
+	        case 8:
+	        	$(this).val("");
 	        default:
 	        	if (event.keyCode>64 && event.keyCode<90){
 	        		$(this).val(String.fromCharCode(event.keyCode));
