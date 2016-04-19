@@ -56,13 +56,18 @@ function next(dir){
 	var startY = null;
 	
 	if (orientation == "down"){
+<<<<<<< HEAD
 		var c = $(".c"+col);
+=======
+		var col = $(".c"+col);
+>>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 		var next;
 		if (dir == -1){
 			next = prevRow(row);
 		} else {
 			next = nextRow(row);
 		}
+<<<<<<< HEAD
 		for (var i=0; i<numRow; i++){
 			var block = c[i];
 			if (!found){
@@ -90,18 +95,36 @@ function next(dir){
 					startY = i;
 				}
 				word+= $(block).val();
+=======
+		for (var i=0; i<numCol; i++){
+			var block = col[i];
+			if ($(block).hasClass("r"+next)){
+				if ($(block).hasClass("filled")){
+					next = nextRow(next);
+					i=-1;
+				} else {
+					$(block).addClass("active");
+					$(block).focus();
+					break;
+				}
+>>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 			}
 		}
 		if (done){
 			checkWord(word, startX, startY, "DOWN");
 		}
 	} else if (orientation == "across"){
+<<<<<<< HEAD
 		var r = $(".r"+row);
+=======
+		var row = $(".r"+row);
+>>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 		if (dir == -1){
 			next = prevCol(col);
 		} else {
 			next = nextCol(col);
 		}
+<<<<<<< HEAD
 		for (var i=0; i<numCol; i++){
 			var block = r[i];
 			if (!found){
@@ -129,6 +152,20 @@ function next(dir){
 				}
 				word+= $(block).val();
 			}
+=======
+		for (var i=0; i<numRow; i++){
+			var block = row[i];
+			if ($(block).hasClass("c"+next)){
+				if ($(block).hasClass("filled")){
+					next = nextCol(next);
+					i=-1;
+				} else {
+					$(block).addClass("active");
+					$(block).focus();
+					break;
+				}
+			} 
+>>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 		}
 		if (done){
 			checkWord(word, startX, startY, "ACROSS");

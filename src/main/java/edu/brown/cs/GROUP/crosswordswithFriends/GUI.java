@@ -3,6 +3,7 @@ package edu.brown.cs.GROUP.crosswordswithFriends;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
+import edu.brown.cs.GROUP.database.Database;
 import freemarker.template.Configuration;
 
 import java.io.File;
@@ -27,24 +28,31 @@ public class GUI {
 
   private static HashMap<String, Box[][]> crosswordCache;
 
-  /** Constructor starts server on instantiation.
+  private Database db;
+
+  /**
+   * Constructor starts server on instantiation.
    *
    * @param port Port number specified by command line or 4567 by default
-   * @param d Database connection path */
-  public GUI(int port) {
-    Spark.setPort(port);
+   * @param d Database connection path
+   */
+  public GUI(int port, Database d) {
+    db = d;
     runSparkServer();
     crosswordCache = new HashMap<String, Box[][]>();
 
   }
 
-  /** Creates engine for server.
+  /**
+   * Creates engine for server.
    *
-   * @return FreeMarker engine. */
+   * @return FreeMarker engine.
+   */
   private static FreeMarkerEngine createEngine() {
 
     Configuration config = new Configuration();
-    File templates = new File("src/main/resources/spark/template/freemarker");
+    File templates = new File(
+        "src/main/resources/spark/template/freemarker");
 
     try {
       config.setDirectoryForTemplateLoading(templates);
