@@ -1,5 +1,6 @@
 package edu.brown.cs.GROUP.words;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ClueWord {
@@ -11,7 +12,7 @@ public interface ClueWord {
    * @return a list of words
    */
 
-  public List<String> getWord(int size);
+  public List<String> getWord(int size) throws SQLException;
 
   /**
    * Given a word, return the clue of that word.
@@ -19,6 +20,6 @@ public interface ClueWord {
    * @return the clue
    */
 
-  public String getClue(String word);
+  public String getClue(String word) throws SQLException;
 
 }
