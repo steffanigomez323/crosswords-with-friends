@@ -69,8 +69,8 @@ public final class Main {
   private void run() throws IOException {
 
     OptionParser parser = new OptionParser();
-    OptionSpec<String> database =
-        parser.accepts("db").withRequiredArg().ofType(String.class);
+    OptionSpec<String> database = parser.accepts("db").withRequiredArg()
+        .ofType(String.class);
     OptionSpec<String> files = parser.nonOptions().ofType(String.class);
     OptionSet options;
     try {
@@ -88,14 +88,15 @@ public final class Main {
         path = options.valueOf(database);
 
       } catch (Exception e) {
-        System.out.println("ERROR: Please provide a valid argument to --db");
+        System.out
+            .println("ERROR: Please provide a valid argument to --db");
         throw new FileNotFoundException();
       }
       try {
         db = new Database(path);
       } catch (ClassNotFoundException | SQLException e) {
-        System.err
-            .println("ERROR: The database file was unable to be connected to.");
+        System.err.println(
+            "ERROR: The database file was unable to be connected to.");
         return;
       }
     }
@@ -121,12 +122,13 @@ public final class Main {
               .println("ERROR: Cannot write information to the database.");
           return;
         } catch (IOException e) {
-          System.err.println("ERROR: Cannot read from the corpus file given.");
+          System.err
+              .println("ERROR: Cannot read from the corpus file given.");
           return;
         }
       } else {
-        System.err
-            .println("ERROR: There must be at least one corpus file to start the program with.");
+        System.err.println(
+            "ERROR: There must be at least one corpus file to start the program with.");
         return;
       }
 
@@ -135,30 +137,34 @@ public final class Main {
       try {
         InputStreamReader isr = new InputStreamReader(System.in, "UTF8");
         BufferedReader sysreader = new BufferedReader(isr);
-        System.out.println("READY");
         String input = sysreader.readLine();
         while (input != null && !input.equals("")) {
           String[] ip = input.split(" ");
-          System.out.println(ip.length);
           for (String s : ip) {
             Path file = Paths.get(s);
-            System.out.println(s);
-            boolean isRegularExecutableFile =
-                Files.isRegularFile(file) & Files.isReadable(file)
-                    & Files.isExecutable(file);
-            System.out.println(isRegularExecutableFile);
-            reader.readtoDB(s, db.getConnection());
-            System.out.println("DONE");
+            try {
+              if (Files.isRegularFile(file) & Files.isReadable(file)) {
+                reader.readtoDB(s, db.getConnection());
+              } else {
+                System.err.println(
+                    "ERROR: The file entered is not a file accessable "
+                        + "by this program.");
+              }
+            } catch (IOException e) {
+              System.err.println(
+                  "ERROR: The given file is not a file accessable by this "
+                      + "program.");
+            } catch (SQLException e) {
+              System.err.println(
+                  "ERROR: The database was unable to be connected to.");
+              throw new IOException();
+            }
           }
           input = sysreader.readLine();
         }
       } catch (IOException e) {
         System.err
-            .println("ERROR: The given file is not a file accessable by this program.");
-        System.out.println("DONE");
-      } catch (SQLException e) {
-        System.err
-            .println("ERROR: The database file was unable to be connected to.");
+            .println("ERROR: Unable to read input from the command line.");
         throw new IOException();
       }
 
