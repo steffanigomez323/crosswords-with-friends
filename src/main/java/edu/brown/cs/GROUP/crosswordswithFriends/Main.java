@@ -6,6 +6,10 @@ import java.sql.SQLException;
 
 import edu.brown.cs.GROUP.database.Database;
 import edu.brown.cs.GROUP.words.CSVReader;
+import joptsimple.OptionException;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 
 /**
  * This class handles starting the program, the database, and the GUI.
@@ -59,24 +63,77 @@ public final class Main {
 
   private void run() throws IOException {
 
-    if (this.arguments.length < 1) {
-      System.err.println("ERROR: Please specify at least one corpus file");
-      throw new FileNotFoundException();
-    } else if (this.arguments.length > 1) {
-      System.err.println("ERROR: Invalid number of arguments. USAGE: "
-          + "./run <path_to_corpus>");
-      throw new IOException();
-    } else {
-      Database db = null;
+    OptionParser parser = new OptionParser();
+
+    // OptionSpec
+    // parser.accepts("corpus").withRequiredArg().ofType(String.class);
+    OptionSpec<String> database = parser.accepts("db").withRequiredArg()
+        .ofType(String.class);
+    OptionSpec<String> files = parser.nonOptions().ofType(String.class);
+    OptionSet options;
+    try {
+      options = parser.parse(this.arguments);
+    } catch (OptionException e) {
+      System.err.println("ERROR: Please provide an argument to --db.");
+      return;
+    }
+
+    // if (options.valuesOf(files).isEmpty()) {
+    // System.out
+    // .println("ERROR: Please provide a valid argument to --db.");
+    // System.exit(1);
+    // throw new FileNotFoundException();
+    // }
+
+    // if (this.arguments.length < 1) {
+    // System.err.println("ERROR: Please specify at least one corpus file");
+    // throw new FileNotFoundException();
+    // }
+
+    Database db = null;
+
+    System.out.println(this.arguments.length);
+
+    if (options.has("db") && options.hasArgument("db")) {
+      String path = null;
       try {
-        db = new Database("data/cluewords.sqlite3");
-        // db = new Database(this.arguments[this.arguments.length - 1]);
+        path = options.valueOf(database);
+
+      } catch (Exception e) {
+        System.out
+            .println("ERROR: Please provide a valid argument to --db");
+        throw new FileNotFoundException();
+      }
+      try {
+        db = new Database(path);
       } catch (ClassNotFoundException | SQLException e) {
         e.printStackTrace();
         System.err.println(
             "ERROR: The database file was unable to be connected to.");
         return;
       }
+    }
+
+    else if (this.arguments.length < 2) {
+      System.err.println("ERROR: Invalid number of arguments. USAGE: "
+          + "./run --db <path_to_database> [optional] --corpus "
+          + "<corpus1>...<corpusn>");
+      throw new IOException();
+    }
+
+    // else if (options.has("corpus") && options.hasArgument("corpus")) {
+    // ledistance = true;
+    // try {
+    // count = options.valueOf(led);
+    // } catch (Exception e) {
+    // System.out
+    // .println("ERROR: Please provide a valid argument to --led");
+    // System.exit(1);
+    // }
+    // }
+
+    else {
+      // Database db = null;
       assert (db != null);
       CSVReader reader = new CSVReader();
       try {
@@ -84,11 +141,11 @@ public final class Main {
             db.getConnection());
       } catch (SQLException e) {
         System.err
-        .println("ERROR: Cannot write information to the database.");
+            .println("ERROR: Cannot write information to the database.");
         return;
       } catch (IOException e) {
         System.err
-        .println("ERROR: Cannot read from the corpus file given.");
+            .println("ERROR: Cannot read from the corpus file given.");
         return;
       }
 

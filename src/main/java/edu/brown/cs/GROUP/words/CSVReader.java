@@ -63,7 +63,7 @@ public class CSVReader {
       int clueidx = headers.indexOf("Clue");
       // int ex_idx = headers.indexOf("Example");
 
-      String query = "INSERT INTO cluewords VALUES (?,?,?)";
+      String query = "INSERT OR IGNORE INTO cluewords(word, length, clue) VALUES (?,?,?)";
       try (PreparedStatement ps = conn.prepareStatement(query)) {
 
         while ((line = reader.readLine()) != null) {

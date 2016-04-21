@@ -37,14 +37,9 @@ public class Database {
     Connection connect = DriverManager.getConnection(urlToDB);
     this.conn = connect;
 
-    // try (Statement stat = conn.createStatement()) {
-    // stat.execute("DROP TABLE IF EXISTS cluewords");
-    // stat.close();
-    // }
-
     String schema = "CREATE TABLE IF NOT EXISTS cluewords ("
         + "word TEXT, " + "length INT, " + "clue TEXT, "
-        + "PRIMARY KEY (word, length, clue));";
+        + "PRIMARY KEY (word));";
     buildTable(schema);
 
   }
