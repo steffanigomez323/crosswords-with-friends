@@ -41,7 +41,7 @@ public class GUI {
     db = d;
     List<String> words = db.getAllUnderFive();
     puzzle = new Crossword(words);
-    Box[][] puzzleArray = puzzle.fillPuzzle();
+    puzzle.fillPuzzle();
 
     runSparkServer();
     crosswordCache = new HashMap<String, Box[][]>();

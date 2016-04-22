@@ -70,7 +70,8 @@ public class Database {
 
   public List<String> getAllUnderFive() {
     List<String> words = new ArrayList<String>();
-    String query = "SELECT * FROM cluewords WHERE length<=5 ORDER BY length DESC;";
+    String query =
+        "SELECT * FROM cluewords WHERE length<=7 ORDER BY length DESC;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
       try (ResultSet rs = prep.executeQuery()) {
         String word = rs.getString(1);

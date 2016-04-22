@@ -89,7 +89,7 @@ public final class Main {
 
       } catch (Exception e) {
         System.out
-            .println("ERROR: Please provide a valid argument to --db");
+        .println("ERROR: Please provide a valid argument to --db");
         throw new FileNotFoundException();
       }
       try {
@@ -103,7 +103,7 @@ public final class Main {
 
     if (this.arguments.length < 3) {
       System.err.println("ERROR: Invalid number of arguments. USAGE: "
-          + "./run --db <path_to_database>" + "<corpus1>...<corpusn>");
+          + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
       throw new IOException();
     }
 
@@ -119,11 +119,11 @@ public final class Main {
           }
         } catch (SQLException e) {
           System.err
-              .println("ERROR: Cannot write information to the database.");
+          .println("ERROR: Cannot write information to the database.");
           return;
         } catch (IOException e) {
           System.err
-              .println("ERROR: Cannot read from the corpus file given.");
+          .println("ERROR: Cannot read from the corpus file given.");
           return;
         }
       } else {
@@ -164,7 +164,7 @@ public final class Main {
         }
       } catch (IOException e) {
         System.err
-            .println("ERROR: Unable to read input from the command line.");
+        .println("ERROR: Unable to read input from the command line.");
         throw new IOException();
       }
 
