@@ -12,3 +12,5 @@
 	</#list>
 	</div>
 </#list>
+
+<iframe id="ifrm" src="/chat" align="center"></iframe>
