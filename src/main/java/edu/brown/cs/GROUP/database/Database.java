@@ -71,17 +71,34 @@ public class Database {
   public List<String> getAllUnderSeven() {
     List<String> words = new ArrayList<String>();
     String query =
-        "SELECT * FROM cluewords WHERE length<=7 ORDER BY length DESC;";
+        "SELECT * FROM cluewords WHERE length<=9 ORDER BY length DESC;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
       try (ResultSet rs = prep.executeQuery()) {
-        String word = rs.getString(1);
-        words.add(word);
+        while (rs.next()) {
+          String word = rs.getString(1);
+          words.add(word);
+        }
       }
     } catch (SQLException e) {
       System.out.println("ERROR: Problem querying the database");
     }
-    System.out.println(words);
     return words;
+  }
+
+  public String getClue(String word) {
+    String clue = "";
+    String query = "SELECT clue FROM cluewords WHERE word=?;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      try (ResultSet rs = prep.executeQuery()) {
+        while (rs.next()) {
+          clue = rs.getString(1);
+        }
+      }
+    } catch (SQLException e) {
+      System.out.println("ERROR: Problem querying the database");
+    }
+    return clue;
+
   }
 
   /**

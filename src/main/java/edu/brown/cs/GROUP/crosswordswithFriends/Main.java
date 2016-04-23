@@ -106,24 +106,22 @@ public final class Main {
           + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
       throw new IOException();
     }
-
     else {
-
       CSVReader reader = new CSVReader();
-
       if (!options.valuesOf(files).isEmpty()) {
         assert (db != null);
         try {
           for (String s : options.valuesOf(files)) {
-            reader.readtoDB(s, db.getConnection());
+            reader.readtoDB(s,
+                db.getConnection());
           }
         } catch (SQLException e) {
-          System.err
-          .println("ERROR: Cannot write information to the database.");
+          System.err.println(
+              "ERROR: Cannot write information to the database.");
           return;
         } catch (IOException e) {
-          System.err
-          .println("ERROR: Cannot read from the corpus file given.");
+          System.err.println(
+              "ERROR: Cannot read from the corpus file given.");
           return;
         }
       } else {
@@ -131,9 +129,7 @@ public final class Main {
             "ERROR: There must be at least one corpus file to start the program with.");
         return;
       }
-
       new GUI(PORT, db);
-
       try {
         InputStreamReader isr = new InputStreamReader(System.in, "UTF8");
         BufferedReader sysreader = new BufferedReader(isr);
@@ -143,7 +139,8 @@ public final class Main {
           for (String s : ip) {
             Path file = Paths.get(s);
             try {
-              if (Files.isRegularFile(file) & Files.isReadable(file)) {
+              if (Files.isRegularFile(file) &
+                  Files.isReadable(file)) {
                 reader.readtoDB(s, db.getConnection());
               } else {
                 System.err.println(
@@ -163,12 +160,12 @@ public final class Main {
           input = sysreader.readLine();
         }
       } catch (IOException e) {
-        System.err
-        .println("ERROR: Unable to read input from the command line.");
+        System.err.println(
+            "ERROR: Unable to read input from the command line.");
         throw new IOException();
       }
-
     }
+
   }
 
 }

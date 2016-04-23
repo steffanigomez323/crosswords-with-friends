@@ -6,7 +6,7 @@ public class Box{
   private boolean isBox;
   private char letter;
   private ArrayList<Clue> clues;
-
+  private Orientation o;
 
   Box(){
     isBox = true;
@@ -24,6 +24,13 @@ public class Box{
     letter = Character.toUpperCase(l);
     clues = new ArrayList<Clue>();
     clues.add(new Clue(c, o));
+  }
+
+  Box(char l, Orientation o) {
+    isBox = false;
+    letter = Character.toUpperCase(l);
+    this.o = o;
+
   }
 
   public boolean getIsBox(){
@@ -54,9 +61,13 @@ public class Box{
     //    System.out.print(" ");
   }
 
+  public Orientation getOrientation() {
+    return o;
+  }
+
   @Override
   public String toString() {
-    return Character.toString(this.letter);
+    return letter + ": " + o;
   }
 
 }

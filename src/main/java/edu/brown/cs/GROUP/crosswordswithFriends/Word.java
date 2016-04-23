@@ -9,20 +9,21 @@ public class Word {
   private String clue;
   private int score;
 
-  public Word(String w, int x, int y, Orientation o, String c) {
-    word = w;
-    xIndex = x;
-    yIndex = y;
-    orientation = o;
-    clue = c;
-  }
-
   public Word(String w, int x, int y, Orientation o, int s) {
     word = w;
     xIndex = x;
     yIndex = y;
     orientation = o;
     score = s;
+  }
+
+  public Word(String w, int x, int y, Orientation o, int s, String c) {
+    word = w;
+    xIndex = x;
+    yIndex = y;
+    orientation = o;
+    score = s;
+    clue = c;
   }
 
   public String getWord(){
@@ -49,4 +50,8 @@ public class Word {
     return score;
   }
 
+  @Override
+  public String toString() {
+    return word + ": " + "(" + xIndex + "," + yIndex + ")" + ", " + orientation;
+  }
 }
