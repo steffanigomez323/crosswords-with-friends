@@ -68,7 +68,7 @@ public class Database {
 
   }
 
-  public List<String> getAllUnderFive() {
+  public List<String> getAllUnderSeven() {
     List<String> words = new ArrayList<String>();
     String query =
         "SELECT * FROM cluewords WHERE length<=7 ORDER BY length DESC;";

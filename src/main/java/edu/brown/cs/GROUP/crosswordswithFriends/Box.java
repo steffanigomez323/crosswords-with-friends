@@ -38,6 +38,10 @@ public class Box{
     clues.add(new Clue(c2, o2));
   }
 
+  public char getLetter() {
+    return this.letter;
+  }
+
   public void printLetter(){
     if (letter == '\u0000'){
       System.out.print("-");

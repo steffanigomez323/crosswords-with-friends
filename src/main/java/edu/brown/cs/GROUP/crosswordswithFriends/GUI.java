@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -39,9 +38,9 @@ public class GUI {
    */
   public GUI(int port, Database d) {
     db = d;
-    List<String> words = db.getAllUnderFive();
-    puzzle = new Crossword(words);
-    puzzle.fillPuzzle();
+    // List<String> words = db.getAllUnderSeven();
+    // puzzle = new Crossword(words);
+    // puzzle.fillPuzzle();
 
     runSparkServer();
     crosswordCache = new HashMap<String, Box[][]>();
@@ -91,16 +90,20 @@ public class GUI {
 
       ArrayList<Word> words = new ArrayList<Word>();
       words.add(new Word("Bruh", 0, 0, Orientation.ACROSS, "\"Dude, cmon ...,\" in modern lingo"));
-      words.add(new Word("Ripen", 1, 0, Orientation.ACROSS, "Turn yellow, as a banana"));
-      words.add(new Word("Apple", 2, 0, Orientation.ACROSS, "Company that tangled with the F.B.I. over encryption"));
-      words.add(new Word("Duels", 3, 0, Orientation.ACROSS, "Burr vs. Hamilton and others"));
-      words.add(new Word("Pros", 4, 1, Orientation.ACROSS, "___ and cons"));
+      words.add(new Word("Ripen", 0, 1, Orientation.ACROSS,
+          "Turn yellow, as a banana"));
+      words.add(new Word("Apple", 0, 2, Orientation.ACROSS,
+          "Company that tangled with the F.B.I. over encryption"));
+      words.add(new Word("Duels", 0, 3, Orientation.ACROSS,
+          "Burr vs. Hamilton and others"));
+      words.add(new Word("Pros", 1, 4, Orientation.ACROSS, "___ and cons"));
 
       words.add(new Word("Brad", 0, 0, Orientation.DOWN, "Pitt of \"The Big Short\""));
-      words.add(new Word("Ripup", 0, 1, Orientation.DOWN, "Tear to pieces"));
-      words.add(new Word("Upper", 0, 2, Orientation.DOWN, "Opposite of lower"));
-      words.add(new Word("Hello", 0, 3, Orientation.DOWN, "One meaning of \"aloha\""));
-      words.add(new Word("Ness", 1, 4, Orientation.DOWN, "Loch ___ monster"));
+      words.add(new Word("Ripup", 1, 0, Orientation.DOWN, "Tear to pieces"));
+      words.add(new Word("Upper", 2, 0, Orientation.DOWN, "Opposite of lower"));
+      words.add(new Word("Hello", 3, 0, Orientation.DOWN,
+          "One meaning of \"aloha\""));
+      words.add(new Word("Ness", 4, 1, Orientation.DOWN, "Loch ___ monster"));
 
       Box[][] crossword = new Box[5][5];
 
@@ -113,25 +116,25 @@ public class GUI {
       for (Word w : words){
         String word = w.getWord();
         int x = w.getXIndex();
-        int y= w.getYIndex();
+        int y = w.getYIndex();
         Orientation o = w.getOrientation();
 
-        Box b = crossword[x][y];
+        Box b = crossword[y][x];
         if (b.getIsBox()){
-          crossword[x][y] = new Box(word.charAt(0), w.getClue(), o);
+          crossword[y][x] = new Box(word.charAt(0), w.getClue(), o);
         } else {
           b.addClue(w.getClue(), o);
         }
         for (int i=1; i<word.length(); i++){
           if (o == Orientation.ACROSS){
-            y++;
-          } else {
             x++;
+          } else {
+            y++;
           }
           char c = word.charAt(i);
-          b = crossword[x][y];
+          b = crossword[y][x];
           if (b.getIsBox()){
-            crossword[x][y] = new Box(c);
+            crossword[y][x] = new Box(c);
           }
         }
       }
