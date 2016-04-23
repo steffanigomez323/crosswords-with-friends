@@ -73,7 +73,6 @@ public class Crossword {
         Orientation o = w.getOrientation();
         String currWord = w.getWord();
         if (checkFit(col, row, o, currWord) > 0) {
-          System.out.println("never getting in here?");
           fit = true;
           setWord(col, row, o, currWord);
           System.out.println(this);

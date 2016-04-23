@@ -89,6 +89,7 @@ public class Database {
     String clue = "";
     String query = "SELECT clue FROM cluewords WHERE word=?;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
+      prep.setString(1, word);
       try (ResultSet rs = prep.executeQuery()) {
         while (rs.next()) {
           clue = rs.getString(1);
