@@ -78,7 +78,6 @@ public class GUI {
     Spark.externalStaticFileLocation("src/main/resources/static");
     Chat.initChatroom();
     FreeMarkerEngine freeMarker = createEngine();
-
     Spark.get("/home", new FrontHandler(db), freeMarker);
     Spark.get("/check", new CheckHandler());
     Spark.get("/chat", new ChatHandler(), freeMarker);
@@ -119,6 +118,7 @@ public class GUI {
       System.out.println("getting here");
       // System.out.println(puzzle.getFinalList());
       List<Word> toPass = puzzle.getFinalList();
+      Chat.setCensorWords(toPass);
       Box[][] crossword2 = puzzle.getArray();
 
       Box[][] crossword = new Box[COLS][ROWS];
@@ -207,7 +207,7 @@ public class GUI {
     }
   }
   
-  /** Handler for serving main page. */
+  /** Handler for serving chat page. */
   private static class ChatHandler implements TemplateViewRoute {
 
     @Override
