@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.chat.Chat;
 import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
@@ -37,16 +38,15 @@ public class GUI {
    *
    * @param port Port number specified by command line or 4567 by default
    * @param d Database connection path
+   * @throws IOException 
    */
-  public GUI(int port, Database d) {
+  public GUI(int port, Database d) throws IOException {
     db = d;
     // List<String> words = db.getAllUnderSeven();
     // Crossword puzzle = new Crossword(words);
     // puzzle.fillPuzzle();
-
     runSparkServer();
     crosswordCache = new HashMap<String, Box[][]>();
-
   }
 
   /**
@@ -72,14 +72,16 @@ public class GUI {
     return new FreeMarkerEngine(config);
   }
 
-  /** Runs the server. Organizes get and put requests. */
-  private void runSparkServer() {
+  /** Runs the server. Organizes get and put requests. 
+   * @throws IOException */
+  private void runSparkServer() throws IOException {
     Spark.externalStaticFileLocation("src/main/resources/static");
-
+    Chat.initChatroom();
     FreeMarkerEngine freeMarker = createEngine();
 
     Spark.get("/home", new FrontHandler(db), freeMarker);
     Spark.get("/check", new CheckHandler());
+    Spark.get("/chat", new ChatHandler(), freeMarker);
   }
 
   /** Handler for serving main page. */
@@ -204,4 +206,17 @@ public class GUI {
       return "true";
     }
   }
+  
+  /** Handler for serving main page. */
+  private static class ChatHandler implements TemplateViewRoute {
+
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+      ImmutableMap<String, Object> variables =
+          new ImmutableMap.Builder<String, Object>().build();
+      return new ModelAndView(variables, "chat.ftl");
+    }
+
+  }
+  
 }

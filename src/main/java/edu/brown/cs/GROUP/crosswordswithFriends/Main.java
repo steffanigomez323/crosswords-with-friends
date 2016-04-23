@@ -31,6 +31,7 @@ public final class Main {
   public static void main(String[] args) {
     try {
       new Main(args).run();
+      System.out.println("running");
     } catch (IOException e) {
       System.exit(1);
     }
@@ -67,7 +68,7 @@ public final class Main {
    */
 
   private void run() throws IOException {
-
+    
     OptionParser parser = new OptionParser();
     OptionSpec<String> database = parser.accepts("db").withRequiredArg()
         .ofType(String.class);
