@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
 import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.chat.Chat;
 import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.QueryParamsMap;

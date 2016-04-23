@@ -1,4 +1,4 @@
-package edu.brown.cs.GROUP.crosswordswithFriends;
+package edu.brown.cs.GROUP.chat;
 import org.eclipse.jetty.websocket.api.*;
 import org.json.*;
 
