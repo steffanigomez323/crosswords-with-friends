@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WebsSockets</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div id="chatControls">
@@ -12,6 +12,6 @@
     </div>
     <ul id="userlist"> <!-- Built by JS --> </ul>
     <div id="chat">    <!-- Built by JS --> </div>
-    <script src="websocketDemo.js"></script>
+    <script src="/js/websocketDemo.js"></script>
 </body>
 </html>

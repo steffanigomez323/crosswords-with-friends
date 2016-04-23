@@ -31,6 +31,7 @@ public final class Main {
   public static void main(String[] args) {
     try {
       new Main(args).run();
+      System.out.println("running");
     } catch (IOException e) {
       System.exit(1);
     }
@@ -105,12 +106,8 @@ public final class Main {
       System.err.println("ERROR: Invalid number of arguments. USAGE: "
           + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
       throw new IOException();
-    }
-
-    else {
-
+    } else {
       CSVReader reader = new CSVReader();
-
       if (!options.valuesOf(files).isEmpty()) {
         assert (db != null);
         try {
@@ -131,9 +128,7 @@ public final class Main {
             "ERROR: There must be at least one corpus file to start the program with.");
         return;
       }
-
       new GUI(PORT, db);
-
       try {
         InputStreamReader isr = new InputStreamReader(System.in, "UTF8");
         BufferedReader sysreader = new BufferedReader(isr);
@@ -167,8 +162,8 @@ public final class Main {
             .println("ERROR: Unable to read input from the command line.");
         throw new IOException();
       }
-
     }
+
   }
 
 }

@@ -7,12 +7,22 @@ public class Word {
   private int yIndex;
   private Orientation orientation;
   private String clue;
+  private int score;
 
-  public Word(String w, int x, int y, Orientation o, String c){
+  public Word(String w, int x, int y, Orientation o, int s) {
     word = w;
     xIndex = x;
     yIndex = y;
     orientation = o;
+    score = s;
+  }
+
+  public Word(String w, int x, int y, Orientation o, int s, String c) {
+    word = w;
+    xIndex = x;
+    yIndex = y;
+    orientation = o;
+    score = s;
     clue = c;
   }
 
@@ -36,4 +46,12 @@ public class Word {
     return clue;
   }
 
+  public int getScore() {
+    return score;
+  }
+
+  @Override
+  public String toString() {
+    return word + ": " + "(" + xIndex + "," + yIndex + ")" + ", " + orientation;
+  }
 }

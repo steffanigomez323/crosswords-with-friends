@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import edu.brown.cs.GROUP.crosswordswithFriends.Chat;
+import edu.brown.cs.GROUP.chat.*;
 
 public class CensorTest {
 

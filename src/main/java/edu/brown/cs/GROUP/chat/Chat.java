@@ -1,4 +1,4 @@
-package edu.brown.cs.GROUP.crosswordswithFriends;
+package edu.brown.cs.GROUP.chat;
 import org.eclipse.jetty.websocket.api.*;
 import org.json.*;
 
@@ -20,9 +20,13 @@ public class Chat {
   static int nextUserNumber = 1; //Assign to username for next connecting user
 
   public static void main(String[] args) throws IOException {
+
+  }
+
+  public static void initChatroom() throws IOException {
     wordsToCensor.add("horse");
     wordsToCensor.add("hair");
-    BufferedReader reader;
+    /*BufferedReader reader;
     try {
       reader = new BufferedReader(new FileReader(new File(args[0])));
       String line;
@@ -33,12 +37,12 @@ public class Chat {
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    }
-    staticFileLocation("public"); //index.html is served at localhost:4567 (default port)
+    }*/
+    //staticFileLocation("static"); //index.html is served at localhost:4567 (default port)
     webSocket("/chat", ChatWebSocketHandler.class);
     init();
   }
-
+  
   public static String censorMessage(List<String> censorList, String message) {
     String cleanedMessage = message.replace("[^a-zA-Z ]", "");
     String[] messageArray = cleanedMessage.split(" ");
