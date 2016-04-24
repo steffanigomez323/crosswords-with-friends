@@ -1,7 +1,18 @@
+body{
+	font-family: 'Montserrat', sans-serif;
+}
+
 .box{
 	width: 50px;
-	height:50px;
+	height: 50px;
+}
+
+.boxWrap{
 	display: inline-block;
+	width: 50px;
+	height: 50px;
+	position: relative;
+	
 }
 
 .row{
@@ -36,9 +47,6 @@ textarea{
 	background-color: black;
 	margin: 0;
 	position: relative;
-<<<<<<< HEAD
-}
-=======
 }
 
 * {
@@ -118,4 +126,21 @@ li {
     50%  { transform: scale(1.05); }
     to   { transform: none;        }
 }
->>>>>>> d0925a2be9de75868c59be717b57bbc98b819c26
+
+#clues{
+	width: 300px;
+	height: 400px;
+	border: 1px black dashed;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 50px;
+	text-decoration: none;
+}
+
+.numMarker{
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	font-size: 8px;
+}
