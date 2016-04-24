@@ -10,12 +10,16 @@ public class ChatWebSocketHandler {
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
         String username = "down";
-        System.out.println("session " + user);
         if (Chat.userUsernameMap.containsValue(username)){
           username = "across";
+          Chat.nextRoomNumber++;
         }
         Chat.userUsernameMap.put(user, username);
         Chat.broadcastMessage(sender = "Server", msg = (username + " joined the chat"));
+    }
+    
+    public Integer getRoomNumber() {
+    	return Chat.nextRoomNumber++;
     }
 
     @OnWebSocketClose

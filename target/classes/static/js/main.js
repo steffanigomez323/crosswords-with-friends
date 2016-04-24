@@ -1,6 +1,8 @@
 function checkWord(word, x, y, o){
 	console.log(word+" "+x+" "+y+" "+o);
-	$.get("/check", {word: word, x: y, y: x, orientation: o, id:"abcdef"}, function(response) {
+	var id = $(".crossword").attr("id");
+	console.log("id " + id);
+	$.get("/check", {word: word, x: y, y: x, orientation: o, id:id}, function(response) {
         var res = JSON.parse(response);
         console.log(res);
         if (res){
