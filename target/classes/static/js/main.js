@@ -1,8 +1,23 @@
 function checkWord(word, x, y, o){
 	console.log(word+" "+x+" "+y+" "+o);
-	$.get("/check", {word: word, x: x, y: y, orientation: o, id:"abcdef"}, function(response) {
+	var id = $(".crossword").attr("id");
+	console.log("id " + id);
+	$.get("/check", {word: word, x: y, y: x, orientation: o, id:id}, function(response) {
         var res = JSON.parse(response);
         console.log(res);
+        if (res){
+        	console.log("k");
+        	if (orientation == "down"){
+        		console.log("here");
+        		var c = $(".c"+x);
+        		$(c).attr("disabled", "disabled");
+        		$(c).addClass("inactive");
+        	} else {
+        		var r = $(".r"+y);
+        		$(r).attr("disabled", "disabled");
+        		$(r).addClass("inactive");
+        	}
+        }
     });
 }
 
@@ -56,23 +71,18 @@ function next(dir){
 	var startY = null;
 	
 	if (orientation == "down"){
-<<<<<<< HEAD
 		var c = $(".c"+col);
-=======
-		var col = $(".c"+col);
->>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 		var next;
 		if (dir == -1){
 			next = prevRow(row);
 		} else {
 			next = nextRow(row);
 		}
-<<<<<<< HEAD
 		for (var i=0; i<numRow; i++){
 			var block = c[i];
 			if (!found){
 				if ($(block).hasClass("r"+next)){
-					if ($(block).hasClass("filled")){
+					if ($(block).hasClass("filled") || $(block).attr("disabled")=="disabled"){
 						if (dir == -1){
 							next = prevRow(next);
 						} else {
@@ -95,41 +105,23 @@ function next(dir){
 					startY = i;
 				}
 				word+= $(block).val();
-=======
-		for (var i=0; i<numCol; i++){
-			var block = col[i];
-			if ($(block).hasClass("r"+next)){
-				if ($(block).hasClass("filled")){
-					next = nextRow(next);
-					i=-1;
-				} else {
-					$(block).addClass("active");
-					$(block).focus();
-					break;
-				}
->>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 			}
 		}
 		if (done){
 			checkWord(word, startX, startY, "DOWN");
 		}
 	} else if (orientation == "across"){
-<<<<<<< HEAD
 		var r = $(".r"+row);
-=======
-		var row = $(".r"+row);
->>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 		if (dir == -1){
 			next = prevCol(col);
 		} else {
 			next = nextCol(col);
 		}
-<<<<<<< HEAD
 		for (var i=0; i<numCol; i++){
 			var block = r[i];
 			if (!found){
 				if ($(block).hasClass("c"+next)){
-					if ($(block).hasClass("filled")){
+					if ($(block).hasClass("filled") || $(block).attr("disabled")=="disabled"){
 						if (dir == -1){
 							next = prevCol(next);
 						} else {
@@ -143,7 +135,7 @@ function next(dir){
 					}
 				} 
 			}
-			if ($(block).val() == ""){
+			if (!$(block).hasClass("filled") && $(block).val() == ""){
 				done = false;
 			} else {
 				if (!$(block).hasClass("filled") && startX == null){
@@ -152,20 +144,6 @@ function next(dir){
 				}
 				word+= $(block).val();
 			}
-=======
-		for (var i=0; i<numRow; i++){
-			var block = row[i];
-			if ($(block).hasClass("c"+next)){
-				if ($(block).hasClass("filled")){
-					next = nextCol(next);
-					i=-1;
-				} else {
-					$(block).addClass("active");
-					$(block).focus();
-					break;
-				}
-			} 
->>>>>>> ad508f8ea9eb4f8ca269058cc48fb2d242f59746
 		}
 		if (done){
 			checkWord(word, startX, startY, "ACROSS");

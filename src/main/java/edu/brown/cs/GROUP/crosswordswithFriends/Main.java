@@ -1,11 +1,20 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.words.CVSReader;
-
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
+
+import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.words.CSVReader;
+import joptsimple.OptionException;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 
 /**
  * This class handles starting the program, the database, and the GUI.
@@ -22,6 +31,7 @@ public final class Main {
   public static void main(String[] args) {
     try {
       new Main(args).run();
+      System.out.println("running");
     } catch (IOException e) {
       System.exit(1);
     }
@@ -58,43 +68,105 @@ public final class Main {
    */
 
   private void run() throws IOException {
+    
+    OptionParser parser = new OptionParser();
+    OptionSpec<String> database = parser.accepts("db").withRequiredArg()
+        .ofType(String.class);
+    OptionSpec<String> files = parser.nonOptions().ofType(String.class);
+    OptionSet options;
+    try {
+      options = parser.parse(this.arguments);
+    } catch (OptionException e) {
+      System.err.println("ERROR: Please provide an argument to --db.");
+      return;
+    }
 
-    if (this.arguments.length < 1) {
-      System.err.println("ERROR: Please specify at least one corpus file");
-      throw new FileNotFoundException();
-    } else if (this.arguments.length > 1) {
-      System.err.println("ERROR: Invalid number of arguments. USAGE: "
-          + "./run <path_to_corpus>");
-      throw new IOException();
-    } else {
-      Database db = null;
+    Database db = null;
+
+    if (options.has("db") && options.hasArgument("db")) {
+      String path = null;
       try {
-        db = new Database("data/cluewords.sqlite3");
-        // db = new Database(this.arguments[this.arguments.length - 1]);
+        path = options.valueOf(database);
+
+      } catch (Exception e) {
+        System.out
+        .println("ERROR: Please provide a valid argument to --db");
+        throw new FileNotFoundException();
+      }
+      try {
+        db = new Database(path);
       } catch (ClassNotFoundException | SQLException e) {
-        e.printStackTrace();
         System.err.println(
             "ERROR: The database file was unable to be connected to.");
         return;
       }
-      assert (db != null);
-      CVSReader reader = new CVSReader();
-      try {
-        reader.readtoDB(this.arguments[this.arguments.length - 1],
-            db.getConnection());
-      } catch (SQLException e) {
-        System.err
-            .println("ERROR: Cannot write information to the database.");
-        return;
-      } catch (IOException e) {
-        System.err
-            .println("ERROR: Cannot read from the corpus file given.");
+    }
+
+    if (this.arguments.length < 3) {
+      System.err.println("ERROR: Invalid number of arguments. USAGE: "
+          + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
+      throw new IOException();
+    }
+    else {
+      CSVReader reader = new CSVReader();
+      if (!options.valuesOf(files).isEmpty()) {
+        assert (db != null);
+        try {
+          for (String s : options.valuesOf(files)) {
+            reader.readtoDB(s,
+                db.getConnection());
+          }
+        } catch (SQLException e) {
+          System.err.println(
+              "ERROR: Cannot write information to the database.");
+          return;
+        } catch (IOException e) {
+          System.err.println(
+              "ERROR: Cannot read from the corpus file given.");
+          return;
+        }
+      } else {
+        System.err.println(
+            "ERROR: There must be at least one corpus file to start the program with.");
         return;
       }
-
       new GUI(PORT, db);
-
+      try {
+        InputStreamReader isr = new InputStreamReader(System.in, "UTF8");
+        BufferedReader sysreader = new BufferedReader(isr);
+        String input = sysreader.readLine();
+        while (input != null && !input.equals("")) {
+          String[] ip = input.split(" ");
+          for (String s : ip) {
+            Path file = Paths.get(s);
+            try {
+              if (Files.isRegularFile(file) &
+                  Files.isReadable(file)) {
+                reader.readtoDB(s, db.getConnection());
+              } else {
+                System.err.println(
+                    "ERROR: The file entered is not a file accessable "
+                        + "by this program.");
+              }
+            } catch (IOException e) {
+              System.err.println(
+                  "ERROR: The given file is not a file accessable by this "
+                      + "program.");
+            } catch (SQLException e) {
+              System.err.println(
+                  "ERROR: The database was unable to be connected to.");
+              throw new IOException();
+            }
+          }
+          input = sysreader.readLine();
+        }
+      } catch (IOException e) {
+        System.err.println(
+            "ERROR: Unable to read input from the command line.");
+        throw new IOException();
+      }
     }
+
   }
 
 }

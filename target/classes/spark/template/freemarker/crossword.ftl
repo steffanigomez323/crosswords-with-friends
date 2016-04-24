@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="css/style.css">
 <script src="js/jquery-2.1.1.js"></script>
 <script src="js/main.js"></script>
+<div id=${id} class="crossword">
 <#list crossword as row>
 		<div class="row">
 	<#list row as col>
@@ -12,3 +13,6 @@
 	</#list>
 	</div>
 </#list>
+</div>
+<iframe id="ifrm" src="/chat" align="center"></iframe>
+<script>console.log("room number");</script>

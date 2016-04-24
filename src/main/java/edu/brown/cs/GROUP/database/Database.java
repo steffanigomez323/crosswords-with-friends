@@ -3,8 +3,10 @@ package edu.brown.cs.GROUP.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles the initialization of the database connection.
@@ -35,14 +37,9 @@ public class Database {
     Connection connect = DriverManager.getConnection(urlToDB);
     this.conn = connect;
 
-    try (Statement stat = conn.createStatement()) {
-      stat.execute("DROP TABLE IF EXISTS cluewords");
-      stat.close();
-    }
-
-    String schema = "CREATE TABLE cluewords (" + "word TEXT, "
-        + "length INT, " + "clue TEXT, "
-        + "PRIMARY KEY (word, length, clue));";
+    String schema = "CREATE TABLE IF NOT EXISTS cluewords ("
+        + "word TEXT, " + "length INT, " + "clue TEXT, "
+        + "PRIMARY KEY (word));";
     buildTable(schema);
 
   }
@@ -68,6 +65,40 @@ public class Database {
       prep.executeUpdate();
       prep.close();
     }
+
+  }
+
+  public List<String> getAllUnderSeven() {
+    List<String> words = new ArrayList<String>();
+    String query =
+        "SELECT * FROM cluewords WHERE length<=9 ORDER BY length DESC;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      try (ResultSet rs = prep.executeQuery()) {
+        while (rs.next()) {
+          String word = rs.getString(1);
+          words.add(word);
+        }
+      }
+    } catch (SQLException e) {
+      System.out.println("ERROR: Problem querying the database");
+    }
+    return words;
+  }
+
+  public String getClue(String word) {
+    String clue = "";
+    String query = "SELECT clue FROM cluewords WHERE word=?;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      prep.setString(1, word);
+      try (ResultSet rs = prep.executeQuery()) {
+        while (rs.next()) {
+          clue = rs.getString(1);
+        }
+      }
+    } catch (SQLException e) {
+      System.out.println("ERROR: Problem querying the database");
+    }
+    return clue;
 
   }
 

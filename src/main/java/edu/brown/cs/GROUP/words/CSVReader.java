@@ -17,7 +17,7 @@ import java.util.List;
  *
  */
 
-public class CVSReader {
+public class CSVReader {
 
   /**
    * This is the reader that reads the file that it is given.
@@ -35,7 +35,7 @@ public class CVSReader {
    * This is the constructor that begins an instance of this class.
    */
 
-  public CVSReader() {
+  public CSVReader() {
   }
 
   /**
@@ -63,7 +63,7 @@ public class CVSReader {
       int clueidx = headers.indexOf("Clue");
       // int ex_idx = headers.indexOf("Example");
 
-      String query = "INSERT INTO cluewords VALUES (?,?,?)";
+      String query = "INSERT OR IGNORE INTO cluewords(word, length, clue) VALUES (?,?,?)";
       try (PreparedStatement ps = conn.prepareStatement(query)) {
 
         while ((line = reader.readLine()) != null) {

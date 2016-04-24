@@ -6,6 +6,7 @@ public class Box{
   private boolean isBox;
   private char letter;
   private ArrayList<Clue> clues;
+  private Orientation o;
 
   Box(){
     isBox = true;
@@ -25,6 +26,13 @@ public class Box{
     clues.add(new Clue(c, o));
   }
 
+  Box(char l, Orientation o) {
+    isBox = false;
+    letter = Character.toUpperCase(l);
+    this.o = o;
+
+  }
+
   public boolean getIsBox(){
     return isBox;
   }
@@ -37,16 +45,29 @@ public class Box{
     clues.add(new Clue(c2, o2));
   }
 
+  public char getLetter() {
+    return this.letter;
+  }
+
   public void printLetter(){
     if (letter == '\u0000'){
       System.out.print("-");
     } else {
       System.out.print(letter);
     }
-//    if (!clues.isEmpty()){
-//      System.out.print(clues.size());
-//    }
-//    System.out.print(" ");
+    //    if (!clues.isEmpty()){
+    //      System.out.print(clues.size());
+    //    }
+    //    System.out.print(" ");
+  }
+
+  public Orientation getOrientation() {
+    return o;
+  }
+
+  @Override
+  public String toString() {
+    return letter + ": " + o;
   }
 
 }

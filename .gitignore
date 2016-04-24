@@ -1,1 +1,23 @@
-/target/
+
+
+# ignore all class files
+
+*.class
+
+# ignore .DS_Store
+
+.DS_Store
+
+# ignore .mvn-classpath because that's unique to someone's file system
+
+.mvn-classpath
+
+# ignore eclipse settings
+
+.settings/*
+
+# ignore target files
+
+target/*
+
+
