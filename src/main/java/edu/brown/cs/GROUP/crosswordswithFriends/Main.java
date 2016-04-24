@@ -39,7 +39,7 @@ public final class Main {
    * That is the port number.
    */
 
-  private static final int PORT = 9999;
+  private static final int PORT = 9998;
 
   /**
    * This constructor takes the arguments from the command line and sets it to

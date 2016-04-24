@@ -37,6 +37,7 @@ public class GUI {
    * @param d Database connection path
    */
   public GUI(int port, Database d) {
+    Spark.port(port);
     db = d;
     runSparkServer();
     crosswordCache = new HashMap<String, Box[][]>();

@@ -1,3 +1,5 @@
+edu/brown/cs/GROUP/crosswordswithFriends/Chat.class
+edu/brown/cs/GROUP/crosswordswithFriends/ChatWebSocketHandler.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$1.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI.class
 edu/brown/cs/GROUP/crosswordswithFriends/Main.class
@@ -5,5 +7,7 @@ edu/brown/cs/GROUP/crosswordswithFriends/Orientation.class
 edu/brown/cs/GROUP/crosswordswithFriends/Box.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$FrontHandler.class
 edu/brown/cs/GROUP/crosswordswithFriends/Word.class
+edu/brown/cs/GROUP/database/Database.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$CheckHandler.class
+edu/brown/cs/GROUP/words/CVSReader.class
 edu/brown/cs/GROUP/crosswordswithFriends/Clue.class
