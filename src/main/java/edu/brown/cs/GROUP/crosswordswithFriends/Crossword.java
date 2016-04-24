@@ -20,6 +20,7 @@ public class Crossword {
   private Set<String> usedWords;
   private List<Word> finalList;
   private Database db;
+  private int players;
 
   public Crossword(List<String> words, Database db) {
     unusedWords = new ArrayList<String>(words);
@@ -31,6 +32,7 @@ public class Crossword {
     unusedWords = new ArrayList<String>(words);
     System.out.println(words);
     this.db = db;
+    players = 1;
   }
 
   public void fillPuzzle() {
@@ -43,7 +45,13 @@ public class Crossword {
     }
 
   }
-
+  
+  public int getPlayers(){
+    return players;
+  }
+  public void addPlayer(){
+    players = 2;
+  }
   public void fitAndAdd(String word) {
     usedWords.add(word);
     boolean fit = false;
@@ -57,7 +65,7 @@ public class Crossword {
         if (checkFit(col, row, o, word) > 0) {
           fit = true;
           setWord(col, row, o, word);
-          System.out.println(this);
+          //System.out.println(this);
         }
       } else {
         // System.out.println("getting in here");
@@ -75,7 +83,7 @@ public class Crossword {
         if (checkFit(col, row, o, currWord) > 0) {
           fit = true;
           setWord(col, row, o, currWord);
-          System.out.println(this);
+          //System.out.println(this);
         } else {
           break;
         }
@@ -310,11 +318,12 @@ public class Crossword {
   @Override
   public String toString() {
     StringBuffer toReturn = new StringBuffer();
-    for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLS; j++) {
+        for (int i = 0; i < ROWS; i++) {
         Box currBox = puzzle[j][i];
         if (currBox == null) {
           toReturn.append("_ ");
+          puzzle[j][i] = new Box();
         } else {
           toReturn.append(puzzle[j][i].getLetter() + " ");
         }

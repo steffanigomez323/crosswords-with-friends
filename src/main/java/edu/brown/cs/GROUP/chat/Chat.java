@@ -18,10 +18,15 @@ public class Chat {
 
   static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
   static Set<String> stopWords = new HashSet<String>();
+  static Set<Room> rooms = new HashSet<Room>();
   static Set<String> wordsToCensor = new HashSet<String>();
-  static int nextUserNumber = 1; //Assign to username for next connecting user
+  static int nextRoomNumber = 1; //Assign to username for next connecting user
 
   public static void main(String[] args) throws IOException {
+  }
+  
+  public static Integer getRoomNumber() {
+    return nextRoomNumber;
   }
 
   public static void initChatroom() throws IOException {
@@ -38,15 +43,16 @@ public class Chat {
       e.printStackTrace();
     }
     //staticFileLocation("static"); //index.html is served at localhost:4567 (default port)
-    webSocket("/chat", ChatWebSocketHandler.class);
+    webSocket("/chat/1", ChatWebSocketHandler.class);
     init();
   }
 
   public static void setCensorWords(List<Word> toPass) {
     for (Word word : toPass) {
       wordsToCensor.add(word.getWord());
-      System.out.println("clue " + word.getClue());
-      String[] clueWords = word.getClue().split(" ");
+      String cleanedClue = word.getClue().replace("[^a-zA-Z ]", "");
+      String[] clueWords = cleanedClue.split(" ");
+      System.out.println("clues " + word.getClue());
       for (String clueWord : clueWords) {
         if (! stopWords.contains(clueWord)) {
           wordsToCensor.add(clueWord);
@@ -89,7 +95,6 @@ public class Chat {
       try {
         session.getRemote().sendString(String.valueOf(new JSONObject()
             .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor, message)))
-            .put("userlist", userUsernameMap.values())
             ));
       } catch (Exception e) {
         e.printStackTrace();
