@@ -12,9 +12,14 @@ public class ChatWebSocketHandler {
         String username = "down";
         if (Chat.userUsernameMap.containsValue(username)){
           username = "across";
+          Chat.nextRoomNumber++;
         }
         Chat.userUsernameMap.put(user, username);
         Chat.broadcastMessage(sender = "Server", msg = (username + " joined the chat"));
+    }
+    
+    public Integer getRoomNumber() {
+    	return Chat.nextRoomNumber++;
     }
 
     @OnWebSocketClose

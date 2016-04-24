@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
@@ -28,11 +29,11 @@ public class GUI {
   private static final int ROWS = 9;
   private static final int COLS = 9;
 
-  private static HashMap<String, Box[][]> crosswordCache;
+  private static HashMap<Integer, Crossword> crosswordCache;
 
   private Database db;
   private Crossword puzzle;
-
+  private static AtomicInteger id;
   /**
    * Constructor starts server on instantiation.
    *
@@ -45,8 +46,9 @@ public class GUI {
     // List<String> words = db.getAllUnderSeven();
     // Crossword puzzle = new Crossword(words);
     // puzzle.fillPuzzle();
+    id = new AtomicInteger(1000);
     runSparkServer();
-    crosswordCache = new HashMap<String, Box[][]>();
+    crosswordCache = new HashMap<Integer, Crossword>();
   }
 
   /**
@@ -93,8 +95,22 @@ public class GUI {
     }
     @Override
     public ModelAndView handle(Request req, Response res) {
-
-      String id = "abcdef";
+      
+      Integer id2 = id.get();
+      System.out.println("Atomic id : "+id2);
+      Crossword puzzle = crosswordCache.get(id2);
+      if (puzzle == null || puzzle.getPlayers()==2) {
+        if (puzzle == null){
+          id2 = id.get();
+        } else {
+          id2 = id.incrementAndGet();
+        }
+        List<String> words = db.getAllUnderSeven();
+        puzzle = new Crossword(words, db);
+        puzzle.fillPuzzle();
+      } else {
+        puzzle.addPlayer();
+      }
 
 
       /*
@@ -112,57 +128,56 @@ public class GUI {
        * 0, Orientation.DOWN, "One meaning of \"aloha\"")); words.add(new
        * Word("Ness", 4, 1, Orientation.DOWN, "Loch ___ monster"));
        */
-      List<String> words = db.getAllUnderSeven();
-      Crossword puzzle = new Crossword(words, db);
-      puzzle.fillPuzzle();
-      System.out.println("getting here");
       // System.out.println(puzzle.getFinalList());
       List<Word> toPass = puzzle.getFinalList();
       Chat.setCensorWords(toPass);
-      Box[][] crossword2 = puzzle.getArray();
+      System.out.println(puzzle.toString());
+      System.out.println("id : "+id2.toString());
+      Box[][] crossword = puzzle.getArray();
 
-      Box[][] crossword = new Box[COLS][ROWS];
+//      Box[][] crossword = new Box[COLS][ROWS];
 
-      for (int i=0; i<crossword.length; i++){
-        for (int j=0; j<crossword[0].length; j++){
-          crossword[i][j] = new Box();
-        }
-      }
-
-      for (Word w : toPass) {
-        String word = w.getWord();
-        int x = w.getXIndex();
-        int y = w.getYIndex();
-        Orientation o = w.getOrientation();
-
-        Box b = crossword[y][x];
-        if (b.getIsBox()){
-          crossword[y][x] = new Box(word.charAt(0), w.getClue(), o);
-        } else {
-          b.addClue(w.getClue(), o);
-        }
-        for (int i=1; i<word.length(); i++){
-          if (o == Orientation.ACROSS){
-            x++;
-          } else {
-            y++;
-          }
-          char c = word.charAt(i);
-          b = crossword[y][x];
-          if (b.getIsBox()){
-            crossword[y][x] = new Box(c);
-          }
-        }
-      }
-
-
-      crosswordCache.put(id, crossword);
+//      for (int i=0; i<crossword.length; i++){
+//        for (int j=0; j<crossword[0].length; j++){
+//          crossword[i][j] = new Box();
+//        }
+//      }
+//
+//      for (Word w : toPass) {
+//        String word = w.getWord();
+//        int x = w.getXIndex();
+//        int y = w.getYIndex();
+//        Orientation o = w.getOrientation();
+//
+//        Box b = crossword[y][x];
+//        if (b.getIsBox()){
+//          crossword[y][x] = new Box(word.charAt(0), w.getClue(), o);
+//        } else {
+//          b.addClue(w.getClue(), o);
+//        }
+//        for (int i=1; i<word.length(); i++){
+//          if (o == Orientation.ACROSS){
+//            x++;
+//          } else {
+//            y++;
+//          }
+//          char c = word.charAt(i);
+//          b = crossword[y][x];
+//          if (b.getIsBox()){
+//            crossword[y][x] = new Box(c);
+//          }
+//        }
+//      }
 
 
+      crosswordCache.put(id2, puzzle);
+
+      //System.out.println("room number " + Chat.getRoomNumber());
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
           .put("crossword", crossword)
-          .put("id", id)
+          .put("id", id2.toString())
+          .put("roomNumber", Chat.getRoomNumber())
           .build();
 
       return new ModelAndView(variables, "crossword.ftl");
@@ -180,29 +195,29 @@ public class GUI {
       int x = Integer.valueOf(qm.value("x"));
       int y = Integer.valueOf(qm.value("y"));
       Orientation orientation = Orientation.valueOf(qm.value("orientation"));
-      String id = qm.value("id");
+      Integer id = Integer.valueOf(qm.value("id"));
 
       System.out.println("Cool!");
-
-      if (!crosswordCache.containsKey(id)){
+      
+      if (!crosswordCache.containsKey(id)) {
         return "false";
       }
-      System.out.println("checking : "+word);
-      Box[][] crossword = crosswordCache.get(id);
-      for (int i=0; i<word.length(); i++){
+      System.out.println("checking : " + word);
+      Crossword puzzle = crosswordCache.get(id);
+      Box[][] crossword = puzzle.getArray();
+      for (int i = 0; i < word.length(); i++){
         Box box = crossword[y][x];
         box.printLetter();
-        if (!box.checkVal(word.charAt(i))){
-          System.out.println("CHECK : "+word.charAt(i));
+        if (!box.checkVal(word.charAt(i))) {
+          System.out.println("CHECK : "+ word.charAt(i));
           return "false";
         }
-        if (orientation == Orientation.ACROSS){
+        if (orientation == Orientation.ACROSS) {
           x++;
         } else {
           y++;
         }
       }
-
       return "true";
     }
   }
@@ -212,8 +227,9 @@ public class GUI {
 
     @Override
     public ModelAndView handle(Request req, Response res) {
+      System.out.println("in chat handler " );
       ImmutableMap<String, Object> variables =
-          new ImmutableMap.Builder<String, Object>().build();
+          new ImmutableMap.Builder<String, Object>().put("roomNumber", Chat.getRoomNumber()).build();
       return new ModelAndView(variables, "chat.ftl");
     }
 
