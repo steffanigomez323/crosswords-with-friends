@@ -1,19 +1,17 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import edu.brown.cs.GROUP.database.Database;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.brown.cs.GROUP.database.Database;
-
 public class Crossword {
 
   private Box[][] puzzle;
   private List<String> words;
-
-
   private static final int ROWS = 9;
   private static final int COLS = 9;
   private List<String> unusedWords;
@@ -26,7 +24,7 @@ public class Crossword {
     unusedWords = new ArrayList<String>(words);
     usedWords = new HashSet<String>();
     finalList = new ArrayList<Word>();
-    puzzle = new Box[COLS][ROWS];
+    puzzle = new Box[ROWS][COLS];
     this.words = words;
     shuffleAndSortWords();
     unusedWords = new ArrayList<String>(words);
@@ -44,8 +42,18 @@ public class Crossword {
 
     }
 
+    for (int j = 0; j < COLS; j++) {
+      for (int i = 0; i < ROWS; i++) {
+        Box currBox = puzzle[i][j];
+        if (currBox == null) {
+          puzzle[i][j] = new Box();
+        }
+      }
+    }
+
+
   }
-  
+
   public int getPlayers(){
     return players;
   }
@@ -64,6 +72,7 @@ public class Crossword {
         int col = 0;
         if (checkFit(col, row, o, word) > 0) {
           fit = true;
+
           setWord(col, row, o, word);
           //System.out.println(this);
         }
@@ -82,8 +91,8 @@ public class Crossword {
         String currWord = w.getWord();
         if (checkFit(col, row, o, currWord) > 0) {
           fit = true;
+
           setWord(col, row, o, currWord);
-          //System.out.println(this);
         } else {
           break;
         }
@@ -93,10 +102,25 @@ public class Crossword {
 
   public void setWord(int col, int row, Orientation o, String word) {
     System.out.println(word + ": " + "(" + col + "," + row + ")" + ", " + o);
-    finalList.add(new Word(word, col, row, o, 1, db.getClue(word
-                                                                .toLowerCase())));
+    String clue = db.getClue(word.toLowerCase());
+    finalList.add(new Word(word, col, row, o, 1, clue));
+
+
     for (int i = 0; i < word.length(); i++) {
-      setCell(col, row, word.charAt(i), o);
+      if (puzzle[row][col] == null){
+        if (i == 0){
+          puzzle[row][col] = new Box(word.charAt(0), clue, o, word.length());
+        } else if (i == word.length()-1){
+          puzzle[row][col] = new Box(word.charAt(i), null, o, word.length());
+        } else {
+          setCell(col, row, word.charAt(i));
+        }
+      } else if (i==0) {
+        puzzle[row][col].addClue(clue, o, word.length());
+      } else if (i == word.length()-1){
+        puzzle[row][col].addClue(null, o, word.length());
+      }
+
       if (o == Orientation.ACROSS) {
         col++;
       } else if (o == Orientation.DOWN) {
@@ -105,9 +129,8 @@ public class Crossword {
     }
   }
 
-  public void setCell(int col, int row, char c, Orientation o) {
-    puzzle[col][row] = new Box(c, o);
-
+  public void setCell(int col, int row, char c) {
+    puzzle[row][col] = new Box(c);
   }
 
   public List<Word> suggestCoordForWord(String word) {
@@ -116,12 +139,12 @@ public class Crossword {
     for (int i = 0; i < word.length(); i++) {
       for (int j = 0; j < ROWS; j++) {
         for (int k = 0; k < COLS; k++) {
-          if (puzzle[k][j] != null) {
+          if (puzzle[j][k] != null) {
             // System.out.print("(" + k + ", " + j + "): ");
             // System.out.println(puzzle[k][j]);
             // System.out.println("why am i stuck in here");
 
-            if (Character.toUpperCase(word.charAt(i)) == puzzle[k][j]
+            if (Character.toUpperCase(word.charAt(i)) == puzzle[j][k]
                 .getLetter()) {
               // System.out.println("char in concern: " + Character.toUpperCase(
               // word.charAt(i)));
@@ -162,7 +185,7 @@ public class Crossword {
     int letterCount = 1;
     for (int i = 0; i < length; i++) {
 
-      Box currBox = puzzle[col][row];
+      Box currBox = puzzle[row][col];
       char currLetter = Character.toUpperCase((word).charAt(i));
       if (currBox != null) {
         if (currBox.getLetter() != currLetter) {
@@ -296,7 +319,7 @@ public class Crossword {
   }
 
   public boolean isBoxEmpty(int col, int row) {
-    Box currBox = puzzle[col][row];
+    Box currBox = puzzle[row][col];
     return currBox == null;
 
   }
@@ -318,14 +341,13 @@ public class Crossword {
   @Override
   public String toString() {
     StringBuffer toReturn = new StringBuffer();
+    for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLS; j++) {
-        for (int i = 0; i < ROWS; i++) {
-        Box currBox = puzzle[j][i];
+        Box currBox = puzzle[i][j];
         if (currBox == null) {
           toReturn.append("_ ");
-          puzzle[j][i] = new Box();
         } else {
-          toReturn.append(puzzle[j][i].getLetter() + " ");
+          toReturn.append(puzzle[i][j].getLetter() + " ");
         }
       }
       toReturn.append("\n");
