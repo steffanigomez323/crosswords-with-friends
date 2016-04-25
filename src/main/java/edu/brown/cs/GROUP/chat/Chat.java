@@ -62,7 +62,7 @@ public class Chat {
   }
 
   public static String censorMessage(Set<String> censorList, String message) {
-    String cleanedMessage = message.replace("[^a-zA-Z ]", "");
+    String cleanedMessage = message.replace("[^a-zA-Z ]", "").toLowerCase();
     String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
       if (censorList.contains(messageArray[i])) {
