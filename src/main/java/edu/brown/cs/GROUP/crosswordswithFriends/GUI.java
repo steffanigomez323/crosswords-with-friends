@@ -1,17 +1,18 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+
+import edu.brown.cs.GROUP.chat.Chat;
+import edu.brown.cs.GROUP.database.Database;
+import freemarker.template.Configuration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-
-import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.chat.Chat;
-import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -39,9 +40,10 @@ public class GUI {
    *
    * @param port Port number specified by command line or 4567 by default
    * @param d Database connection path
-   * @throws IOException 
+   * @throws IOException
    */
-  public GUI(int port, Database d) throws IOException {
+  public GUI(int port, Database d) {
+    Spark.port(port);
     db = d;
     // List<String> words = db.getAllUnderSeven();
     // Crossword puzzle = new Crossword(words);
@@ -74,11 +76,16 @@ public class GUI {
     return new FreeMarkerEngine(config);
   }
 
-  /** Runs the server. Organizes get and put requests. 
+  /** Runs the server. Organizes get and put requests.
    * @throws IOException */
-  private void runSparkServer() throws IOException {
+  private void runSparkServer() {
     Spark.externalStaticFileLocation("src/main/resources/static");
-    Chat.initChatroom();
+    try {
+      Chat.initChatroom();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     FreeMarkerEngine freeMarker = createEngine();
     Spark.get("/home", new FrontHandler(db), freeMarker);
     Spark.get("/check", new CheckHandler());
@@ -95,9 +102,9 @@ public class GUI {
     }
     @Override
     public ModelAndView handle(Request req, Response res) {
-      
+
       Integer id2 = id.get();
-      System.out.println("Atomic id : "+id2);
+
       Crossword puzzle = crosswordCache.get(id2);
       if (puzzle == null || puzzle.getPlayers()==2) {
         if (puzzle == null){
@@ -112,67 +119,14 @@ public class GUI {
         puzzle.addPlayer();
       }
 
-
-      /*
-       * words.add(new Word("Bruh", 0, 0, Orientation.ACROSS,
-       * "\"Dude, cmon ...,\" in modern lingo")); words.add(new Word("Ripen", 0,
-       * 1, Orientation.ACROSS, "Turn yellow, as a banana")); words.add(new
-       * Word("Apple", 0, 2, Orientation.ACROSS,
-       * "Company that tangled with the F.B.I. over encryption")); words.add(new
-       * Word("Duels", 0, 3, Orientation.ACROSS, "Burr vs. Hamilton and others"
-       * )); words.add(new Word("Pros", 1, 4, Orientation.ACROSS, "___ and cons"
-       * )); words.add(new Word("Brad", 0, 0, Orientation.DOWN,
-       * "Pitt of \"The Big Short\"")); words.add(new Word("Ripup", 1, 0,
-       * Orientation.DOWN, "Tear to pieces")); words.add(new Word("Upper", 2, 0,
-       * Orientation.DOWN, "Opposite of lower")); words.add(new Word("Hello", 3,
-       * 0, Orientation.DOWN, "One meaning of \"aloha\"")); words.add(new
-       * Word("Ness", 4, 1, Orientation.DOWN, "Loch ___ monster"));
-       */
-      // System.out.println(puzzle.getFinalList());
       List<Word> toPass = puzzle.getFinalList();
       Chat.setCensorWords(toPass);
-      System.out.println(puzzle.toString());
-      System.out.println("id : "+id2.toString());
+
       Box[][] crossword = puzzle.getArray();
-
-//      Box[][] crossword = new Box[COLS][ROWS];
-
-//      for (int i=0; i<crossword.length; i++){
-//        for (int j=0; j<crossword[0].length; j++){
-//          crossword[i][j] = new Box();
-//        }
-//      }
-//
-//      for (Word w : toPass) {
-//        String word = w.getWord();
-//        int x = w.getXIndex();
-//        int y = w.getYIndex();
-//        Orientation o = w.getOrientation();
-//
-//        Box b = crossword[y][x];
-//        if (b.getIsBox()){
-//          crossword[y][x] = new Box(word.charAt(0), w.getClue(), o);
-//        } else {
-//          b.addClue(w.getClue(), o);
-//        }
-//        for (int i=1; i<word.length(); i++){
-//          if (o == Orientation.ACROSS){
-//            x++;
-//          } else {
-//            y++;
-//          }
-//          char c = word.charAt(i);
-//          b = crossword[y][x];
-//          if (b.getIsBox()){
-//            crossword[y][x] = new Box(c);
-//          }
-//        }
-//      }
-
+      System.out.println(puzzle);
 
       crosswordCache.put(id2, puzzle);
 
-      //System.out.println("room number " + Chat.getRoomNumber());
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
           .put("crossword", crossword)
@@ -192,13 +146,13 @@ public class GUI {
       QueryParamsMap qm = req.queryMap();
 
       String word = qm.value("word");
-      int x = Integer.valueOf(qm.value("x"));
       int y = Integer.valueOf(qm.value("y"));
+      int x = Integer.valueOf(qm.value("x"));
       Orientation orientation = Orientation.valueOf(qm.value("orientation"));
       Integer id = Integer.valueOf(qm.value("id"));
 
       System.out.println("Cool!");
-      
+
       if (!crosswordCache.containsKey(id)) {
         return "false";
       }
@@ -221,7 +175,7 @@ public class GUI {
       return "true";
     }
   }
-  
+
   /** Handler for serving chat page. */
   private static class ChatHandler implements TemplateViewRoute {
 
@@ -234,5 +188,5 @@ public class GUI {
     }
 
   }
-  
+
 }

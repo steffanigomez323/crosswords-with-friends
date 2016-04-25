@@ -1,7 +1,18 @@
+body{
+	font-family: 'Montserrat', sans-serif;
+}
+
 .box{
 	width: 50px;
-	height:50px;
+	height: 50px;
+}
+
+.boxWrap{
 	display: inline-block;
+	width: 50px;
+	height: 50px;
+	position: relative;
+	
 }
 
 .row{
@@ -114,4 +125,21 @@ li {
     from { transform: none;        }
     50%  { transform: scale(1.05); }
     to   { transform: none;        }
+}
+
+#clues{
+	width: 300px;
+	border: 1px black dashed;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 50px;
+	text-decoration: none;
+}
+
+.numMarker{
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	font-size: 8px;
 }
