@@ -18,15 +18,11 @@ public class Chat {
 
   static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
   static Set<String> stopWords = new HashSet<String>();
-  static Set<Room> rooms = new HashSet<Room>();
+  static Map<Integer, List<Session>> roomUsers = new HashMap<Integer, List<Session>>();
   static Set<String> wordsToCensor = new HashSet<String>();
-  static int nextRoomNumber = 1; //Assign to username for next connecting user
+  
 
   public static void main(String[] args) throws IOException {
-  }
-  
-  public static Integer getRoomNumber() {
-    return nextRoomNumber;
   }
 
   public static void initChatroom() throws IOException {
@@ -43,7 +39,7 @@ public class Chat {
       e.printStackTrace();
     }
     //staticFileLocation("static"); //index.html is served at localhost:4567 (default port)
-    webSocket("/chat/1", ChatWebSocketHandler.class);
+    webSocket("/chat", ChatWebSocketHandler.class);
     init();
   }
 
@@ -90,16 +86,25 @@ public class Chat {
   }
 
   //Sends a message from one user to all users, along with a list of current usernames
-  public static void broadcastMessage(String sender, String message) {
-    userUsernameMap.keySet().stream().filter(Session::isOpen).forEach(session -> {
-      try {
-        session.getRemote().sendString(String.valueOf(new JSONObject()
-            .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor, message)))
-            ));
-      } catch (Exception e) {
-        e.printStackTrace();
+  public static void broadcastMessage(String sender, String message, Integer roomId) {
+    try {
+      System.out.println("room id " + roomId);
+      if (roomUsers.get(roomId) != null ) {
+        System.out.println("room id " + roomId + roomUsers.get(roomId));
+      for (Session session : roomUsers.get(roomId)) {
+        System.out.println("in broadcast message");
+        System.out.println("sender " + sender);
+        if (session.isOpen()) {
+          System.out.println("sesion is open");
+          session.getRemote().sendString(String.valueOf(new JSONObject()
+              .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor, message)))
+              ));
+        }
       }
-    });
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   //Builds a HTML element with a sender-name, a message, and a timestamp,
