@@ -5,19 +5,14 @@
 <div id=${id} class="crossword">
 <#assign num=1>
 <#list crossword as row>
-		<div class="col">
+		<div class="row">
 	<#list row as col>
 		<div class="boxWrap">
 		<#if col.isBox >
 			<div class = "box filled c${col_index} r${row_index}"></div>
 		<#else>
 			<#assign start=false>
-			<textarea class = "box c${col_index} r${row_index}" spellcheck="false" maxlength="1" ></textarea>
-		    <#list col.clues as clue>
-				<#if clue.clue??>
-					<#assign start=true>
-				</#if>
-			</#list>
+			<textarea class = "box c${col_index} r${row_index} <#list col.clues as clue>${clue.orientation}${clue.size} <#if clue.clue??><#assign start=true></#if></#list>" spellcheck="false" maxlength="1" ></textarea>
 				
 			<#if start>
 		    	<div class="numMarker">${num}</div>

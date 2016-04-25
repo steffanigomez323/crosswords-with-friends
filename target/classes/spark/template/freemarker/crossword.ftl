@@ -5,19 +5,19 @@
 <div id=${id} class="crossword">
 <#assign num=1>
 <#list crossword as row>
-		<div class="col">
+		<div class="row">
 	<#list row as col>
 		<div class="boxWrap">
 		<#if col.isBox >
 			<div class = "box filled c${col_index} r${row_index}"></div>
 		<#else>
-		    <#if col.clues?? >
-		    	<textarea class = "box c${col_index} r${row_index}" spellcheck="false" maxlength="1" ></textarea>
+			<#assign start=false>
+			<textarea class = "box c${col_index} r${row_index} <#list col.clues as clue>${clue.orientation}${clue.size} <#if clue.clue??><#assign start=true></#if></#list>" spellcheck="false" maxlength="1" ></textarea>
+				
+			<#if start>
 		    	<div class="numMarker">${num}</div>
-				<#assign num = num + 1>
-			<#else>
-				<textarea class = "box c${col_index} r${row_index}" spellcheck="false" maxlength="1" ></textarea>
-			</#if>
+		    	<#assign num = num + 1>
+		    </#if>
 		</#if>
 		</div>
 	</#list>
@@ -28,16 +28,20 @@
 <#assign num=1>
 <#list crossword as row>
 	<#list row as col>
-		<#if col.clues?? >
+		<#assign start=false>
+		<#if col.clues?? &&  (col.clues?size > 0)>
 			<#list col.clues as clue>
-					hi
-					<#if clue.orientation == "ACROSS" >
+					<#if clue.clue?? && clue.orientation == "ACROSS" >
 						<li class="across">${clue.orientation} ${num} : ${clue.clue}</li>
-					<#else>
+						<#assign start=true>
+					<#elseif clue.clue?? >
 						<li class="down">${clue.orientation} ${num} : ${clue.clue}</li>
+						<#assign start=true>
 					</#if>
 			</#list>
-			<#assign num = num + 1>
+			<#if start>
+		    	<#assign num = num + 1>
+		    </#if>
 		</#if>
 	</#list>
 </#list>

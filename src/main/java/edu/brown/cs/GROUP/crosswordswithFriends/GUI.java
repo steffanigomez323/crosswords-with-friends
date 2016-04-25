@@ -124,7 +124,7 @@ public class GUI {
 
       Box[][] crossword = puzzle.getArray();
       System.out.println(puzzle);
-      
+
       crosswordCache.put(id2, puzzle);
 
       ImmutableMap<String, Object> variables =
@@ -146,8 +146,8 @@ public class GUI {
       QueryParamsMap qm = req.queryMap();
 
       String word = qm.value("word");
-      int x = Integer.valueOf(qm.value("x"));
       int y = Integer.valueOf(qm.value("y"));
+      int x = Integer.valueOf(qm.value("x"));
       Orientation orientation = Orientation.valueOf(qm.value("orientation"));
       Integer id = Integer.valueOf(qm.value("id"));
 
