@@ -34,6 +34,7 @@ public class Database {
     Class.forName("org.sqlite.JDBC");
 
     String urlToDB = "jdbc:sqlite:" + db;
+
     Connection connect = DriverManager.getConnection(urlToDB);
     this.conn = connect;
 
@@ -68,14 +69,14 @@ public class Database {
 
   }
 
-  public List<String> getAllUnderSeven() {
+  public List<String> getAllUnderNine() {
     List<String> words = new ArrayList<String>();
-    String query =
-        "SELECT * FROM cluewords WHERE length<=9 ORDER BY length DESC;";
+    String query = "SELECT * FROM cluewords WHERE length<=9 ORDER BY length DESC;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
       try (ResultSet rs = prep.executeQuery()) {
         while (rs.next()) {
           String word = rs.getString(1);
+          // System.out.println(word);
           words.add(word);
         }
       }
@@ -93,6 +94,7 @@ public class Database {
       try (ResultSet rs = prep.executeQuery()) {
         while (rs.next()) {
           clue = rs.getString(1);
+          System.out.println("CLUE: " + clue);
         }
       }
     } catch (SQLException e) {
