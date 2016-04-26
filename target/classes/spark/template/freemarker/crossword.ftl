@@ -47,5 +47,5 @@
 </#list>
 </ul>
 </div>
-<iframe id="ifrm" src="/chat" align="center"></iframe>
+<iframe id="ifrm" src="/chatroom" align="center"></iframe>
 <script>console.log("room number");</script>

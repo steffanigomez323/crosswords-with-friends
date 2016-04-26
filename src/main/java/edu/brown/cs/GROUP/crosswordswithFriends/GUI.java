@@ -34,7 +34,7 @@ public class GUI {
 
   private Database db;
   private Crossword puzzle;
-  private static AtomicInteger id;
+  public static AtomicInteger id;
   /**
    * Constructor starts server on instantiation.
    *
@@ -89,7 +89,7 @@ public class GUI {
     FreeMarkerEngine freeMarker = createEngine();
     Spark.get("/home", new FrontHandler(db), freeMarker);
     Spark.get("/check", new CheckHandler());
-    Spark.get("/chat", new ChatHandler(), freeMarker);
+    Spark.get("/chatroom", new ChatHandler(), freeMarker);
   }
 
   /** Handler for serving main page. */
@@ -131,7 +131,7 @@ public class GUI {
           new ImmutableMap.Builder<String, Object>()
           .put("crossword", crossword)
           .put("id", id2.toString())
-          .put("roomNumber", Chat.getRoomNumber())
+          .put("roomNumber", id2.toString())
           .build();
 
       return new ModelAndView(variables, "crossword.ftl");
@@ -183,7 +183,7 @@ public class GUI {
     public ModelAndView handle(Request req, Response res) {
       System.out.println("in chat handler " );
       ImmutableMap<String, Object> variables =
-          new ImmutableMap.Builder<String, Object>().put("roomNumber", Chat.getRoomNumber()).build();
+          new ImmutableMap.Builder<String, Object>().put("roomNumber", id.get()).build();
       return new ModelAndView(variables, "chat.ftl");
     }
 

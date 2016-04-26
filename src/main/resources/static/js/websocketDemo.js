@@ -1,6 +1,6 @@
 //Establish the WebSocket connection and set up event handlers
-var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/chat/1");
-webSocket.onmessage = function (msg) { updateChat(msg); };
+var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/chat/");
+webSocket.onmessage = function (msg) { console.log("in on message"); updateChat(msg); };
 webSocket.onclose = function () { alert("WebSocket connection closed ") };
 
 //Send message if "Send" is clicked
@@ -16,6 +16,7 @@ id("message").addEventListener("keypress", function (e) {
 //Send a message if it's not empty, then clear the input field
 function sendMessage(message) {
     if (message !== "") {
+    	console.log("typed + message" + message);
         webSocket.send(message);
         id("message").value = "";
     }
@@ -25,11 +26,13 @@ function sendMessage(message) {
 function updateChat(msg) {
     var data = JSON.parse(msg.data);
     insert("chat", data.userMessage);
+    console.log("inserted");
     id("userlist").innerHTML = "";
     data.userlist.forEach(function (user) {
         insert("userlist", "<li>" + user + "</li>");
     });
 }
+
 
 //Helper function for inserting HTML as the first child of an element
 function insert(targetId, message) {

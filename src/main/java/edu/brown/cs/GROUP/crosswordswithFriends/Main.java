@@ -68,7 +68,7 @@ public final class Main {
    */
 
   private void run() throws IOException {
-    
+
     OptionParser parser = new OptionParser();
     OptionSpec<String> database = parser.accepts("db").withRequiredArg()
         .ofType(String.class);
@@ -90,7 +90,7 @@ public final class Main {
 
       } catch (Exception e) {
         System.out
-        .println("ERROR: Please provide a valid argument to --db");
+            .println("ERROR: Please provide a valid argument to --db");
         throw new FileNotFoundException();
       }
       try {
@@ -106,23 +106,21 @@ public final class Main {
       System.err.println("ERROR: Invalid number of arguments. USAGE: "
           + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
       throw new IOException();
-    }
-    else {
+    } else {
       CSVReader reader = new CSVReader();
       if (!options.valuesOf(files).isEmpty()) {
         assert (db != null);
         try {
           for (String s : options.valuesOf(files)) {
-            reader.readtoDB(s,
-                db.getConnection());
+            reader.readtoDB(s, db.getConnection());
           }
         } catch (SQLException e) {
-          System.err.println(
-              "ERROR: Cannot write information to the database.");
+          System.err
+              .println("ERROR: Cannot write information to the database.");
           return;
         } catch (IOException e) {
-          System.err.println(
-              "ERROR: Cannot read from the corpus file given.");
+          System.err
+              .println("ERROR: Cannot read from the corpus file given.");
           return;
         }
       } else {
@@ -140,8 +138,7 @@ public final class Main {
           for (String s : ip) {
             Path file = Paths.get(s);
             try {
-              if (Files.isRegularFile(file) &
-                  Files.isReadable(file)) {
+              if (Files.isRegularFile(file) & Files.isReadable(file)) {
                 reader.readtoDB(s, db.getConnection());
               } else {
                 System.err.println(
@@ -161,8 +158,8 @@ public final class Main {
           input = sysreader.readLine();
         }
       } catch (IOException e) {
-        System.err.println(
-            "ERROR: Unable to read input from the command line.");
+        System.err
+            .println("ERROR: Unable to read input from the command line.");
         throw new IOException();
       }
     }
