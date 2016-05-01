@@ -1,45 +1,72 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import edu.brown.cs.GROUP.database.Database;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.brown.cs.GROUP.database.Database;
+
 public class Crossword {
 
   private Box[][] puzzle;
-  private List<String> words;
+  private List<String> originalList;
+  private List<String> unusedWords;
   private static final int ROWS = 9;
   private static final int COLS = 9;
-  private List<String> unusedWords;
   private Set<String> usedWords;
   private List<Word> finalList;
   private Database db;
   private int players;
 
-  public Crossword(List<String> words, Database db) {
-    unusedWords = new ArrayList<String>(words);
+  public Crossword(List<String> originalList, Database db) {
     usedWords = new HashSet<String>();
     finalList = new ArrayList<Word>();
     puzzle = new Box[ROWS][COLS];
-    this.words = words;
+    this.originalList = originalList;
+    unusedWords = new ArrayList<String>(originalList);
     shuffleAndSortWords();
-    unusedWords = new ArrayList<String>(words);
-    System.out.println(words);
     this.db = db;
     players = 1;
+    String firstWord = unusedWords.remove(0);
+    fillPuzzle(firstWord);
+
+    // System.out.println("unused words: " + unusedWords);
   }
 
-  public void fillPuzzle() {
+  public void fillPuzzle(String firstWord) {
 
+    Collections.shuffle(unusedWords);
+    fitAndAdd(firstWord);
+    System.out.println("where am i getting stuck");
+    usedWords.add(firstWord);
+
+    for (String word : unusedWords) {
+
+      if (!usedWords.contains(word)) {
+        // System.out.println("word: " + word);
+        fitAndAdd(word);
+      }
+    }
     for (String word : unusedWords) {
       if (!usedWords.contains(word)) {
         fitAndAdd(word);
       }
-
+    }
+    int acrossCount = 0;
+    int downCount = 0;
+    for (int i = 0; i < finalList.size(); i++) {
+      if (finalList.get(i).getOrientation() == Orientation.ACROSS) {
+        acrossCount += 1;
+      } else {
+        downCount += 1;
+      }
+    }
+    if (acrossCount < 4 || downCount < 4) {
+      System.out.println("I'm refilling");
+      System.out.println("final list: " + finalList);
+      refill();
     }
 
     for (int j = 0; j < COLS; j++) {
@@ -51,7 +78,16 @@ public class Crossword {
       }
     }
 
+  }
 
+  public void refill() {
+    puzzle = new Box[ROWS][COLS];
+    finalList = new ArrayList<Word>();
+    unusedWords = new ArrayList<String>(originalList);
+    usedWords = new HashSet<String>();
+    String firstWord = unusedWords.remove(0);
+
+    fillPuzzle(firstWord);
   }
 
   public int getPlayers(){
@@ -66,20 +102,15 @@ public class Crossword {
     int count = 0;
     while (!fit) {
       if (finalList.size() == 0) {
-        System.out.println("why am i in here?");
         Orientation o = Orientation.ACROSS;
         int row = 0;
         int col = 0;
         if (checkFit(col, row, o, word) > 0) {
           fit = true;
-
           setWord(col, row, o, word);
-          //System.out.println(this);
         }
       } else {
-        // System.out.println("getting in here");
         List<Word> coordList = suggestCoordForWord(word);
-        // System.out.println(coordList);
         if (coordList.size() == 0) {
           break;
         }
@@ -101,11 +132,9 @@ public class Crossword {
   }
 
   public void setWord(int col, int row, Orientation o, String word) {
-    System.out.println(word + ": " + "(" + col + "," + row + ")" + ", " + o);
+    // System.out.println(word + ": " + "(" + col + "," + row + ")" + ", " + o);
     String clue = db.getClue(word.toLowerCase());
     finalList.add(new Word(word, col, row, o, 1, clue));
-
-
     for (int i = 0; i < word.length(); i++) {
       if (puzzle[row][col] == null){
         if (i == 0){
@@ -134,36 +163,21 @@ public class Crossword {
   }
 
   public List<Word> suggestCoordForWord(String word) {
-    // System.out.println("stuck word: " + word);
     List<Word> coordList = new ArrayList<Word>();
     for (int i = 0; i < word.length(); i++) {
       for (int j = 0; j < ROWS; j++) {
         for (int k = 0; k < COLS; k++) {
           if (puzzle[j][k] != null) {
-            // System.out.print("(" + k + ", " + j + "): ");
-            // System.out.println(puzzle[k][j]);
-            // System.out.println("why am i stuck in here");
-
             if (Character.toUpperCase(word.charAt(i)) == puzzle[j][k]
                 .getLetter()) {
-              // System.out.println("char in concern: " + Character.toUpperCase(
-              // word.charAt(i)));
-              // System.out.println("puzzle letter: " +
-              // puzzle[k][j].getLetter());
-              // System.out.println("I should not be getting in here for
-              // concern");
               if (j - i >= 0) { // vertical placement
                 if (j - i + word.length() <= ROWS) {
-                  // System.out.println("getting in vertical");
                   coordList.add(new Word(word, k, j - i, Orientation.DOWN,
                       0));
                 }
               }
-              // k should be either 0 or 4
-              // i should be 4
               if (k - i >= 0) { // horizontal placement
                 if (k - i + word.length() <= COLS) {
-                  // System.out.println("getting in across");
                   coordList.add(new Word(word, k - i, j, Orientation.ACROSS,
                       0));
                 }
@@ -173,29 +187,23 @@ public class Crossword {
         }
       }
     }
-    // System.out.println("ever getting to return?")
     return coordList;
   }
 
   public int checkFit(int col, int row, Orientation o, String word) {
-    // System.out.println("getting into check fit");
-    // System.out.println("(" + col + ", " + row + "), " + o);
     int length = word.length();
     int score = 1;
     int letterCount = 1;
     for (int i = 0; i < length; i++) {
-
       Box currBox = puzzle[row][col];
       char currLetter = Character.toUpperCase((word).charAt(i));
       if (currBox != null) {
         if (currBox.getLetter() != currLetter) {
-          // System.out.println("this should be getting here");
           return 0;
         }
         if (currBox.getLetter() == currLetter) {
           score += 1;
         }
-
         if (o == Orientation.DOWN) {
           if (currBox.getLetter() != currLetter) {
             if (col < COLS - 1) {
@@ -325,8 +333,8 @@ public class Crossword {
   }
 
   private void shuffleAndSortWords() {
-    Collections.shuffle(words);
-    Collections.sort(words, (word1, word2) -> (word2.length() - word1
+    Collections.shuffle(unusedWords);
+    Collections.sort(unusedWords, (word1, word2) -> (word2.length() - word1
         .length()));
   }
 
