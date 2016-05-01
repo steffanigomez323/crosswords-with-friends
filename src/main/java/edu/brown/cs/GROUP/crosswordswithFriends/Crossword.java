@@ -65,7 +65,7 @@ public class Crossword {
     }
     if (acrossCount < 4 || downCount < 4) {
       System.out.println("I'm refilling");
-      System.out.println("final list: " + finalList);
+      // System.out.println("final list: " + finalList);
       refill();
     }
 
