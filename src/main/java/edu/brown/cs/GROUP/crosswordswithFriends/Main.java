@@ -4,6 +4,7 @@ import edu.brown.cs.GROUP.database.Database;
 import edu.brown.cs.GROUP.words.CSVReader;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+
+import edu.brown.cs.GROUP.words.TXTReader;
 
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -91,7 +94,7 @@ public final class Main {
 
       } catch (Exception e) {
         System.out
-        .println("ERROR: Please provide a valid argument to --db");
+            .println("ERROR: Please provide a valid argument to --db");
         throw new FileNotFoundException();
       }
       try {
@@ -107,23 +110,33 @@ public final class Main {
       System.err.println("ERROR: Invalid number of arguments. USAGE: "
           + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
       throw new IOException();
-    }
-    else {
-      CSVReader reader = new CSVReader();
+    } else {
+      CSVReader csvreader = new CSVReader();
+      TXTReader txtreader = new TXTReader();
       if (!options.valuesOf(files).isEmpty()) {
         assert (db != null);
         try {
           for (String s : options.valuesOf(files)) {
-            reader.readtoDB(s,
-                db.getConnection());
+            File filename = new File(s);
+            if (filename.getName().endsWith(".txt")) {
+              txtreader.readtoDB(filename, db.getConnection());
+            } else if (filename.getName().endsWith(".csv")) {
+              csvreader.readtoDB(filename, db.getConnection());
+            } else {
+              System.err.println(
+                  "ERROR: The given file must be either .txt file or "
+                      + "a .csv file");
+              return;
+            }
           }
         } catch (SQLException e) {
-          System.err.println(
-              "ERROR: Cannot write information to the database.");
+          e.printStackTrace();
+          System.err
+              .println("ERROR: Cannot write information to the database.");
           return;
         } catch (IOException e) {
-          System.err.println(
-              "ERROR: Cannot read from the corpus file given.");
+          System.err
+              .println("ERROR: Cannot read from the corpus file given.");
           return;
         }
       } else {
@@ -131,6 +144,7 @@ public final class Main {
             "ERROR: There must be at least one corpus file to start the program with.");
         return;
       }
+      System.out.println("here");
       new GUI(PORT, db);
       try {
         InputStreamReader isr = new InputStreamReader(System.in, "UTF8");
@@ -141,9 +155,18 @@ public final class Main {
           for (String s : ip) {
             Path file = Paths.get(s);
             try {
-              if (Files.isRegularFile(file) &
-                  Files.isReadable(file)) {
-                reader.readtoDB(s, db.getConnection());
+              if (Files.isRegularFile(file) & Files.isReadable(file)) {
+                File filename = new File(s);
+                if (filename.getName().endsWith(".txt")) {
+                  txtreader.readtoDB(filename, db.getConnection());
+                } else if (filename.getName().endsWith(".csv")) {
+                  csvreader.readtoDB(filename, db.getConnection());
+                } else {
+                  System.err.println(
+                      "ERROR: The given file must be either .txt file or "
+                          + "a .csv file");
+                  return;
+                }
               } else {
                 System.err.println(
                     "ERROR: The file entered is not a file accessable "
@@ -162,8 +185,8 @@ public final class Main {
           input = sysreader.readLine();
         }
       } catch (IOException e) {
-        System.err.println(
-            "ERROR: Unable to read input from the command line.");
+        System.err
+            .println("ERROR: Unable to read input from the command line.");
         throw new IOException();
       }
     }

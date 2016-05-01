@@ -34,7 +34,8 @@ public class GUI {
 
   private Database db;
   private Crossword puzzle;
-  private static AtomicInteger id;
+  public static AtomicInteger id;
+
   /**
    * Constructor starts server on instantiation.
    *
@@ -77,8 +78,10 @@ public class GUI {
     return new FreeMarkerEngine(config);
   }
 
-  /** Runs the server. Organizes get and put requests.
-   * @throws IOException */
+  /**
+   * Runs the server. Organizes get and put requests.
+   * @throws IOException
+   */
   private void runSparkServer() {
     Spark.externalStaticFileLocation("src/main/resources/static");
     try {
@@ -90,7 +93,7 @@ public class GUI {
     FreeMarkerEngine freeMarker = createEngine();
     Spark.get("/home", new FrontHandler(db), freeMarker);
     Spark.get("/check", new CheckHandler());
-    Spark.get("/chat", new ChatHandler(), freeMarker);
+    Spark.get("/chatroom", new ChatHandler(), freeMarker);
   }
 
   /** Handler for serving main page. */
@@ -101,19 +104,20 @@ public class GUI {
     public FrontHandler(Database db) {
       this.db = db;
     }
+
     @Override
     public ModelAndView handle(Request req, Response res) {
 
       Integer id2 = id.get();
 
       Crossword puzzle = crosswordCache.get(id2);
-      if (puzzle == null || puzzle.getPlayers()==2) {
-        if (puzzle == null){
+      if (puzzle == null || puzzle.getPlayers() == 2) {
+        if (puzzle == null) {
           id2 = id.get();
         } else {
           id2 = id.incrementAndGet();
         }
-        List<String> words = db.getAllUnderSeven();
+        List<String> words = db.getAllUnderNine();
         puzzle = new Crossword(words, db);
         puzzle.fillPuzzle();
       } else {
@@ -128,12 +132,9 @@ public class GUI {
 
       crosswordCache.put(id2, puzzle);
 
-      ImmutableMap<String, Object> variables =
-          new ImmutableMap.Builder<String, Object>()
-          .put("crossword", crossword)
-          .put("id", id2.toString())
-          .put("roomNumber", Chat.getRoomNumber())
-          .build();
+      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+          .put("crossword", crossword).put("id", id2.toString())
+          .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword.ftl");
     }
@@ -149,7 +150,8 @@ public class GUI {
       String word = qm.value("word");
       int y = Integer.valueOf(qm.value("y"));
       int x = Integer.valueOf(qm.value("x"));
-      Orientation orientation = Orientation.valueOf(qm.value("orientation"));
+      Orientation orientation = Orientation
+          .valueOf(qm.value("orientation"));
       Integer id = Integer.valueOf(qm.value("id"));
 
       if (!crosswordCache.containsKey(id)) {
@@ -158,12 +160,11 @@ public class GUI {
       System.out.println("checking : " + word);
       Crossword puzzle = crosswordCache.get(id);
       Box[][] crossword = puzzle.getArray();
-      for (int i = 0; i < word.length(); i++){
+      for (int i = 0; i < word.length(); i++) {
         Box box = crossword[y][x];
         box.printLetter();
         if (!box.checkVal(word.charAt(i))) {
-          System.out.println(" CHECK : "+ word.charAt(i));
-          System.out.println("x : "+x+" y : "+y);
+          System.out.println("CHECK : " + word.charAt(i));
           return "false";
         }
         if (orientation == Orientation.ACROSS) {
@@ -181,9 +182,9 @@ public class GUI {
 
     @Override
     public ModelAndView handle(Request req, Response res) {
-      System.out.println("in chat handler " );
-      ImmutableMap<String, Object> variables =
-          new ImmutableMap.Builder<String, Object>().put("roomNumber", Chat.getRoomNumber()).build();
+      System.out.println("in chat handler ");
+      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+          .put("roomNumber", id.get()).build();
       return new ModelAndView(variables, "chat.ftl");
     }
 
