@@ -12,8 +12,8 @@ edu/brown/cs/GROUP/crosswordswithFriends/Crossword.class
 edu/brown/cs/GROUP/chat/ChatWebSocketHandler.class
 edu/brown/cs/GROUP/crosswordswithFriends/Clue.class
 edu/brown/cs/GROUP/words/ClueWordGetter.class
+edu/brown/cs/GROUP/chat/Chat.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$ChatHandler.class
 edu/brown/cs/GROUP/words/CSVReader.class
-edu/brown/cs/GROUP/chat/Chat.class
 edu/brown/cs/GROUP/database/Database.class
 edu/brown/cs/GROUP/crosswordswithFriends/Coordinate.class

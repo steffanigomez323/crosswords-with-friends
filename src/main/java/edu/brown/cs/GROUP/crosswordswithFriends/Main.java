@@ -1,5 +1,8 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.words.CSVReader;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,8 +12,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
-import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.words.CSVReader;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -68,7 +69,7 @@ public final class Main {
    */
 
   private void run() throws IOException {
-    
+
     OptionParser parser = new OptionParser();
     OptionSpec<String> database = parser.accepts("db").withRequiredArg()
         .ofType(String.class);

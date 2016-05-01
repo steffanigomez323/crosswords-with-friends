@@ -57,7 +57,6 @@ public class CSVReader {
     String line = reader.readLine();
     if (line != null) {
       List<String> headers = Arrays.asList(line.split(","));
-      // }
 
       int nameidx = headers.indexOf("Word");
       int clueidx = headers.indexOf("Clue");
@@ -76,8 +75,11 @@ public class CSVReader {
           ps.addBatch();
 
         }
+        System.out.println("EXECUTING: ");
         ps.executeBatch();
+        System.out.println("Done executing.");
         ps.close();
+        System.out.println("DONE");
       }
     }
   }

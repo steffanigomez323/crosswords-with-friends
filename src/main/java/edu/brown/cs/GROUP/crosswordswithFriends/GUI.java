@@ -43,6 +43,7 @@ public class GUI {
    * @throws IOException
    */
   public GUI(int port, Database d) {
+    System.out.println("here!");
     Spark.port(port);
     db = d;
     // List<String> words = db.getAllUnderSeven();
@@ -151,8 +152,6 @@ public class GUI {
       Orientation orientation = Orientation.valueOf(qm.value("orientation"));
       Integer id = Integer.valueOf(qm.value("id"));
 
-      System.out.println("Cool!");
-
       if (!crosswordCache.containsKey(id)) {
         return "false";
       }
@@ -163,7 +162,8 @@ public class GUI {
         Box box = crossword[y][x];
         box.printLetter();
         if (!box.checkVal(word.charAt(i))) {
-          System.out.println("CHECK : "+ word.charAt(i));
+          System.out.println(" CHECK : "+ word.charAt(i));
+          System.out.println("x : "+x+" y : "+y);
           return "false";
         }
         if (orientation == Orientation.ACROSS) {
