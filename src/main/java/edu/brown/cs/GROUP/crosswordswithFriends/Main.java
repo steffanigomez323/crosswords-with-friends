@@ -153,7 +153,7 @@ public final class Main {
           for (String s : ip) {
             Path file = Paths.get(s);
             try {
-              if (Files.isRegularFile(file) & Files.isReadable(file)) {
+              if (Files.isRegularFile(file) && Files.isReadable(file)) {
                 File filename = new File(s);
                 if (filename.getName().endsWith(".txt")) {
                   txtreader.readtoDB(filename, db.getConnection());

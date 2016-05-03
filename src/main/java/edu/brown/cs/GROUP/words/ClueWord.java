@@ -10,6 +10,7 @@ public interface ClueWord {
    * length.
    * @param size the length of the word.
    * @return a list of words
+   * @throws SQLException exception in case the word is not found
    */
 
   public List<String> getWord(int size) throws SQLException;
@@ -18,6 +19,7 @@ public interface ClueWord {
    * Given a word, return the clue of that word.
    * @param word the word
    * @return the clue
+   * @throws SQLException exception in case the clue is not found
    */
 
   public String getClue(String word) throws SQLException;

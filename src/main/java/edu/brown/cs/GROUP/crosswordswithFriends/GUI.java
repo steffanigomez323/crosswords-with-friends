@@ -40,7 +40,6 @@ public class GUI {
    *
    * @param port Port number specified by command line or 4567 by default
    * @param d Database connection path
-   * @throws IOException
    */
   public GUI(int port, Database d) {
     Spark.port(port);
