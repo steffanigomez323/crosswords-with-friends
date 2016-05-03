@@ -57,9 +57,8 @@ public class Chat {
   public static void setCensorWords(List<Word> toPass) {
     for (Word word : toPass) {
       wordsToCensor.add(word.getWord());
-      String cleanedClue = word.getClue().replace("[^a-zA-Z ]", "");
+      String cleanedClue = word.getClue().replace("[^a-zA-Z ]", "").toLowerCase();
       String[] clueWords = cleanedClue.split(" ");
-      System.out.println("clues " + word.getClue());
       for (String clueWord : clueWords) {
         if (! stopWords.contains(clueWord)) {
           wordsToCensor.add(clueWord);
@@ -99,14 +98,9 @@ public class Chat {
   //Sends a message from one user to all users, along with a list of current usernames
   public static void broadcastMessage(String sender, String message, Integer roomId) {
     try {
-      System.out.println("room id " + roomId);
       if (roomUsers.get(roomId) != null ) {
-        System.out.println("room id " + roomId + roomUsers.get(roomId));
       for (Session session : roomUsers.get(roomId)) {
-        System.out.println("in broadcast message");
-        System.out.println("sender " + sender);
         if (session.isOpen()) {
-          System.out.println("sesion is open");
           session.getRemote().sendString(String.valueOf(new JSONObject()
               .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor, message)))
               ));
@@ -125,15 +119,12 @@ public class Chat {
     Orientation o = Orientation
         .valueOf(variables[4]);
     Integer id = Integer.valueOf(variables[5]);
-    System.out.println("x : "+x+" y: "+y);
     boolean valid = GUI.checkValid(variables[1], x, y, o, id);
-    System.out.println(valid);
     if (valid){
       try {
         if (roomUsers.get(roomId) != null ) {
         for (Session session : roomUsers.get(roomId)) {
           if (session.isOpen()) {
-            System.out.println("broadcastin");
             session.getRemote().sendString(message);
           }
         }

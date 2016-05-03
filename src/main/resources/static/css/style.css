@@ -1,5 +1,10 @@
 body{
 	font-family: 'Montserrat', sans-serif;
+		min-width: 1200px;
+}
+
+window{
+		min-width: 1200px;
 }
 
 .box{
@@ -14,6 +19,13 @@ body{
 	height: 50px;
 	position: relative;
 	
+}
+
+.crossword{
+	background-color: red;
+	min-width: 1200px;
+	height: 500px;
+	position: relative;
 }
 
 #crosswordWrapper{
@@ -135,7 +147,7 @@ li {
 	width: 300px;
 	border: 1px black dashed;
 	position: absolute;
-	right: 0;
+	left: 0;
 	top: 0;
 	padding: 50px;
 	text-decoration: none;

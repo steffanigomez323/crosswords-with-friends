@@ -59,7 +59,6 @@ public class ChatWebSocketHandler {
       if (message.startsWith("DATA")){
         Chat.broadcastCorrect(sender = Chat.userUsernameMap.get(user), message, userRoom.get(user));
       } else {
-        System.out.println("sender " + Chat.userUsernameMap.get(user)  + "message " + message);
         Chat.broadcastMessage(sender = Chat.userUsernameMap.get(user), msg = message, userRoom.get(user));
       }
     }

@@ -63,9 +63,7 @@ public class CSVReader {
           ps.addBatch();
 
         }
-        System.out.println("EXECUTING: ");
         ps.executeBatch();
-        System.out.println("Done executing.");
         ps.close();
         reader.close();
       }
