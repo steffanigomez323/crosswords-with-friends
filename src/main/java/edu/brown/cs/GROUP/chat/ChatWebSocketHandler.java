@@ -35,7 +35,7 @@ public class ChatWebSocketHandler {
         Chat.roomUsers.put(nextRoomNumber,  usersInRoom);
         userRoom.put(user, nextRoomNumber);
         Chat.userUsernameMap.put(user, username);
-        Chat.broadcastMessage(sender = "Server", msg = (username + " joined the chat"), nextRoomNumber);
+        Chat.broadcastStart(sender = "Server", msg = (username + " joined the chat"), nextRoomNumber);
         if (username.contains("across")) {
           nextRoomNumber++;
         }
@@ -58,6 +58,8 @@ public class ChatWebSocketHandler {
     public void onMessage(Session user, String message) {
       if (message.startsWith("DATA")){
         Chat.broadcastCorrect(sender = Chat.userUsernameMap.get(user), message, userRoom.get(user));
+      } else if (message.startsWith("LETTER")){
+
       } else {
         Chat.broadcastMessage(sender = Chat.userUsernameMap.get(user), msg = message, userRoom.get(user));
       }

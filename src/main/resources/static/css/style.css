@@ -1,11 +1,10 @@
 body{
 	font-family: 'Montserrat', sans-serif;
-		min-width: 1200px;
+	min-width: 1200px;
+    background-color: #222222;
+    background: repeating-linear-gradient(45deg, #2b2b2b 0%, #2b2b2b 10%, #222222 0%, #222222 50%) 0 / 15px 15px;
 }
 
-window{
-		min-width: 1200px;
-}
 
 .box{
 	width: 50px;
@@ -21,18 +20,27 @@ window{
 	
 }
 
+#timer, #player {
+	color: white;
+	font-size: 40px;
+}
+
 .crossword{
-	background-color: red;
-	min-width: 1200px;
-	height: 500px;
-	position: relative;
+	width: 1025px;
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
 }
 
 #crosswordWrapper{
 	background-color: black;
 	padding: 2px 0 7px 0;
 	width: 500px;
-	margin: auto;
+	margin: 0;
+	position: absolute;
+	right: 0;
+	display: inline-block;
 }
 
 .row{
@@ -73,13 +81,6 @@ html {
     overflow-y: scroll;
 }
 
-iframe {
-    max-width: 480px;
-    border:1px solid #ccc;
-    width:80%; 
-    height:520px;
-}
-
 input {
     width: 100%;
     padding: 5px;
@@ -92,6 +93,21 @@ button {
 
 li {
     margin: 5px 0;
+}
+
+.hints{
+	float: right;
+}
+#hint1, #hint2, #hint3 {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
 }
 
 #chatControls {
@@ -110,9 +126,20 @@ li {
     top: 11px;
 }
 
+#chatwrapper {
+	width: 500px;
+}
+
+#chat {
+	height: 400px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 #chat p {
     margin: 5px 0;
-    font-weight: 300
+    font-weight: 300;
+    font-size: 12px;
+    text-align: left;
 }
 
 #chat .timestamp {
@@ -131,6 +158,7 @@ li {
     word-wrap: break-word;
 }
 
+
 #chat article:first-of-type {
     background: #c9edc3;
     border-left-color: #74a377;
@@ -143,14 +171,20 @@ li {
     to   { transform: none;        }
 }
 
-#clues{
-	width: 300px;
-	border: 1px black dashed;
+#leftWrapper{
+	width: 500px;
+	margin: 0;
 	position: absolute;
-	left: 0;
-	top: 0;
+	top: -15px;
+	display: inline-block;
+}
+
+#clues{
+	width: 500px;
+	border: 1px black dashed;
 	padding: 50px;
 	text-decoration: none;
+	background-color: white;
 }
 
 .numMarker{
@@ -166,4 +200,75 @@ input[disabled], input:disabled, textarea[disabled], textarea[disabled="disabled
 
 .inactive{
 	background-color: green !important;
+}
+
+#container {
+  width: 500px;
+  margin: auto;
+}
+/*neeeeoooon*/
+
+a {
+  text-align: center;
+  font-size: 3em;
+  margin: 20px 0 20px 0;
+  text-decoration: none;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #fff;
+  font-family: Monoton;
+  -webkit-animation: neon1 1.5s;
+  -moz-animation: neon1 1.5s;
+  animation: neon1 1.5s;
+}
+
+b{
+	font-size: 12px;
+}
+
+
+a:hover {
+  color: #ffffff;
+}
+/*glow for webkit*/
+
+@-webkit-keyframes neon1 {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FFDD1B, 0 0 70px #FFDD1B, 0 0 80px #FFDD1B, 0 0 100px #FFDD1B, 0 0 150px #FFDD1B;
+  }
+  to {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FFDD1B, 0 0 35px #FFDD1B, 0 0 40px #FFDD1B, 0 0 50px #FFDD1B, 0 0 75px #FFDD1B;
+  }
+}
+
+@-moz-keyframes neon1 {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF1177, 0 0 70px #FFDD1B, 0 0 80px #FFDD1B, 0 0 100px #FFDD1B, 0 0 150px #FFDD1B;
+  }
+  to {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FFDD1B, 0 0 35px #FFDD1B, 0 0 40px #FFDD1B, 0 0 50px #FFDD1B, 0 0 75px #FFDD1B;
+  }
+}
+
+
+
+@keyframes neon1 {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FFDD1B, 0 0 70px #FFDD1B, 0 0 80px #FFDD1B, 0 0 100px #FFDD1B, 0 0 150px #FFDD1B;
+  }
+  to {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FFDD1B, 0 0 35px #FFDD1B, 0 0 40px #FFDD1B, 0 0 50px #FFDD1B, 0 0 75px #FFDD1B;
+  }
+}
+
+
+
+@media (max-width: 650px) {
+  #container {
+    width: 100%;
+  }
+  p {
+    font-size: 3.5em;
+  }
 }

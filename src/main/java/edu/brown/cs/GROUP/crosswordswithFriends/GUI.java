@@ -44,24 +44,24 @@ public class GUI {
   }
 
   public static boolean checkValid(String word, int x, int y,  Orientation orientation, Integer id){
-      if (!crosswordCache.containsKey(id)) {
+    if (!crosswordCache.containsKey(id)) {
+      return false;
+    }
+    Crossword puzzle = crosswordCache.get(id);
+    Box[][] crossword = puzzle.getArray();
+    for (int i = 0; i < word.length(); i++) {
+      Box box = crossword[y][x];
+      if (!box.checkVal(word.charAt(i))) {
         return false;
       }
-      Crossword puzzle = crosswordCache.get(id);
-      Box[][] crossword = puzzle.getArray();
-      for (int i = 0; i < word.length(); i++) {
-        Box box = crossword[y][x];
-        if (!box.checkVal(word.charAt(i))) {
-          return false;
-        }
-        if (orientation == Orientation.ACROSS) {
-          x++;
-        } else {
-          y++;
-        }
+      if (orientation == Orientation.ACROSS) {
+        x++;
+      } else {
+        y++;
       }
-      return true;
     }
+    return true;
+  }
 
   /**
    * Creates engine for server.
@@ -143,6 +143,7 @@ public class GUI {
 
       if (puzzle == null){
         puzzle = createCrossword();
+        player = "DOWN";
       } else if (puzzle.getPlayers() != 2){
         puzzle.addPlayer();
       } else {
@@ -160,7 +161,7 @@ public class GUI {
       System.out.println(id2);
 
       List<Word> toPass = puzzle.getFinalList();
-      Chat.setCensorWords(toPass);
+      Chat.setCensorWords(id2, toPass);
 
       Box[][] crossword = puzzle.getArray();
       System.out.println(puzzle);
@@ -226,6 +227,7 @@ public class GUI {
     }
 
   }
+
 
   /** Handler for serving chat page. */
   private static class ChatHandler implements TemplateViewRoute {

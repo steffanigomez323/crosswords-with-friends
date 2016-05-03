@@ -200,6 +200,12 @@ function checkWord(word, x, y, o){
 	webSocket.send(toSend);
 }
 
+function exposeLetter(x, y, o){
+	var id = $(".crossword").attr("id");
+	var toSend = "LETTER;"+x+";"+y+";"+o+";"+id;
+	webSocket.send(toSend);
+}
+
 function wordActive(block){
 	$(block).addClass("wordActive");
 }
@@ -289,6 +295,31 @@ stop.setMinutes(stop.getMinutes() + 10);
 var timer = setInterval(countdown, 1000);
 
 window.onload = function(response) {	
+
+	$("hint1").click(function(){
+		$.get( "/hint1", function(data ) {
+			$("textarea").click(function(){
+				$(".active").removeClass("active");
+				$(this).addClass("active");
+				orient();
+			});
+		});
+		$("hint1").hide();
+	});
+	
+	$("hint2").click(function(){
+		$.get( "/hint2", function(data ) {
+			
+		});
+		$("hint2").hide();
+	});
+	
+	$("hint3").click(function(){
+		$.get( "/hint3", function(data ) {
+			
+		});
+		$("hint3").hide();
+	});
 	
 	numRow = $(".row").length;
 	if (numRow>0){

@@ -40,7 +40,6 @@ public class Crossword {
     usedWords.add(firstWord);
 
     for (String word : unusedWords) {
-
       if (!usedWords.contains(word)) {
         fitAndAdd(word);
       }
@@ -79,7 +78,11 @@ public class Crossword {
     finalList = new ArrayList<Word>();
     unusedWords = new ArrayList<String>(originalList);
     usedWords = new HashSet<String>();
+    shuffleAndSortWords();
     String firstWord = unusedWords.remove(0);
+    Collections.shuffle(unusedWords);
+
+
 
     fillPuzzle(firstWord);
   }
@@ -194,7 +197,36 @@ public class Crossword {
         if (currBox.getLetter() != currLetter) {
           return 0;
         }
+
         if (currBox.getLetter() == currLetter) {
+          if (i + 1 < length) {
+            if (o == Orientation.DOWN) {
+              if (row + 1 < ROWS) {
+                Box nextBox = puzzle[row + 1][col];
+                if (nextBox != null) {
+                  char nextLetterInPuzzle = nextBox.getLetter();
+                  char nextLetterInWord = Character.toUpperCase((word).charAt(i
+                      + 1));
+                  if (nextLetterInPuzzle == nextLetterInWord) {
+                    return 0;
+                  }
+
+                }
+              }
+            } else {
+              if (col + 1 < COLS) {
+                Box nextBox = puzzle[row][col + 1];
+                if (nextBox != null) {
+                  char nextLetterInPuzzle = nextBox.getLetter();
+                  char nextLetterInWord = Character.toUpperCase((word).charAt(i
+                      + 1));
+                  if (nextLetterInPuzzle == nextLetterInWord) {
+                    return 0;
+                  }
+                }
+              }
+            }
+          }
           score += 1;
         }
         if (o == Orientation.DOWN) {
@@ -255,7 +287,6 @@ public class Crossword {
       }
       else {
         if (o == Orientation.DOWN) {
-
           if (col < COLS - 1) {
             if (!isBoxEmpty(col + 1, row)) {
               return 0;
@@ -266,7 +297,6 @@ public class Crossword {
               return 0;
             }
           }
-
           if (letterCount == 1) {
             if (row > 0) {
               if (!isBoxEmpty(col, row - 1)) {

@@ -1,5 +1,8 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import java.util.HashMap;
+import java.util.Random;
+
 public class Word {
 
   private String word;
@@ -28,6 +31,19 @@ public class Word {
 
   public String getWord(){
     return word;
+  }
+
+  public String getScrambledWord() {
+    Random random = new Random();
+    String scrambled = word;
+    char a[] = scrambled.toCharArray();
+    for(int i=0 ; i<a.length-1 ; i++) {
+      int j = random.nextInt(a.length-1);
+      char temp = a[i]; 
+      a[i] = a[j];  
+      a[j] = temp;
+    }       
+    return new String(a);
   }
 
   public int getXIndex(){
