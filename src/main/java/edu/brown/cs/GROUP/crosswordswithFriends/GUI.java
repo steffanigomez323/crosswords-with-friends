@@ -1,17 +1,16 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import com.google.common.collect.ImmutableMap;
-
-import edu.brown.cs.GROUP.chat.Chat;
-import edu.brown.cs.GROUP.database.Database;
-import freemarker.template.Configuration;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.common.collect.ImmutableMap;
+
+import edu.brown.cs.GROUP.chat.Chat;
+import edu.brown.cs.GROUP.database.Database;
+import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -45,27 +44,27 @@ public class GUI {
   }
 
   public static boolean checkValid(String word, int x, int y,  Orientation orientation, Integer id){
-      if (!crosswordCache.containsKey(id)) {
+    if (!crosswordCache.containsKey(id)) {
+      return false;
+    }
+    System.out.println("checking : " + word);
+    Crossword puzzle = crosswordCache.get(id);
+    Box[][] crossword = puzzle.getArray();
+    for (int i = 0; i < word.length(); i++) {
+      Box box = crossword[y][x];
+      box.printLetter();
+      if (!box.checkVal(word.charAt(i))) {
+        System.out.println("CHECK : " + word.charAt(i));
         return false;
       }
-      System.out.println("checking : " + word);
-      Crossword puzzle = crosswordCache.get(id);
-      Box[][] crossword = puzzle.getArray();
-      for (int i = 0; i < word.length(); i++) {
-        Box box = crossword[y][x];
-        box.printLetter();
-        if (!box.checkVal(word.charAt(i))) {
-          System.out.println("CHECK : " + word.charAt(i));
-          return false;
-        }
-        if (orientation == Orientation.ACROSS) {
-          x++;
-        } else {
-          y++;
-        }
+      if (orientation == Orientation.ACROSS) {
+        x++;
+      } else {
+        y++;
       }
-      return true;
     }
+    return true;
+  }
 
   /**
    * Creates engine for server.
@@ -106,7 +105,7 @@ public class GUI {
     Spark.get("/home", new FrontHandler(), freeMarker);
     Spark.get("/two", new TwoHandler(db), freeMarker);
     Spark.get("/one", new OneHandler(db), freeMarker);
-
+    Spark.get("/chatroom", new ChatHandler(), freeMarker);
   }
 
   private static class FrontHandler implements TemplateViewRoute {
@@ -146,7 +145,7 @@ public class GUI {
       Crossword puzzle = crosswordCache.get(id2);
 
       if (puzzle == null){
-        createCrossword();
+        puzzle = createCrossword();
       } else if (puzzle.getPlayers() != 2){
         puzzle.addPlayer();
       } else {
@@ -201,7 +200,7 @@ public class GUI {
       Crossword puzzle = crosswordCache.get(id2);
 
       if (puzzle == null){
-        createCrossword();
+        puzzle = createCrossword();
       } else {
         while (puzzle.getPlayers() == 2) {
           id2 = id.incrementAndGet();
@@ -227,6 +226,55 @@ public class GUI {
           .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword_single.ftl");
+    }
+
+  }
+
+  //  private class CheckHandler implements Route {
+  //    @Override
+  //    public Object handle(final Request req, final Response res) {
+  //
+  //      QueryParamsMap qm = req.queryMap();
+  //
+  //      String word = qm.value("word");
+  //      int y = Integer.valueOf(qm.value("y"));
+  //      int x = Integer.valueOf(qm.value("x"));
+  //      Orientation orientation = Orientation
+  //          .valueOf(qm.value("orientation"));
+  //      Integer id = Integer.valueOf(qm.value("id"));
+  //
+  //      if (!crosswordCache.containsKey(id)) {
+  //        return "false";
+  //      }
+  //      System.out.println("checking : " + word);
+  //      Crossword puzzle = crosswordCache.get(id);
+  //      Box[][] crossword = puzzle.getArray();
+  //      for (int i = 0; i < word.length(); i++) {
+  //        Box box = crossword[y][x];
+  //        box.printLetter();
+  //        if (!box.checkVal(word.charAt(i))) {
+  //          System.out.println("CHECK : " + word.charAt(i));
+  //          return "false";
+  //        }
+  //        if (orientation == Orientation.ACROSS) {
+  //          x++;
+  //        } else {
+  //          y++;
+  //        }
+  //      }
+  //      return "true";
+  //    }
+  //  }
+
+  /** Handler for serving chat page. */
+  private static class ChatHandler implements TemplateViewRoute {
+
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+      System.out.println("in chat handler ");
+      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+          .put("roomNumber", id.get()).build();
+      return new ModelAndView(variables, "chat.ftl");
     }
 
   }

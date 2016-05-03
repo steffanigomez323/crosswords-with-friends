@@ -30,6 +30,7 @@ public class Crossword {
     this.db = db;
     players = 1;
     String firstWord = unusedWords.remove(0);
+    System.out.println("firstWord: " + firstWord);
     fillPuzzle(firstWord);
 
     // System.out.println("unused words: " + unusedWords);
@@ -65,6 +66,7 @@ public class Crossword {
     }
     if (acrossCount < 4 || downCount < 4) {
       System.out.println("I'm refilling");
+      Collections.shuffle(unusedWords);
       // System.out.println("final list: " + finalList);
       refill();
     }
@@ -86,6 +88,7 @@ public class Crossword {
     unusedWords = new ArrayList<String>(originalList);
     usedWords = new HashSet<String>();
     String firstWord = unusedWords.remove(0);
+    System.out.println("firstWord: " + firstWord);
 
     fillPuzzle(firstWord);
   }
