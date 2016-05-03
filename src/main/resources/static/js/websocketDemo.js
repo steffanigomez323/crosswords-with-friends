@@ -45,6 +45,8 @@ function updateChat(msg) {
         	$(r).attr("disabled", "disabled");
         	$(r).addClass("inactive");
         }
+    } else if (msg.data.startsWith("LETTER;")) {
+    
     }
     else {
 		var players = $("#player").attr("class");

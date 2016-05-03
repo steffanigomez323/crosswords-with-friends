@@ -105,7 +105,6 @@ public class GUI {
     Spark.get("/home", new FrontHandler(), freeMarker);
     Spark.get("/two", new TwoHandler(db), freeMarker);
     Spark.get("/one", new OneHandler(db), freeMarker);
-    //    Spark.get("/check", new CheckHandler());
     Spark.get("/chatroom", new ChatHandler(), freeMarker);
   }
 
@@ -164,7 +163,7 @@ public class GUI {
       System.out.println(id2);
 
       List<Word> toPass = puzzle.getFinalList();
-      Chat.setCensorWords(toPass);
+      Chat.setCensorWords(id2, toPass);
 
       Box[][] crossword = puzzle.getArray();
       System.out.println(puzzle);
