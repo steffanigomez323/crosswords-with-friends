@@ -1,4 +1,3 @@
-edu/brown/cs/GROUP/chat/Room.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$1.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI.class
 edu/brown/cs/GROUP/crosswordswithFriends/Main.class
@@ -16,4 +15,5 @@ edu/brown/cs/GROUP/chat/Chat.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$ChatHandler.class
 edu/brown/cs/GROUP/words/CSVReader.class
 edu/brown/cs/GROUP/database/Database.class
+edu/brown/cs/GROUP/words/TXTReader.class
 edu/brown/cs/GROUP/crosswordswithFriends/Coordinate.class

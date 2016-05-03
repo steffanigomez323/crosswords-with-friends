@@ -1,7 +1,6 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 
 import edu.brown.cs.GROUP.chat.Chat;
 import edu.brown.cs.GROUP.database.Database;
@@ -26,14 +25,9 @@ import spark.template.freemarker.FreeMarkerEngine;
 public class GUI {
 
   /** For converting to JSON. */
-  private static final Gson GSON = new Gson();
-  private static final int ROWS = 9;
-  private static final int COLS = 9;
-
   private static HashMap<Integer, Crossword> crosswordCache;
 
   private Database db;
-  private Crossword puzzle;
   public static AtomicInteger id;
 
   /**
@@ -47,13 +41,33 @@ public class GUI {
     System.out.println("here!");
     Spark.port(port);
     db = d;
-    // List<String> words = db.getAllUnderSeven();
-    // Crossword puzzle = new Crossword(words);
-    // puzzle.fillPuzzle();
     id = new AtomicInteger(1000);
     runSparkServer();
     crosswordCache = new HashMap<Integer, Crossword>();
   }
+
+  public static boolean checkValid(String word, int x, int y,  Orientation orientation, Integer id){
+      if (!crosswordCache.containsKey(id)) {
+        return false;
+      }
+      System.out.println("checking : " + word);
+      Crossword puzzle = crosswordCache.get(id);
+      Box[][] crossword = puzzle.getArray();
+      for (int i = 0; i < word.length(); i++) {
+        Box box = crossword[y][x];
+        box.printLetter();
+        if (!box.checkVal(word.charAt(i))) {
+          System.out.println("CHECK : " + word.charAt(i));
+          return false;
+        }
+        if (orientation == Orientation.ACROSS) {
+          x++;
+        } else {
+          y++;
+        }
+      }
+      return true;
+    }
 
   /**
    * Creates engine for server.
@@ -108,10 +122,13 @@ public class GUI {
     @Override
     public ModelAndView handle(Request req, Response res) {
 
+      String player = "ACROSS";
+
       Integer id2 = id.get();
 
       Crossword puzzle = crosswordCache.get(id2);
       if (puzzle == null || puzzle.getPlayers() == 2) {
+        player = "DOWN";
         if (puzzle == null) {
           id2 = id.get();
         } else {
@@ -133,7 +150,7 @@ public class GUI {
       crosswordCache.put(id2, puzzle);
 
       ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("crossword", crossword).put("id", id2.toString())
+          .put("crossword", crossword).put("id", id2.toString()).put("player", player)
           .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword.ftl");

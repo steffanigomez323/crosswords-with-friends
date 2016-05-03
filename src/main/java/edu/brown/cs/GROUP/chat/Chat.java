@@ -1,7 +1,12 @@
 package edu.brown.cs.GROUP.chat;
-import org.eclipse.jetty.websocket.api.*;
-import org.json.*;
-
+import static j2html.TagCreator.article;
+import static j2html.TagCreator.b;
+import static j2html.TagCreator.p;
+import static j2html.TagCreator.span;
+import static spark.Spark.init;
+import static spark.Spark.webSocket;
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
 import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 
 import java.io.BufferedReader;
@@ -9,10 +14,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.*;
-import java.util.*;
-import static j2html.TagCreator.*;
-import static spark.Spark.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.eclipse.jetty.websocket.api.Session;
+import org.json.JSONObject;
 
 public class Chat {
 
@@ -20,7 +31,7 @@ public class Chat {
   static Set<String> stopWords = new HashSet<String>();
   static Map<Integer, List<Session>> roomUsers = new HashMap<Integer, List<Session>>();
   static Set<String> wordsToCensor = new HashSet<String>();
-  
+
 
   public static void main(String[] args) throws IOException {
   }
@@ -104,6 +115,32 @@ public class Chat {
       }
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  public static void broadcastCorrect(String sender, String message, Integer roomId) {
+    String[] variables = message.split(";");
+    int x = Integer.valueOf(variables[2]);
+    int y = Integer.valueOf(variables[3]);
+    Orientation o = Orientation
+        .valueOf(variables[4]);
+    Integer id = Integer.valueOf(variables[5]);
+
+    boolean valid = GUI.checkValid(variables[1], x, y, o, id);
+    System.out.println(valid);
+    if (valid){
+      try {
+        if (roomUsers.get(roomId) != null ) {
+        for (Session session : roomUsers.get(roomId)) {
+          if (session.isOpen()) {
+            System.out.println("broadcastin");
+            session.getRemote().sendString(message);
+          }
+        }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 

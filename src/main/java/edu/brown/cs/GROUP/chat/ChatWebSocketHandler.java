@@ -1,13 +1,16 @@
 package edu.brown.cs.GROUP.chat;
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.eclipse.jetty.websocket.api.*;
-import org.eclipse.jetty.websocket.api.annotations.*;
-
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 @WebSocket
 public class ChatWebSocketHandler {
@@ -24,7 +27,7 @@ public class ChatWebSocketHandler {
         if (Chat.roomUsers.get(nextRoomNumber) != null) {
           usersInRoom = Chat.roomUsers.get(nextRoomNumber);
           //Chat.roomUsers.remove(nextRoomNumber);
-        } 
+        }
         usersInRoom.add(user);
         if (Chat.userUsernameMap.containsValue(username)){
           username = "across" + nextRoomNumber;
@@ -37,7 +40,7 @@ public class ChatWebSocketHandler {
           nextRoomNumber++;
         }
     }
-    
+
     public static Integer getRoomNumber(Session user) {
     	return userRoom.get(user);
     }
@@ -53,8 +56,12 @@ public class ChatWebSocketHandler {
 
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
-      System.out.println("sender " + Chat.userUsernameMap.get(user)  + "message " + message);
+      if (message.startsWith("DATA")){
+        Chat.broadcastCorrect(sender = Chat.userUsernameMap.get(user), message, userRoom.get(user));
+      } else {
+        System.out.println("sender " + Chat.userUsernameMap.get(user)  + "message " + message);
         Chat.broadcastMessage(sender = Chat.userUsernameMap.get(user), msg = message, userRoom.get(user));
+      }
     }
 
 }

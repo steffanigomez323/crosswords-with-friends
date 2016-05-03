@@ -5,6 +5,7 @@ body{
 .box{
 	width: 50px;
 	height: 50px;
+	border-top: 5px solid black;
 }
 
 .boxWrap{
@@ -15,11 +16,17 @@ body{
 	
 }
 
+#crosswordWrapper{
+	background-color: black;
+	padding: 2px 0 7px 0;
+	width: 500px;
+	margin: auto;
+}
+
 .row{
 	height: 50px;
-	text-align: center;
+	left: 7px;
 	position: relative;
-	margin: 2px;	
 }
 
 textarea{
@@ -29,6 +36,7 @@ textarea{
 	resize: none;
 	line-height: 50px;
 	text-transform: uppercase;
+	border: none;
 }
 .wordActive {
 	background-color: blue;
@@ -142,4 +150,8 @@ li {
 	top: 5px;
 	left: 5px;
 	font-size: 8px;
+}
+
+input[disabled], input:disabled, textarea[disabled], textarea[disabled="disabled"], textarea:disabled {
+    background: pink;
 }

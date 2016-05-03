@@ -1,8 +1,9 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
-<script src="js/jquery-2.1.1.js"></script>
-<script src="js/main.js"></script>
+<div id="timer">01:00</div>
+<div id="player">${player}</div>
 <div id=${id} class="crossword">
+<div id="crosswordWrapper">
 <#assign num=1>
 <#list crossword as row>
 		<div class="row">
@@ -12,10 +13,11 @@
 			<div class = "box filled c${col_index} r${row_index}"></div>
 		<#else>
 			<#assign start=false>
-			<textarea class = "box c${col_index} r${row_index} <#list col.clues as clue>${clue.orientation}${clue.size} <#if clue.clue??><#assign start=true></#if></#list>" spellcheck="false" maxlength="1" ></textarea>
+			<#assign orientation="ACROSS">
+			<textarea disabled = "disabled" class = "box c${col_index} r${row_index} <#list col.clues as clue>${clue.orientation}${clue.size} <#if clue.clue??><#assign start=true><#assign orientation=clue.orientation></#if></#list>" spellcheck="false" maxlength="1" ></textarea>
 				
 			<#if start>
-		    	<div class="numMarker">${num}</div>
+		    	<div class="numMarker ${orientation}">${num}</div>
 		    	<#assign num = num + 1>
 		    </#if>
 		</#if>
@@ -23,7 +25,7 @@
 	</#list>
 	</div>
 </#list>
-
+</div>
 <ul id="clues">
 <#assign num=1>
 <#list crossword as row>
@@ -31,11 +33,10 @@
 		<#assign start=false>
 		<#if col.clues?? &&  (col.clues?size > 0)>
 			<#list col.clues as clue>
-					<#if clue.clue?? && clue.orientation == "ACROSS" >
-						<li class="across">${clue.orientation} ${num} : ${clue.clue}</li>
+					<#if clue.clue?? && clue.orientation != player >
+						<li>${clue.orientation} ${num} : ${clue.clue}</li>
 						<#assign start=true>
-					<#elseif clue.clue?? >
-						<li class="down">${clue.orientation} ${num} : ${clue.clue}</li>
+					<#elseif clue.clue??>
 						<#assign start=true>
 					</#if>
 			</#list>
@@ -47,5 +48,14 @@
 </#list>
 </ul>
 </div>
-<iframe id="ifrm" src="/chatroom" align="center"></iframe>
-<script>console.log("room number");</script>
+<div id="chatWrapper">
+    <div id="chatControls">
+        <input id="message" placeholder="Type your message">
+        <button id="send">Send</button>
+    </div>
+    <ul id="userlist"> <!-- Built by JS --> </ul>
+    <div id="chat">    <!-- Built by JS --> </div>
+</div>
+<script src="js/jquery-2.1.1.js"></script>
+<script src="/js/websocketDemo.js"></script>
+<script src="js/main.js"></script>
