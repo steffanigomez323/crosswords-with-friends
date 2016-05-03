@@ -6,10 +6,11 @@ edu/brown/cs/GROUP/crosswordswithFriends/Box.class
 edu/brown/cs/GROUP/words/ClueWord.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$FrontHandler.class
 edu/brown/cs/GROUP/crosswordswithFriends/Word.class
-edu/brown/cs/GROUP/crosswordswithFriends/GUI$CheckHandler.class
+edu/brown/cs/GROUP/crosswordswithFriends/GUI$TwoHandler.class
 edu/brown/cs/GROUP/crosswordswithFriends/Crossword.class
 edu/brown/cs/GROUP/chat/ChatWebSocketHandler.class
 edu/brown/cs/GROUP/crosswordswithFriends/Clue.class
+edu/brown/cs/GROUP/crosswordswithFriends/GUI$OneHandler.class
 edu/brown/cs/GROUP/words/ClueWordGetter.class
 edu/brown/cs/GROUP/chat/Chat.class
 edu/brown/cs/GROUP/crosswordswithFriends/GUI$ChatHandler.class

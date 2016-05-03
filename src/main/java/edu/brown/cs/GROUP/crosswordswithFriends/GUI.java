@@ -13,10 +13,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import spark.ModelAndView;
-import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -105,18 +103,38 @@ public class GUI {
       e.printStackTrace();
     }
     FreeMarkerEngine freeMarker = createEngine();
-    Spark.get("/home", new FrontHandler(db), freeMarker);
-    Spark.get("/check", new CheckHandler());
+    Spark.get("/home", new FrontHandler(), freeMarker);
+    Spark.get("/two", new TwoHandler(db), freeMarker);
+    Spark.get("/one", new OneHandler(db), freeMarker);
+//    Spark.get("/check", new CheckHandler());
     Spark.get("/chatroom", new ChatHandler(), freeMarker);
   }
 
-  /** Handler for serving main page. */
   private static class FrontHandler implements TemplateViewRoute {
+
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+
+      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>().build();
+
+      return new ModelAndView(variables, "main.ftl");
+    }
+
+  }
+
+
+  /** Handler for serving main page. */
+  private static class TwoHandler implements TemplateViewRoute {
 
     private Database db;
 
-    public FrontHandler(Database db) {
+    public TwoHandler(Database db) {
       this.db = db;
+    }
+
+    private Crossword createCrossword(){
+      List<String> originalList = db.getAllUnderNine();
+      return new Crossword(originalList, db);
     }
 
     @Override
@@ -127,19 +145,24 @@ public class GUI {
       Integer id2 = id.get();
 
       Crossword puzzle = crosswordCache.get(id2);
-      if (puzzle == null || puzzle.getPlayers() == 2) {
-        player = "DOWN";
-        if (puzzle == null) {
-          id2 = id.get();
-        } else {
-          id2 = id.incrementAndGet();
-        }
-        List<String> originalList = db.getAllUnderNine();
-        puzzle = new Crossword(originalList, db);
 
-      } else {
+      if (puzzle == null){
+        createCrossword();
+      } else if (puzzle.getPlayers() != 2){
         puzzle.addPlayer();
+      } else {
+        while (puzzle.getPlayers() == 2) {
+          id2 = id.incrementAndGet();
+          puzzle = crosswordCache.get(id2);
+          if (puzzle == null){
+            puzzle = createCrossword();
+          }
+        }
+        player = "DOWN";
       }
+
+      System.out.println("2 player : "+player);
+      System.out.println(id2);
 
       List<Word> toPass = puzzle.getFinalList();
       Chat.setCensorWords(toPass);
@@ -150,7 +173,7 @@ public class GUI {
       crosswordCache.put(id2, puzzle);
 
       ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("crossword", crossword).put("id", id2.toString()).put("player", player)
+          .put("crossword", crossword).put("id", id2.toString()).put("player", player).put("players", "double")
           .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword.ftl");
@@ -158,41 +181,92 @@ public class GUI {
 
   }
 
-  private class CheckHandler implements Route {
-    @Override
-    public Object handle(final Request req, final Response res) {
+  /** Handler for serving main page. */
+  private static class OneHandler implements TemplateViewRoute {
 
-      QueryParamsMap qm = req.queryMap();
+    private Database db;
 
-      String word = qm.value("word");
-      int y = Integer.valueOf(qm.value("y"));
-      int x = Integer.valueOf(qm.value("x"));
-      Orientation orientation = Orientation
-          .valueOf(qm.value("orientation"));
-      Integer id = Integer.valueOf(qm.value("id"));
-
-      if (!crosswordCache.containsKey(id)) {
-        return "false";
-      }
-      System.out.println("checking : " + word);
-      Crossword puzzle = crosswordCache.get(id);
-      Box[][] crossword = puzzle.getArray();
-      for (int i = 0; i < word.length(); i++) {
-        Box box = crossword[y][x];
-        box.printLetter();
-        if (!box.checkVal(word.charAt(i))) {
-          System.out.println("CHECK : " + word.charAt(i));
-          return "false";
-        }
-        if (orientation == Orientation.ACROSS) {
-          x++;
-        } else {
-          y++;
-        }
-      }
-      return "true";
+    public OneHandler(Database db) {
+      this.db = db;
     }
+
+    private Crossword createCrossword(){
+      List<String> originalList = db.getAllUnderNine();
+      return new Crossword(originalList, db);
+    }
+
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+
+      Integer id2 = id.get()+1;
+      Crossword puzzle = crosswordCache.get(id2);
+
+      if (puzzle == null){
+        createCrossword();
+      } else {
+        while (puzzle.getPlayers() == 2) {
+          id2 = id.incrementAndGet();
+          puzzle = crosswordCache.get(id2);
+          if (puzzle == null){
+            puzzle = createCrossword();
+          }
+        }
+      }
+      puzzle.addPlayer();
+
+
+      System.out.println("1 player");
+      System.out.println(id2);
+
+      Box[][] crossword = puzzle.getArray();
+      System.out.println(puzzle);
+
+      crosswordCache.put(id2, puzzle);
+
+      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+          .put("crossword", crossword).put("id", id2.toString()).put("players", "single")
+          .put("roomNumber", id2.toString()).build();
+
+      return new ModelAndView(variables, "crossword_single.ftl");
+    }
+
   }
+
+//  private class CheckHandler implements Route {
+//    @Override
+//    public Object handle(final Request req, final Response res) {
+//
+//      QueryParamsMap qm = req.queryMap();
+//
+//      String word = qm.value("word");
+//      int y = Integer.valueOf(qm.value("y"));
+//      int x = Integer.valueOf(qm.value("x"));
+//      Orientation orientation = Orientation
+//          .valueOf(qm.value("orientation"));
+//      Integer id = Integer.valueOf(qm.value("id"));
+//
+//      if (!crosswordCache.containsKey(id)) {
+//        return "false";
+//      }
+//      System.out.println("checking : " + word);
+//      Crossword puzzle = crosswordCache.get(id);
+//      Box[][] crossword = puzzle.getArray();
+//      for (int i = 0; i < word.length(); i++) {
+//        Box box = crossword[y][x];
+//        box.printLetter();
+//        if (!box.checkVal(word.charAt(i))) {
+//          System.out.println("CHECK : " + word.charAt(i));
+//          return "false";
+//        }
+//        if (orientation == Orientation.ACROSS) {
+//          x++;
+//        } else {
+//          y++;
+//        }
+//      }
+//      return "true";
+//    }
+//  }
 
   /** Handler for serving chat page. */
   private static class ChatHandler implements TemplateViewRoute {

@@ -46,10 +46,6 @@ textarea{
 	background-color: yellow;
 }
 
-.inactive{
-	background-color: green;
-}
-
 
 .filled{
 	background-color: black;
@@ -154,4 +150,8 @@ li {
 
 input[disabled], input:disabled, textarea[disabled], textarea[disabled="disabled"], textarea:disabled {
     background: pink;
+}
+
+.inactive{
+	background-color: green !important;
 }

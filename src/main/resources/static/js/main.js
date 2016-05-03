@@ -1,9 +1,10 @@
+//TO DO
+//Dissallow one-player orientation switching when not possible
+//Double clues error
+//Censoring words by room id
+
+
 //Establish the WebSocket connection and set up event handlers
-
-//everything that's currently buggy
-//start logic one player / two player, wait for other player to start timer
-
-
 var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/chat/");
 webSocket.onmessage = function (msg) { console.log("in on message"); updateChat(msg); };
 webSocket.onclose = function () { alert("WebSocket connection closed ") };
@@ -55,8 +56,13 @@ function wordSize(classes, o){
 }
 
 function checkCol(c, row, x, check){
+	console.log("checking column");
+	console.log(c);
+	console.log(row); 
+	console.log(x); 
+	console.log(check);
 	
-	var foundUp = true;
+	var foundUp = false;
 	var foundDown = false;
 	
 	var down = row+1;
@@ -67,10 +73,10 @@ function checkCol(c, row, x, check){
 	var y = -1;
 	var size = 1;
 	
-	//$(block).addClass("wordActive");
 	var word = $(block).val();
-	var rSize = wordSize($(block).attr("class").split(" "), "across");
-	if (rSize>0){
+	var cSize = wordSize($(block).attr("class").split(" "), "down");
+	console.log(cSize);
+	if (cSize>0){
 		y = row;
 	}
 	
@@ -134,10 +140,9 @@ function checkRow(r, col, y, check){
 	var x = -1;
 	var size = 1;
 	
-	//$(block).addClass("wordActive");
 	var word = $(block).val();
-	var cSize = wordSize($(block).attr("class").split(" "), "down");
-	if (cSize>0){
+	var rSize = wordSize($(block).attr("class").split(" "), "across");
+	if (rSize>0){
 		x = col;
 	}
 	
@@ -190,6 +195,7 @@ function checkRow(r, col, y, check){
 function checkWord(word, x, y, o){
 	var id = $(".crossword").attr("id");
 	var toSend = "DATA;"+word+";"+x+";"+y+";"+o+";"+id;
+	console.log(word +". X : "+x+" Y : "+y+" O : "+o);
 	webSocket.send(toSend);
 }
 
@@ -288,25 +294,28 @@ window.onload = function(response) {
 		numCol = $(".r0").length;
 	}
 	
-	var player = $("#player").text();
-	var playerWords = $("."+player).prev().each(function(){
-		var classes = $(this).attr("class").split(" ");
-		var row = parseFloat(classes[2][1]);
-		var col = parseFloat(classes[1][1]);
-		var word = $(".c"+col);
-		
-		var enabled;
-		if (player == "ACROSS"){
-			orientation = "across";
-			word = $(".r"+row);
-			console.log(word);
-			enabled = checkRow(word,col, row, false);
-		} else {
-			enabled = checkCol(word, row, col, false);
-		} 
-		console.log(enabled);
-		$(enabled).attr("disabled", false);
-	});
+	var players = $("#player").attr("class");
+	if (players == "double"){
+		var player = $("#player").text();
+		var playerWords = $("."+player).prev().each(function(){
+			var classes = $(this).attr("class").split(" ");
+			var row = parseFloat(classes[2][1]);
+			var col = parseFloat(classes[1][1]);
+			var word = $(".c"+col);
+			var enabled;
+			if (player == "ACROSS"){
+				orientation = "across";
+				word = $(".r"+row);
+				enabled = checkRow(word,col, row, false);
+			} else {
+				enabled = checkCol(word, row, col, false);
+			} 
+			console.log(enabled);
+			$(enabled).attr("disabled", false);
+		});
+	} else {
+		$("textarea").attr("disabled", false);
+	}
 	
 	$("textarea").click(function(){
 		$(".active").removeClass("active");
@@ -320,32 +329,40 @@ window.onload = function(response) {
 	        	if (orientation=="across"){
 	        		next(-1);
 	        	}else {
-		        	//orientation = "across";
-		        	//orient();
+	        		if (players == "single"){
+			        	orientation = "across";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 38:
 	        	if (orientation=="down"){
 	        		next(-1);
 	        	}else {
-		        	//orientation = "down";
-		        	//orient();
+	        		if (players == "single"){
+			        	orientation = "down";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 39:
 	        	if (orientation=="across"){
 	        		next(1);
 	        	}else {
-		        	//orientation = "across";
-		        	//orient();
+	        		if (players == "single"){
+			        	orientation = "across";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 40:
 	        	if (orientation=="down"){
 	        		next(1);
 	        	}else {
-		        	//orientation = "down";
-		        	//orient();
+	        		if (players == "single"){
+			        	orientation = "down";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 8:

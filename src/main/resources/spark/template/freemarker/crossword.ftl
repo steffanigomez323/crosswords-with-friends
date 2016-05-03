@@ -1,7 +1,7 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
 <div id="timer">01:00</div>
-<div id="player">${player}</div>
+<div id="player" class="${players}">${player}</div>
 <div id=${id} class="crossword">
 <div id="crosswordWrapper">
 <#assign num=1>
@@ -13,11 +13,12 @@
 			<div class = "box filled c${col_index} r${row_index}"></div>
 		<#else>
 			<#assign start=false>
-			<#assign orientation="ACROSS">
-			<textarea disabled = "disabled" class = "box c${col_index} r${row_index} <#list col.clues as clue>${clue.orientation}${clue.size} <#if clue.clue??><#assign start=true><#assign orientation=clue.orientation></#if></#list>" spellcheck="false" maxlength="1" ></textarea>
+			<#assign across=false>
+			<#assign down=false>
+			<textarea disabled = "disabled" class = "box c${col_index} r${row_index} <#list col.clues as clue>${clue.orientation}${clue.size} <#if clue.clue??><#assign start=true><#if clue.orientation=="ACROSS"><#assign across=true><#else><#assign down=true></#if></#if></#list>" spellcheck="false" maxlength="1" ></textarea>
 				
 			<#if start>
-		    	<div class="numMarker ${orientation}">${num}</div>
+		    	<div class="numMarker <#if across>ACROSS</#if> <#if down>DOWN</#if>">${num}</div>
 		    	<#assign num = num + 1>
 		    </#if>
 		</#if>
