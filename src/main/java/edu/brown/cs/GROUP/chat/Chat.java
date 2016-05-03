@@ -126,7 +126,7 @@ public class Chat {
     Orientation o = Orientation
         .valueOf(variables[4]);
     Integer id = Integer.valueOf(variables[5]);
-
+    System.out.println("x : "+x+" y: "+y);
     boolean valid = GUI.checkValid(variables[1], x, y, o, id);
     System.out.println(valid);
     if (valid){
@@ -152,7 +152,6 @@ public class Chat {
     Orientation o = Orientation
         .valueOf(variables[4]);
     Integer id = Integer.valueOf(variables[5]);
-
     boolean valid = GUI.checkValid(variables[1], x, y, o, id);
     System.out.println(valid);
     if (valid){

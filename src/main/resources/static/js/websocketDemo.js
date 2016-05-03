@@ -1,12 +1,16 @@
 //Send message if "Send" is clicked
-id("send").addEventListener("click", function () {
-    sendMessage(id("message").value);
-});
+var players = $("#player").attr("class");
+if (players == "double"){
+	id("send").addEventListener("click", function () {
+	    sendMessage(id("message").value);
+	});
+	
+	//Send message if enter is pressed in the input field
+	id("message").addEventListener("keypress", function (e) {
+	    if (e.keyCode === 13) { sendMessage(e.target.value); }
+	});
+}
 
-//Send message if enter is pressed in the input field
-id("message").addEventListener("keypress", function (e) {
-    if (e.keyCode === 13) { sendMessage(e.target.value); }
-});
 
 //Send a message if it's not empty, then clear the input field
 function sendMessage(message) {
@@ -41,15 +45,20 @@ function updateChat(msg) {
         	$(r).attr("disabled", "disabled");
         	$(r).addClass("inactive");
         }
+    } else if (msg.data.startsWith("LETTER;")) {
+    
     }
     else {
-      var data = JSON.parse(msg.data);
-      insert("chat", data.userMessage);
-      console.log("inserted");
-      id("userlist").innerHTML = "";
-      data.userlist.forEach(function (user) {
-          insert("userlist", "<li>" + user + "</li>");
-      });
+		var players = $("#player").attr("class");
+		if (players == "double"){
+	      var data = JSON.parse(msg.data);
+	      insert("chat", data.userMessage);
+	      console.log("inserted");
+	      id("userlist").innerHTML = "";
+	      data.userlist.forEach(function (user) {
+	          insert("userlist", "<li>" + user + "</li>");
+	      });
+		}
     }
 }
 

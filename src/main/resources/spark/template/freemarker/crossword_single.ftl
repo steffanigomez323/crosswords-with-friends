@@ -1,7 +1,7 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
 <div id="timer">01:00</div>
-<div id="player" class="${players}">${player}</div>
+<div id="player" class="${players}">single player</div>
 <div id=${id} class="crossword">
 <div id="crosswordWrapper">
 <#assign num=1>
@@ -34,7 +34,7 @@
 		<#assign start=false>
 		<#if col.clues?? &&  (col.clues?size > 0)>
 			<#list col.clues as clue>
-					<#if clue.clue?? && clue.orientation != player >
+					<#if clue.clue??>
 						<li>${clue.orientation} ${num} : ${clue.clue}</li>
 						<#assign start=true>
 					<#elseif clue.clue??>
@@ -48,26 +48,6 @@
 	</#list>
 </#list>
 </ul>
-
-<div class = "hints">Stuck? Get a hint:<br>
-<div id = "hint1">Expose a letter</div><br>
-<div id = "hint2">Get all letters of a word</div><br>
-<div id = "hint3">Expose clue</div><br>
-</div>
-
-
-</div>
-
-<p>
-
-<div id="chatWrapper">
-    <div id="chatControls">
-        <input id="message" placeholder="Type your message">
-        <button id="send">Send</button>
-    </div>
-    <ul id="userlist"></ul>
-    <div id="chat"></div>
-    </div>
 </div>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>
