@@ -44,7 +44,6 @@ public class Crossword {
     usedWords.add(firstWord);
 
     for (String word : unusedWords) {
-
       if (!usedWords.contains(word)) {
         // System.out.println("word: " + word);
         fitAndAdd(word);
@@ -64,9 +63,8 @@ public class Crossword {
         downCount += 1;
       }
     }
-    if (acrossCount < 4 || downCount < 4) {
+    if (acrossCount < 5 || downCount < 5) {
       System.out.println("I'm refilling");
-      Collections.shuffle(unusedWords);
       // System.out.println("final list: " + finalList);
       refill();
     }
@@ -87,8 +85,12 @@ public class Crossword {
     finalList = new ArrayList<Word>();
     unusedWords = new ArrayList<String>(originalList);
     usedWords = new HashSet<String>();
+    shuffleAndSortWords();
     String firstWord = unusedWords.remove(0);
     System.out.println("firstWord: " + firstWord);
+    Collections.shuffle(unusedWords);
+
+
 
     fillPuzzle(firstWord);
   }
