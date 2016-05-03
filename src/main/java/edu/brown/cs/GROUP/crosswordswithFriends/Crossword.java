@@ -30,7 +30,6 @@ public class Crossword {
     this.db = db;
     players = 1;
     String firstWord = unusedWords.remove(0);
-    System.out.println("firstWord: " + firstWord);
     fillPuzzle(firstWord);
 
     // System.out.println("unused words: " + unusedWords);
@@ -63,7 +62,7 @@ public class Crossword {
         downCount += 1;
       }
     }
-    if (acrossCount < 5 || downCount < 5) {
+    if (acrossCount < 4 || downCount < 4) {
       System.out.println("I'm refilling");
       // System.out.println("final list: " + finalList);
       refill();
@@ -87,7 +86,6 @@ public class Crossword {
     usedWords = new HashSet<String>();
     shuffleAndSortWords();
     String firstWord = unusedWords.remove(0);
-    System.out.println("firstWord: " + firstWord);
     Collections.shuffle(unusedWords);
 
 
@@ -206,7 +204,36 @@ public class Crossword {
         if (currBox.getLetter() != currLetter) {
           return 0;
         }
+
         if (currBox.getLetter() == currLetter) {
+          if (i + 1 < length) {
+            if (o == Orientation.DOWN) {
+              if (row + 1 < ROWS) {
+                Box nextBox = puzzle[row + 1][col];
+                if (nextBox != null) {
+                  char nextLetterInPuzzle = nextBox.getLetter();
+                  char nextLetterInWord = Character.toUpperCase((word).charAt(i
+                      + 1));
+                  if (nextLetterInPuzzle == nextLetterInWord) {
+                    return 0;
+                  }
+
+                }
+              }
+            } else {
+              if (col + 1 < COLS) {
+                Box nextBox = puzzle[row][col + 1];
+                if (nextBox != null) {
+                  char nextLetterInPuzzle = nextBox.getLetter();
+                  char nextLetterInWord = Character.toUpperCase((word).charAt(i
+                      + 1));
+                  if (nextLetterInPuzzle == nextLetterInWord) {
+                    return 0;
+                  }
+                }
+              }
+            }
+          }
           score += 1;
         }
         if (o == Orientation.DOWN) {
@@ -267,7 +294,6 @@ public class Crossword {
       }
       else {
         if (o == Orientation.DOWN) {
-
           if (col < COLS - 1) {
             if (!isBoxEmpty(col + 1, row)) {
               return 0;
@@ -278,7 +304,6 @@ public class Crossword {
               return 0;
             }
           }
-
           if (letterCount == 1) {
             if (row > 0) {
               if (!isBoxEmpty(col, row - 1)) {
