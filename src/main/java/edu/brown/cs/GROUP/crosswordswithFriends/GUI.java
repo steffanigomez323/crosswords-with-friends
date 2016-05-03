@@ -134,9 +134,9 @@ public class GUI {
         } else {
           id2 = id.incrementAndGet();
         }
-        List<String> words = db.getAllUnderNine();
-        puzzle = new Crossword(words, db);
-        puzzle.fillPuzzle();
+        List<String> originalList = db.getAllUnderNine();
+        puzzle = new Crossword(originalList, db);
+
       } else {
         puzzle.addPlayer();
       }
