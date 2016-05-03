@@ -47,14 +47,26 @@
 	</#list>
 </#list>
 </ul>
+
+<div class = "hints">Stuck? Get a hint:<br>
+<div id = "hint1">Expose a letter</div><br>
+<div id = "hint2">Get all letters of a word</div><br>
+<div id = "hint3">Expose clue</div><br>
 </div>
+
+
+</div>
+
+<p>
+
 <div id="chatWrapper">
     <div id="chatControls">
         <input id="message" placeholder="Type your message">
         <button id="send">Send</button>
     </div>
-    <ul id="userlist"> <!-- Built by JS --> </ul>
-    <div id="chat">    <!-- Built by JS --> </div>
+    <ul id="userlist"></ul>
+    <div id="chat"></div>
+    </div>
 </div>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>

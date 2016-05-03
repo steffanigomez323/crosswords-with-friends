@@ -30,9 +30,8 @@ public class Chat {
   static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
   static Set<String> stopWords = new HashSet<String>();
   static Map<Integer, List<Session>> roomUsers = new HashMap<Integer, List<Session>>();
-  static Set<String> wordsToCensor = new HashSet<String>();
-
-
+  static HashMap<Integer, Set<String>> wordsToCensor = new HashMap<Integer, Set<String>>();
+  
   public static void main(String[] args) throws IOException {
   }
 
@@ -54,18 +53,20 @@ public class Chat {
     init();
   }
 
-  public static void setCensorWords(List<Word> toPass) {
+  public static void setCensorWords(Integer roomId, List<Word> toPass) {
+    Set<String> censorWords = new HashSet<String>();
     for (Word word : toPass) {
-      wordsToCensor.add(word.getWord());
+      censorWords.add(word.getWord());
       String cleanedClue = word.getClue().replace("[^a-zA-Z ]", "");
       String[] clueWords = cleanedClue.split(" ");
       System.out.println("clues " + word.getClue());
       for (String clueWord : clueWords) {
         if (! stopWords.contains(clueWord)) {
-          wordsToCensor.add(clueWord);
+          censorWords.add(word.getWord());
         }
       }
     }
+    wordsToCensor.put(roomId,  censorWords);
   }
 
   public static String censorMessage(Set<String> censorList, String message) {
@@ -108,7 +109,7 @@ public class Chat {
         if (session.isOpen()) {
           System.out.println("sesion is open");
           session.getRemote().sendString(String.valueOf(new JSONObject()
-              .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor, message)))
+              .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor.get(roomId), message)))
               ));
         }
       }
@@ -119,6 +120,32 @@ public class Chat {
   }
 
   public static void broadcastCorrect(String sender, String message, Integer roomId) {
+    String[] variables = message.split(";");
+    int x = Integer.valueOf(variables[2]);
+    int y = Integer.valueOf(variables[3]);
+    Orientation o = Orientation
+        .valueOf(variables[4]);
+    Integer id = Integer.valueOf(variables[5]);
+
+    boolean valid = GUI.checkValid(variables[1], x, y, o, id);
+    System.out.println(valid);
+    if (valid){
+      try {
+        if (roomUsers.get(roomId) != null ) {
+        for (Session session : roomUsers.get(roomId)) {
+          if (session.isOpen()) {
+            System.out.println("broadcastin");
+            session.getRemote().sendString(message);
+          }
+        }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+  
+  public static void broadcastLetter(String sender, String message, Integer roomId) {
     String[] variables = message.split(";");
     int x = Integer.valueOf(variables[2]);
     int y = Integer.valueOf(variables[3]);

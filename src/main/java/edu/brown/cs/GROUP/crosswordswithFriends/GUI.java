@@ -107,7 +107,9 @@ public class GUI {
     FreeMarkerEngine freeMarker = createEngine();
     Spark.get("/home", new FrontHandler(db), freeMarker);
     Spark.get("/check", new CheckHandler());
-    Spark.get("/chatroom", new ChatHandler(), freeMarker);
+    Spark.get("/hint1", new Hint1Handler());
+    Spark.get("/hint2", new Hint2Handler());
+    Spark.get("/hint3", new Hint3Handler());
   }
 
   /** Handler for serving main page. */
@@ -142,7 +144,7 @@ public class GUI {
       }
 
       List<Word> toPass = puzzle.getFinalList();
-      Chat.setCensorWords(toPass);
+      Chat.setCensorWords(id2, toPass);
 
       Box[][] crossword = puzzle.getArray();
       System.out.println(puzzle);
@@ -161,16 +163,13 @@ public class GUI {
   private class CheckHandler implements Route {
     @Override
     public Object handle(final Request req, final Response res) {
-
       QueryParamsMap qm = req.queryMap();
-
       String word = qm.value("word");
       int y = Integer.valueOf(qm.value("y"));
       int x = Integer.valueOf(qm.value("x"));
       Orientation orientation = Orientation
           .valueOf(qm.value("orientation"));
       Integer id = Integer.valueOf(qm.value("id"));
-
       if (!crosswordCache.containsKey(id)) {
         return "false";
       }
@@ -193,18 +192,27 @@ public class GUI {
       return "true";
     }
   }
-
-  /** Handler for serving chat page. */
-  private static class ChatHandler implements TemplateViewRoute {
-
+  
+  private class Hint1Handler implements Route {
     @Override
-    public ModelAndView handle(Request req, Response res) {
-      System.out.println("in chat handler ");
-      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("roomNumber", id.get()).build();
-      return new ModelAndView(variables, "chat.ftl");
+    public Object handle(final Request req, final Response res) {
+      String letter = "";
+      return "The letter is " + letter;
     }
-
+  }
+  
+  private class Hint2Handler implements Route {
+    @Override
+    public Object handle(final Request req, final Response res) {
+      return res;
+    }
+  }
+  
+  private class Hint3Handler implements Route {
+    @Override
+    public Object handle(final Request req, final Response res) {
+      return res;
+    }
   }
 
 }
