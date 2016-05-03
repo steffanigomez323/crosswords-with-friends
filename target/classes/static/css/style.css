@@ -20,6 +20,11 @@ body{
 	
 }
 
+#timer, #player {
+	color: white;
+	font-size: 40px;
+}
+
 .crossword{
 	width: 1025px;
 	position: absolute;

@@ -169,7 +169,7 @@ public class GUI {
       crosswordCache.put(id2, puzzle);
 
       ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("crossword", crossword).put("id", id2.toString()).put("player", player).put("players", "double")
+          .put("crossword", crossword).put("id", id2.toString()).put("player", player)
           .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword.ftl");
@@ -201,7 +201,7 @@ public class GUI {
         puzzle = createCrossword();
       } else {
         while (puzzle.getPlayers() == 2) {
-          id2 = id.incrementAndGet();
+          id2 = id2+1;
           puzzle = crosswordCache.get(id2);
           if (puzzle == null){
             puzzle = createCrossword();
@@ -220,7 +220,7 @@ public class GUI {
       crosswordCache.put(id2, puzzle);
 
       ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("crossword", crossword).put("id", id2.toString()).put("players", "single")
+          .put("crossword", crossword).put("id", id2.toString())
           .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword_single.ftl");

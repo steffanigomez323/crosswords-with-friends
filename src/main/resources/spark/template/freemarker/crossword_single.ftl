@@ -1,7 +1,7 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
 <div id="timer">10:00</div>
-<div id="player" class="${players}">single player</div>
+<div id="player" class="single">single player</div>
 <div id=${id} class="crossword">
 <div id = "leftWrapper">
 <ul id="clues">
