@@ -39,9 +39,7 @@ public class TXTReader {
         ps.addBatch();
 
       }
-      System.out.println("start batch");
       ps.executeBatch();
-      System.out.println("end batch");
       ps.close();
       reader.close();
     }

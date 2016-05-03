@@ -1,21 +1,16 @@
-//Establish the WebSocket connection and set up event handlers
-var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/chat/");
-webSocket.onmessage = function (msg) { console.log("in on message"); updateChat(msg); };
-webSocket.onclose = function () { alert("WebSocket connection closed ") };
-
 //Send message if "Send" is clicked
-id("send").addEventListener("click", function () {
-    sendMessage(id("message").value);
-});
+var players = $("#player").attr("class");
+if (players == "double"){
+	//Send message if enter is pressed in the input field
+	id("message").addEventListener("keypress", function (e) {
+	    if (e.keyCode === 13) { sendMessage(e.target.value); }
+	});
+}
 
-//Send message if enter is pressed in the input field
-id("message").addEventListener("keypress", function (e) {
-    if (e.keyCode === 13) { sendMessage(e.target.value); }
-});
 
 //Send a message if it's not empty, then clear the input field
 function sendMessage(message) {
-    if (message !== "") {
+    if (message !== "" && players == "double") {
     	console.log("typed + message" + message);
         webSocket.send(message);
         id("message").value = "";
@@ -24,13 +19,43 @@ function sendMessage(message) {
 
 //Update the chat-panel, and the list of connected users
 function updateChat(msg) {
-    var data = JSON.parse(msg.data);
-    insert("chat", data.userMessage);
-    console.log("inserted");
-    id("userlist").innerHTML = "";
-    data.userlist.forEach(function (user) {
-        insert("userlist", "<li>" + user + "</li>");
-    });
+    if (msg.data.startsWith("DATA;")){
+    	var data = msg.data.split(";");
+    	var word = data[1];
+    	var col = parseFloat(data[2]);
+    	var row = parseFloat(data[3]);
+    	var orientation = data[4];
+
+        if (orientation == "DOWN"){
+        	var c = checkCol($(".c"+col), row, col, false);
+        	for (i in c){
+        		$(c[i]).val(word[i]);
+        	}
+        	$(c).attr("disabled", "disabled");
+            $(c).addClass("inactive");
+        } else if (orientation == "ACROSS"){
+        	var r = checkRow($(".r"+row), col, row, false);
+        	for (i in r){
+        		$(r[i]).val(word[i]);
+        	}
+        	$(r).attr("disabled", "disabled");
+        	$(r).addClass("inactive");
+        }
+    } else if (msg.data.startsWith("LETTER;")) {
+    
+    }
+    else {
+		var players = $("#player").attr("class");
+		if (players == "double"){
+	      var data = JSON.parse(msg.data);
+	      insert("chat", data.userMessage);
+	      console.log("inserted");
+	      id("userlist").innerHTML = "";
+	      data.userlist.forEach(function (user) {
+	          insert("userlist", "<li>" + user + "</li>");
+	      });
+		}
+    }
 }
 
 

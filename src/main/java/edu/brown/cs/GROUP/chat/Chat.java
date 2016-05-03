@@ -23,6 +23,8 @@ import java.util.Set;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
 
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
 import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 
 public class Chat {
@@ -30,7 +32,7 @@ public class Chat {
   static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
   static Set<String> stopWords = new HashSet<String>();
   static Map<Integer, List<Session>> roomUsers = new HashMap<Integer, List<Session>>();
-  static Set<String> wordsToCensor = new HashSet<String>();
+  static HashMap<Integer, Set<String>> wordsToCensor = new HashMap<Integer, Set<String>>();
 
   public static void main(String[] args) throws IOException {
   }
@@ -64,27 +66,31 @@ public class Chat {
     init();
   }
 
-  public static void setCensorWords(List<Word> toPass) {
+  public static void setCensorWords(Integer roomId, List<Word> toPass) {
+    Set<String> censorWords = new HashSet<String>();
     for (Word word : toPass) {
-      wordsToCensor.add(word.getWord());
-      String cleanedClue = word.getClue().replace("[^a-zA-Z ]", "");
+      censorWords.add(word.getWord());
+      String cleanedClue = word.getClue().replaceAll("[^a-zA-Z ]", "")
+          .toLowerCase();
       String[] clueWords = cleanedClue.split(" ");
-      System.out.println("clues " + word.getClue());
       for (String clueWord : clueWords) {
         if (!stopWords.contains(clueWord)) {
-          wordsToCensor.add(clueWord);
+          System.out.println("clueword " + clueWord);
+          censorWords.add(clueWord);
         }
       }
     }
+    wordsToCensor.put(roomId, censorWords);
   }
 
-  public static String censorMessage(Set<String> censorList,
-      String message) {
-    String cleanedMessage = message.replace("[^a-zA-Z ]", "")
+  public static String censorMessage(Integer roomId, String message) {
+    Set<String> censorWords = wordsToCensor.get(roomId);
+    String cleanedMessage = message.replaceAll("[^a-zA-Z ]", "")
         .toLowerCase();
+    System.out.println("message: " + cleanedMessage);
     String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
-      if (censorList.contains(messageArray[i])) {
+      if (censorWords.contains(messageArray[i])) {
         Integer numAstericks = messageArray[i].length();
         StringBuilder stars = new StringBuilder("");
         for (int g = 0; g < numAstericks; g++) {
@@ -92,7 +98,7 @@ public class Chat {
         }
         messageArray[i] = stars.toString();
       } else {
-        for (String word : censorList) {
+        for (String word : censorWords) {
           Integer numToCensor = word.length();
           String wordInArray = messageArray[i];
           String astericks = new String(new char[numToCensor])
@@ -111,26 +117,88 @@ public class Chat {
 
   // Sends a message from one user to all users, along with a list of current
   // usernames
-  public static void broadcastMessage(String sender, String message,
+  public static void broadcastStart(String sender, String message,
       Integer roomId) {
     try {
-      System.out.println("room id " + roomId);
       if (roomUsers.get(roomId) != null) {
-        System.out.println("room id " + roomId + roomUsers.get(roomId));
         for (Session session : roomUsers.get(roomId)) {
-          System.out.println("in broadcast message");
-          System.out.println("sender " + sender);
           if (session.isOpen()) {
-            System.out.println("sesion is open");
-            session.getRemote()
-                .sendString(String.valueOf(new JSONObject()
-                    .put("userMessage", createHtmlMessageFromSender(sender,
-                        censorMessage(wordsToCensor, message)))));
+            session.getRemote().sendString(
+                String.valueOf(new JSONObject().put("userMessage",
+                    createHtmlMessageFromSender(sender, message))));
           }
         }
       }
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  // Sends a message from one user to all users, along with a list of current
+  // usernames
+  public static void broadcastMessage(String sender, String message,
+      Integer roomId) {
+    try {
+      if (roomUsers.get(roomId) != null) {
+        for (Session session : roomUsers.get(roomId)) {
+          if (session.isOpen()) {
+            session.getRemote()
+                .sendString(String.valueOf(new JSONObject()
+                    .put("userMessage", createHtmlMessageFromSender(sender,
+                        censorMessage(roomId, message)))));
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void broadcastCorrect(String sender, String message,
+      Integer roomId) {
+    String[] variables = message.split(";");
+    int x = Integer.valueOf(variables[2]);
+    int y = Integer.valueOf(variables[3]);
+    Orientation o = Orientation.valueOf(variables[4]);
+    Integer id = Integer.valueOf(variables[5]);
+    boolean valid = GUI.checkValid(variables[1], x, y, o, id);
+    if (valid) {
+      try {
+        if (roomUsers.get(roomId) != null) {
+          for (Session session : roomUsers.get(roomId)) {
+            if (session.isOpen()) {
+              session.getRemote().sendString(message);
+            }
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public static void broadcastLetter(String sender, String message,
+      Integer roomId) {
+    String[] variables = message.split(";");
+    int x = Integer.valueOf(variables[2]);
+    int y = Integer.valueOf(variables[3]);
+    Orientation o = Orientation.valueOf(variables[4]);
+    Integer id = Integer.valueOf(variables[5]);
+    boolean valid = GUI.checkValid(variables[1], x, y, o, id);
+    System.out.println(valid);
+    if (valid) {
+      try {
+        if (roomUsers.get(roomId) != null) {
+          for (Session session : roomUsers.get(roomId)) {
+            if (session.isOpen()) {
+              System.out.println("broadcastin");
+              session.getRemote().sendString(message);
+            }
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 

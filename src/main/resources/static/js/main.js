@@ -1,20 +1,83 @@
+//TO DO
+//Dissallow one-player orientation switching when not possible
+//Double clues error
+//Censoring words by room id
+//clear caches on exit
+
+
+//Establish the WebSocket connection and set up event handlers
+var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/chat/");
+webSocket.onmessage = function (msg) { console.log("in on message"); updateChat(msg); };
+webSocket.onclose = function () { alert("WebSocket connection closed ") };
+
+function time(stop){
+	  var t = Date.parse(stop) - Date.parse(new Date());
+	  var seconds = Math.floor((t/1000)%60);
+	  var minutes = Math.floor((t/1000/60)%60);
+	  return {
+	    'minutes': minutes,
+	    'seconds': seconds
+	  };
+}
+
+function n(n){
+    return n > 9 ? "" + n: "0" + n;
+}
+
+function countdown(){
+	var timeLeft = time(stop);
+	
+	$("#timer").text(n(timeLeft["minutes"])+":"+n(timeLeft["seconds"]));
+	if (timeLeft["minutes"]==0 && timeLeft["seconds"]==0){
+		alert("you lose :(");
+		clearInterval(timer);
+	}
+}
+
+function wordSize(classes, o){
+	var found = null
+	for (i in classes){
+		var c = classes[i];
+		if (o=="down" && c.startsWith("D")){
+			found = c;
+			break;
+		} else if (o=="across" && c.startsWith("A")){
+			found = c;
+			break;
+		}
+	}
+	if (found != null){
+		if (o=="down"){
+			return parseFloat(found.split("N")[1])-1;
+		} else {
+			return parseFloat(found.split("S")[2])-1;
+		}
+	}
+	return 0;
+}
+
 function checkCol(c, row, x, check){
+	console.log("checking column");
+	console.log(c);
+	console.log(row); 
+	console.log(x); 
+	console.log(check);
 	
 	var foundUp = false;
 	var foundDown = false;
 	
 	var down = row+1;
 	var up=row-1;
-	
+	console.log(numRow);
 	var block = c[row];
 	
 	var y = -1;
 	var size = 1;
 	
-	$(block).addClass("wordActive");
 	var word = $(block).val();
-	var rSize = rowSize($(block).attr("class").split(" "));
-	if (rSize>0){
+	var cSize = wordSize($(block).attr("class").split(" "), "down");
+	console.log(cSize);
+	if (cSize>0){
 		y = row;
 	}
 	
@@ -28,11 +91,9 @@ function checkCol(c, row, x, check){
 			block = c[up];
 			if (!$(block).hasClass("filled")){
 				word = $(block).val()+word;
-				if (y==-1){
-					var rSize = rowSize($(block).attr("class").split(" "));
-					if (rSize>0){
-						y = up;
-					}
+				var cSize = wordSize($(block).attr("class").split(" "), "down");
+				if (cSize>0){
+					y = up;
 				}
 				col.push(block);
 				up--;
@@ -55,8 +116,7 @@ function checkCol(c, row, x, check){
 			}
 		}
 	}
-	
-	console.log(x+" "+y);
+
 	if (check && size>1 && word.length == size){
 		checkWord(word, x, y, "DOWN");
 	}
@@ -81,10 +141,9 @@ function checkRow(r, col, y, check){
 	var x = -1;
 	var size = 1;
 	
-	$(block).addClass("wordActive");
 	var word = $(block).val();
-	var cSize = colSize($(block).attr("class").split(" "));
-	if (cSize>0){
+	var rSize = wordSize($(block).attr("class").split(" "), "across");
+	if (rSize>0){
 		x = col;
 	}
 	
@@ -98,11 +157,10 @@ function checkRow(r, col, y, check){
 			block = r[left];
 			if (!$(block).hasClass("filled")){
 				word = $(block).val()+word;
-				if (x==-1){
-					var cSize = colSize($(block).attr("class").split(" "));
-					if (cSize>0){
-						x = left;
-					}
+				var rSize = wordSize($(block).attr("class").split(" "), "across");
+				console.log(rSize);
+				if (rSize>0){
+					x = left;
 				}
 				row.push(block);
 				left--;
@@ -136,29 +194,16 @@ function checkRow(r, col, y, check){
 }
 
 function checkWord(word, x, y, o){
-	console.log(word+" "+x+" "+y+" "+o);
 	var id = $(".crossword").attr("id");
-	console.log("id " + id);
-	$.get("/check", {word: word, x: x, y: y, orientation: o, id:id}, function(response) {
-        var res = JSON.parse(response);
-        if (res){
-        	
-        	var classes = $(".active").attr("class").split(" ");
-        	var row = parseFloat(classes[2][1]);
-        	var col = parseFloat(classes[1][1]);
-        	
-        	if (orientation == "down"){
-        		
-        		var c = checkCol($("."+classes[1]), row, col, false);
-        		$(c).attr("disabled", "disabled");
-        		$(c).addClass("inactive");
-        	} else if (orientation == "across"){
-        		var r = checkRow($("."+classes[2]), col, row, false);
-        		$(r).attr("disabled", "disabled");
-        		$(r).addClass("inactive");
-        	}
-        }
-    });
+	var toSend = "DATA;"+word+";"+x+";"+y+";"+o+";"+id;
+	console.log(word +". X : "+x+" Y : "+y+" O : "+o);
+	webSocket.send(toSend);
+}
+
+function exposeLetter(x, y, o){
+	var id = $(".crossword").attr("id");
+	var toSend = "LETTER;"+x+";"+y+";"+o+";"+id;
+	webSocket.send(toSend);
 }
 
 function wordActive(block){
@@ -177,133 +222,131 @@ function orient(){
 	}
 }
 
-function rowSize(classes){
-	var found = null
-	for (i in classes){
-		var c = classes[i];
-		if (c.startsWith("D")){
-			found = c;
-			break;
-		}
-	}
-	if (found != null){
-		return parseFloat(found.split("N")[1])-1;
-	}
-	return 0;
-}
-
-function colSize(classes){
-	var found = null
-	for (i in classes){
-		var c = classes[i];
-		if (c.startsWith("A")){
-			found = c;
-			break;
-		}
-	}
-	if (found != null){
-		return parseFloat(found.split("S")[2])-1;
-	}
-	return 0;
-}
 
 function next(dir){
 	var curr = $(".active");
-	$(".active").removeClass("active");
 	var classes = curr.attr("class").split(" ");
 	
 	var row = parseFloat(classes[2][1]);
 	var col = parseFloat(classes[1][1]);
+	var word = $(".c"+col);
 	
-	var startX = null;
-	var startY = null;
+	if (orientation == "across"){
+		word = $(".r"+row);
+		var temp = col;
+		col = row;
+		row = temp;
+	}
+	
+	var block = getNext(dir, col, row, word, classes);
+	console.log(block);
 	
 	if (orientation == "down"){
-		var c = $(".c"+col);
-
-		var next;
-		if (dir == -1){
-			next = row-1;
-		} else {
-			next = row+1;
-		}
-		
-		if (next<0){
-			console.log("1");
-			next = row+rowSize(classes);
-		} else if (next == numCol){
-			console.log("2");
-			next = row-rowSize(classes);
-		}
-
-		var block = c[next];
-		
-		if ($(block).hasClass("filled")){
-			console.log(classes);
-			var size = rowSize(classes);
-			if (dir == -1){
-				console.log("3");
-				next = row+size;
-			} else {
-				console.log("4");
-				next = row-size;
-			}
-			block = c[next];
-		}
-		
-		checkCol(c, row, col, true);
-		
-		$(block).addClass("active");
-		$(block).focus();
-		
-	} else if (orientation == "across"){
-		var r = $(".r"+row);
-
-		var next;
-		if (dir == -1){
-			next = col-1;
-		} else {
-			next = col+1;
-		}
-		
-		if (next<0){
-			console.log("1b");
-			next = col+colSize(classes);
-		} else if (next == numRow){
-			console.log("2b");
-			next = col-colSize(classes);
-		}
-
-		var block = r[next];
-		
-		if ($(block).hasClass("filled")){
-			var size = colSize(classes);
-			if (dir == -1){
-				console.log("3b");
-				next = col+size;
-			} else {
-				console.log("4b");
-				next = col-size;
-			}
-			block = r[next];
-		}
-		
-		checkRow(r, col, row, true);
-		
-		$(block).addClass("active");
-		$(block).focus();
+		checkCol(word, row, col, true);
+	} else {
+		checkRow(word, row, col, true);
 	}
+	
+	$(".active").removeClass("active");
+	$(block).addClass("active");
+	$(block).focus();
 }
+
+function getNext(dir, i, j, word, classes){
+	
+	var next;
+	if (dir == -1){
+		next = j-1;
+	} else {
+		next = j+1;
+	}
+	
+	if (next<0){
+		next = j+wordSize(classes, orientation);
+	} else if (next == numRow){
+		next = j-wordSize(classes, orientation);
+	}
+	
+	var block = word[next];
+	console.log(block);
+	
+	if ($(block).hasClass("filled")){
+		var size = wordSize(classes, orientation);
+		if (dir == -1){
+			next = j+size;
+		} else {
+			next = j-size;
+		}
+		block = word[next];
+	}
+	if ($(block).attr("disabled")=="disabled"){
+		console.log(dir+" "+i+" "+next);
+		return getNext(dir, i, next, word, $(block).attr("class").split(" "));
+	}
+	return block;
+}
+
 
 var orientation = "down";
 var numCol = 0;
 var numRow = 0;
+var stop = new Date();
+stop.setMinutes(stop.getMinutes() + 10);
+var timer = setInterval(countdown, 1000);
 
 window.onload = function(response) {	
+
+	$("hint1").click(function(){
+		$.get( "/hint1", function(data ) {
+			$("textarea").click(function(){
+				$(".active").removeClass("active");
+				$(this).addClass("active");
+				orient();
+			});
+		});
+		$("hint1").hide();
+	});
+	
+	$("hint2").click(function(){
+		$.get( "/hint2", function(data ) {
+			
+		});
+		$("hint2").hide();
+	});
+	
+	$("hint3").click(function(){
+		$.get( "/hint3", function(data ) {
+			
+		});
+		$("hint3").hide();
+	});
 	
 	numRow = $(".row").length;
 	if (numRow>0){
 		numCol = $(".r0").length;
+	}
+	
+	var players = $("#player").attr("class");
+	if (players == "double"){
+		var player = $("#player").text();
+		var playerWords = $("."+player).prev().each(function(){
+			var classes = $(this).attr("class").split(" ");
+			var row = parseFloat(classes[2][1]);
+			var col = parseFloat(classes[1][1]);
+			var word = $(".c"+col);
+			var enabled;
+			if (player == "ACROSS"){
+				orientation = "across";
+				word = $(".r"+row);
+				enabled = checkRow(word,col, row, false);
+			} else {
+				enabled = checkCol(word, row, col, false);
+			} 
+			console.log(enabled);
+			$(enabled).attr("disabled", false);
+		});
+	} else {
+		$("textarea").attr("disabled", false);
 	}
 	
 	$("textarea").click(function(){
@@ -318,39 +361,48 @@ window.onload = function(response) {
 	        	if (orientation=="across"){
 	        		next(-1);
 	        	}else {
-		        	orientation = "across";
-		        	orient();
+	        		if (players == "single"){
+			        	orientation = "across";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 38:
 	        	if (orientation=="down"){
 	        		next(-1);
 	        	}else {
-		        	orientation = "down";
-		        	orient();
+	        		if (players == "single"){
+			        	orientation = "down";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 39:
 	        	if (orientation=="across"){
 	        		next(1);
 	        	}else {
-		        	orientation = "across";
-		        	orient();
+	        		if (players == "single"){
+			        	orientation = "across";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 40:
 	        	if (orientation=="down"){
 	        		next(1);
 	        	}else {
-		        	orientation = "down";
-		        	orient();
+	        		if (players == "single"){
+			        	orientation = "down";
+			        	orient();
+	        		}
 	        	}
 	        	break;
 	        case 8:
 	        	$(this).val("");
 	        default:
-	        	if (event.keyCode>64 && event.keyCode<90){
+	        	if (event.keyCode>64 && event.keyCode<91){
 	        		$(this).val(String.fromCharCode(event.keyCode));
+	        		console.log("1");
 	        		next();
 	        	}
 	     }

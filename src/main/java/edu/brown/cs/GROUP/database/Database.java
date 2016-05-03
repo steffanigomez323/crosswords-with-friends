@@ -76,7 +76,6 @@ public class Database {
       try (ResultSet rs = prep.executeQuery()) {
         while (rs.next()) {
           String word = rs.getString(1);
-          // System.out.println(word);
           words.add(word);
         }
       }
@@ -94,7 +93,6 @@ public class Database {
       try (ResultSet rs = prep.executeQuery()) {
         while (rs.next()) {
           clue = rs.getString(1);
-          System.out.println("CLUE: " + clue);
         }
       }
     } catch (SQLException e) {

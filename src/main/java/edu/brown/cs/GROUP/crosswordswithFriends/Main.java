@@ -1,5 +1,9 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.words.CSVReader;
+import edu.brown.cs.GROUP.words.TXTReader;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,9 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
-import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.words.CSVReader;
-import edu.brown.cs.GROUP.words.TXTReader;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -33,7 +34,6 @@ public final class Main {
   public static void main(String[] args) {
     try {
       new Main(args).run();
-      System.out.println("running");
     } catch (IOException e) {
       System.exit(1);
     }
@@ -142,7 +142,6 @@ public final class Main {
             "ERROR: There must be at least one corpus file to start the program with.");
         return;
       }
-      System.out.println("here");
       new GUI(PORT, db);
       try {
         InputStreamReader isr = new InputStreamReader(System.in, "UTF8");

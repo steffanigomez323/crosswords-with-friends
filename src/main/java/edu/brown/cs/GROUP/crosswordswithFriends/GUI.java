@@ -1,22 +1,20 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import com.google.common.collect.ImmutableMap;
+
+import edu.brown.cs.GROUP.chat.Chat;
+import edu.brown.cs.GROUP.database.Database;
+import freemarker.template.Configuration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-
-import edu.brown.cs.GROUP.chat.Chat;
-import edu.brown.cs.GROUP.database.Database;
-import freemarker.template.Configuration;
 import spark.ModelAndView;
-import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -25,14 +23,9 @@ import spark.template.freemarker.FreeMarkerEngine;
 public class GUI {
 
   /** For converting to JSON. */
-  private static final Gson GSON = new Gson();
-  private static final int ROWS = 9;
-  private static final int COLS = 9;
-
   private static HashMap<Integer, Crossword> crosswordCache;
 
   private Database db;
-  private Crossword puzzle;
   public static AtomicInteger id;
 
   /**
@@ -44,12 +37,29 @@ public class GUI {
   public GUI(int port, Database d) {
     Spark.port(port);
     db = d;
-    // List<String> words = db.getAllUnderSeven();
-    // Crossword puzzle = new Crossword(words);
-    // puzzle.fillPuzzle();
     id = new AtomicInteger(1000);
     runSparkServer();
     crosswordCache = new HashMap<Integer, Crossword>();
+  }
+
+  public static boolean checkValid(String word, int x, int y,  Orientation orientation, Integer id){
+    if (!crosswordCache.containsKey(id)) {
+      return false;
+    }
+    Crossword puzzle = crosswordCache.get(id);
+    Box[][] crossword = puzzle.getArray();
+    for (int i = 0; i < word.length(); i++) {
+      Box box = crossword[y][x];
+      if (!box.checkVal(word.charAt(i))) {
+        return false;
+      }
+      if (orientation == Orientation.ACROSS) {
+        x++;
+      } else {
+        y++;
+      }
+    }
+    return true;
   }
 
   /**
@@ -88,41 +98,120 @@ public class GUI {
       e.printStackTrace();
     }
     FreeMarkerEngine freeMarker = createEngine();
-    Spark.get("/home", new FrontHandler(db), freeMarker);
-    Spark.get("/check", new CheckHandler());
+    Spark.get("/home", new FrontHandler(), freeMarker);
+    Spark.get("/two", new TwoHandler(db), freeMarker);
+    Spark.get("/one", new OneHandler(db), freeMarker);
     Spark.get("/chatroom", new ChatHandler(), freeMarker);
   }
 
-  /** Handler for serving main page. */
   private static class FrontHandler implements TemplateViewRoute {
+
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+
+      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>().build();
+
+      return new ModelAndView(variables, "main.ftl");
+    }
+
+  }
+
+
+  /** Handler for serving main page. */
+  private static class TwoHandler implements TemplateViewRoute {
 
     private Database db;
 
-    public FrontHandler(Database db) {
+    public TwoHandler(Database db) {
       this.db = db;
+    }
+
+    private Crossword createCrossword(){
+      List<String> originalList = db.getAllUnderNine();
+      return new Crossword(originalList, db);
     }
 
     @Override
     public ModelAndView handle(Request req, Response res) {
 
+      String player = "ACROSS";
+
       Integer id2 = id.get();
 
       Crossword puzzle = crosswordCache.get(id2);
-      if (puzzle == null || puzzle.getPlayers() == 2) {
-        if (puzzle == null) {
-          id2 = id.get();
-        } else {
-          id2 = id.incrementAndGet();
-        }
-        List<String> originalList = db.getAllUnderNine();
-        puzzle = new Crossword(originalList, db);
 
-      } else {
+      if (puzzle == null){
+        puzzle = createCrossword();
+        player = "DOWN";
+      } else if (puzzle.getPlayers() != 2){
         puzzle.addPlayer();
+      } else {
+        while (puzzle.getPlayers() == 2) {
+          id2 = id.incrementAndGet();
+          puzzle = crosswordCache.get(id2);
+          if (puzzle == null){
+            puzzle = createCrossword();
+          }
+        }
+        player = "DOWN";
       }
 
+      System.out.println("2 player : "+player);
+      System.out.println(id2);
+
       List<Word> toPass = puzzle.getFinalList();
-      Chat.setCensorWords(toPass);
+      Chat.setCensorWords(id2, toPass);
+
+      Box[][] crossword = puzzle.getArray();
+      System.out.println(puzzle);
+
+      crosswordCache.put(id2, puzzle);
+
+      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
+          .put("crossword", crossword).put("id", id2.toString()).put("player", player)
+          .put("roomNumber", id2.toString()).build();
+
+      return new ModelAndView(variables, "crossword.ftl");
+    }
+
+  }
+
+  /** Handler for serving main page. */
+  private static class OneHandler implements TemplateViewRoute {
+
+    private Database db;
+
+    public OneHandler(Database db) {
+      this.db = db;
+    }
+
+    private Crossword createCrossword(){
+      List<String> originalList = db.getAllUnderNine();
+      return new Crossword(originalList, db);
+    }
+
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+
+      Integer id2 = id.get()+1;
+      Crossword puzzle = crosswordCache.get(id2);
+
+      if (puzzle == null){
+        puzzle = createCrossword();
+      } else {
+        while (puzzle.getPlayers() == 2) {
+          id2 = id2+1;
+          puzzle = crosswordCache.get(id2);
+          if (puzzle == null){
+            puzzle = createCrossword();
+          }
+        }
+      }
+      puzzle.addPlayer();
+
+
+      System.out.println("1 player");
+      System.out.println(id2);
 
       Box[][] crossword = puzzle.getArray();
       System.out.println(puzzle);
@@ -133,55 +222,17 @@ public class GUI {
           .put("crossword", crossword).put("id", id2.toString())
           .put("roomNumber", id2.toString()).build();
 
-      return new ModelAndView(variables, "crossword.ftl");
+      return new ModelAndView(variables, "crossword_single.ftl");
     }
 
   }
 
-  private class CheckHandler implements Route {
-    @Override
-    public Object handle(final Request req, final Response res) {
-
-      QueryParamsMap qm = req.queryMap();
-
-      String word = qm.value("word");
-      int y = Integer.valueOf(qm.value("y"));
-      int x = Integer.valueOf(qm.value("x"));
-      Orientation orientation = Orientation
-          .valueOf(qm.value("orientation"));
-      Integer id = Integer.valueOf(qm.value("id"));
-
-      System.out.println("Cool!");
-
-      if (!crosswordCache.containsKey(id)) {
-        return "false";
-      }
-      System.out.println("checking : " + word);
-      Crossword puzzle = crosswordCache.get(id);
-      Box[][] crossword = puzzle.getArray();
-      for (int i = 0; i < word.length(); i++) {
-        Box box = crossword[y][x];
-        box.printLetter();
-        if (!box.checkVal(word.charAt(i))) {
-          System.out.println("CHECK : " + word.charAt(i));
-          return "false";
-        }
-        if (orientation == Orientation.ACROSS) {
-          x++;
-        } else {
-          y++;
-        }
-      }
-      return "true";
-    }
-  }
 
   /** Handler for serving chat page. */
   private static class ChatHandler implements TemplateViewRoute {
 
     @Override
     public ModelAndView handle(Request req, Response res) {
-      System.out.println("in chat handler ");
       ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
           .put("roomNumber", id.get()).build();
       return new ModelAndView(variables, "chat.ftl");
