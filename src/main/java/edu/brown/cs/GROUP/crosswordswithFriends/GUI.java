@@ -88,17 +88,17 @@ public class GUI {
     char a[] = scrambled.toCharArray();
     for(int i=0 ; i<a.length-1 ; i++) {
       int j = random.nextInt(a.length-1);
-      char temp = a[i]; 
-      a[i] = a[j];  
+      char temp = a[i];
+      a[i] = a[j];
       a[j] = temp;
-    }       
+    }
     return new String(a);
   }
 
   public static char getLetter(int x, int y, Integer id){
     if (!crosswordCache.containsKey(id)) {
       System.out.println(crosswordCache.keySet());
-      return (Character) null;
+      return '-';
     }
     //System.out.println("letter letter : ");
     Crossword puzzle = crosswordCache.get(id);
@@ -199,8 +199,8 @@ public class GUI {
         player = "DOWN";
       }
 
-      System.out.println("2 player : "+player);
-      System.out.println(id2);
+//      System.out.println("2 player : "+player);
+//      System.out.println(id2);
 
       List<Word> toPass = puzzle.getFinalList();
       Chat.setCensorWords(id2, toPass);

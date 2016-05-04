@@ -75,7 +75,6 @@ public class Chat {
       String[] clueWords = cleanedClue.split(" ");
       for (String clueWord : clueWords) {
         if (!stopWords.contains(clueWord)) {
-          System.out.println("clueword " + clueWord);
           censorWords.add(clueWord);
         }
       }
@@ -87,7 +86,6 @@ public class Chat {
     Set<String> censorWords = wordsToCensor.get(roomId);
     String cleanedMessage = message.replaceAll("[^a-zA-Z ]", "")
         .toLowerCase();
-    System.out.println("message: " + cleanedMessage);
     String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
       if (censorWords.contains(messageArray[i])) {
@@ -180,12 +178,10 @@ public class Chat {
 
   public static void broadcastLetter(String message, Integer roomId) {
     String[] variables = message.split(";");
-    System.out.println("BROADCAST LETTER " );
     int x = Integer.valueOf(variables[1]);
     int y = Integer.valueOf(variables[2]);
     Integer id = Integer.valueOf(variables[3]);
     Character letter = GUI.getLetter(x, y, roomId);
-    System.out.println(letter);
     try {
       if (roomUsers.get(roomId) != null ) {
         for (Session session : roomUsers.get(roomId)) {
@@ -200,7 +196,7 @@ public class Chat {
       e.printStackTrace();
     }
   }
-  
+
   public static void broadcastAnagram(String message, Integer roomId) {
     String[] variables = message.split(";");
     System.out.println("ANAGRAM " );

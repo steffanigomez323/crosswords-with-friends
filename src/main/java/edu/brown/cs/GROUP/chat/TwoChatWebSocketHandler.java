@@ -20,16 +20,18 @@ public class TwoChatWebSocketHandler {
   public void onConnect(Session user) throws Exception {
 
     int nextRoomNumber = GUI.twoPlayerId.get();
-    String username = "down" + nextRoomNumber;
 
     //roomUsers maps room#s to list of sessions
     List<Session> usersInRoom = new ArrayList<Session>();
     if (Chat.roomUsers.get(nextRoomNumber) != null) {
       usersInRoom = Chat.roomUsers.get(nextRoomNumber);
+      GUI.twoPlayerId.getAndIncrement();
     }
+
     usersInRoom.add(user);
     Chat.roomUsers.put(nextRoomNumber, usersInRoom);
 
+    String username = "down" + nextRoomNumber;
     //userUsernameMap maps sessions to usernames
     if (Chat.userUsernameMap.containsValue(username)) {
       username = "across" + nextRoomNumber;
@@ -39,6 +41,7 @@ public class TwoChatWebSocketHandler {
     //userRoom maps sessions to room#s
     userRoom.put(user, nextRoomNumber);
 
+    System.out.println(username);
     Chat.broadcastStart("Server", (username + " joined the chat"), nextRoomNumber);
   }
 
