@@ -120,12 +120,13 @@ public class Chat {
   public static void broadcastStart(String sender, String message,
       Integer roomId) {
     try {
+
       if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
           if (session.isOpen()) {
             session.getRemote().sendString(
                 String.valueOf(new JSONObject().put("userMessage",
-                    createHtmlMessageFromSender(sender, message))));
+                    createHtmlMessageFromSender(sender, censorMessage(roomId, message)))));
           }
         }
       }
@@ -177,28 +178,49 @@ public class Chat {
     }
   }
 
-  public static void broadcastLetter(String sender, String message,
-      Integer roomId) {
+  public static void broadcastLetter(String message, Integer roomId) {
     String[] variables = message.split(";");
-    int x = Integer.valueOf(variables[2]);
-    int y = Integer.valueOf(variables[3]);
-    Orientation o = Orientation.valueOf(variables[4]);
-    Integer id = Integer.valueOf(variables[5]);
-    boolean valid = GUI.checkValid(variables[1], x, y, o, id);
-    System.out.println(valid);
-    if (valid) {
-      try {
-        if (roomUsers.get(roomId) != null) {
-          for (Session session : roomUsers.get(roomId)) {
-            if (session.isOpen()) {
-              System.out.println("broadcastin");
-              session.getRemote().sendString(message);
-            }
+    System.out.println("BROADCAST LETTER " );
+    int x = Integer.valueOf(variables[1]);
+    int y = Integer.valueOf(variables[2]);
+    Integer id = Integer.valueOf(variables[3]);
+    Character letter = GUI.getLetter(x, y, roomId);
+    System.out.println(letter);
+    try {
+      if (roomUsers.get(roomId) != null ) {
+        for (Session session : roomUsers.get(roomId)) {
+          if (session.isOpen()) {
+            String toSend = "LETTER;" + x + ";" + y + ";" + letter.toString();
+            System.out.println(toSend);
+            session.getRemote().sendString(toSend);
           }
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public static void broadcastAnagram(String message, Integer roomId) {
+    String[] variables = message.split(";");
+    System.out.println("ANAGRAM " );
+    int x = Integer.valueOf(variables[1]);
+    int y = Integer.valueOf(variables[2]);
+    Integer id = Integer.valueOf(variables[3]);
+    Character letter = GUI.getLetter(x, y, roomId);
+    System.out.println(letter);
+    try {
+      if (roomUsers.get(roomId) != null ) {
+        for (Session session : roomUsers.get(roomId)) {
+          if (session.isOpen()) {
+            String toSend = "LETTER;" + x + ";" + y + ";" + letter.toString();
+            System.out.println(toSend);
+            session.getRemote().sendString(toSend);
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 

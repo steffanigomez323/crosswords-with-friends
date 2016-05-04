@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import spark.ModelAndView;
@@ -63,6 +64,34 @@ public class GUI {
       }
     }
     return true;
+  }
+
+  public static String getAnagram(String word, int x, int y,  Orientation orientation, Integer id) {
+    if (!crosswordCache.containsKey(id)) {
+      return "";
+    }
+    Random random = new Random();
+    String scrambled = word;
+    char a[] = scrambled.toCharArray();
+    for(int i=0 ; i<a.length-1 ; i++) {
+      int j = random.nextInt(a.length-1);
+      char temp = a[i]; 
+      a[i] = a[j];  
+      a[j] = temp;
+    }       
+    return new String(a);
+  }
+
+  public static char getLetter(int x, int y, Integer id){
+    if (!crosswordCache.containsKey(id)) {
+      System.out.println(crosswordCache.keySet());
+      return (Character) null;
+    }
+    System.out.println("letter letter : ");
+    Crossword puzzle = crosswordCache.get(id);
+    Box[][] crossword = puzzle.getArray();
+    Box box = crossword[y][x];
+    return box.getLetter();
   }
 
   /**

@@ -154,6 +154,24 @@ public class Crossword {
     }
   }
 
+  public String getWord(int col, int row, Orientation o) {
+    String word = "";
+    if (puzzle[row][col] == null){
+      return "";
+    } else {
+      while (!String.valueOf(puzzle[row][col].getLetter()).equals("-")) {
+        System.out.println(String.valueOf(puzzle[row][col].getLetter()).equals("-"));
+        word = word + puzzle[row][col].getLetter();
+        if (o == Orientation.ACROSS) {
+          col++;
+        } else if (o == Orientation.DOWN) {
+          row++;
+        }
+      }
+    }
+    return word;
+  }
+
   public void setCell(int col, int row, char c) {
     puzzle[row][col] = new Box(c);
   }

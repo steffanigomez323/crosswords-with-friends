@@ -48,10 +48,12 @@ public class TwoChatWebSocketHandler {
 
   @OnWebSocketMessage
   public void onMessage(Session user, String message) {
-    if (message.startsWith("DATA")) {
+    if (message.startsWith("DATA")){
       Chat.broadcastCorrect(message, userRoom.get(user));
-    } else if (message.startsWith("LETTER")) {
-
+    } else if (message.startsWith("LETTER")){
+      Chat.broadcastLetter(message, userRoom.get(user));
+    } else if (message.startsWith("ANAGRAM")){
+      Chat.broadcastLetter(message, userRoom.get(user));
     } else {
       Chat.broadcastMessage(Chat.userUsernameMap.get(user), message, userRoom.get(user));
     }

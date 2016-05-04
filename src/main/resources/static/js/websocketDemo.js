@@ -48,7 +48,26 @@ function updateChat(msg) {
         }
         
     } else if (msg.data.startsWith("LETTER;")) {
-    
+    	console.log("msg data " + msg.data);
+    	var data = msg.data.split(";");
+    	var col = parseFloat(data[1]);
+    	var row = parseFloat(data[2]);
+    	var letter = data[3];
+    	$(".c"+col+".r"+row).val(letter);
+    	$(".c"+col+".r"+row).attr("disabled", "disabled");
+    	console.log("should have exposed letter ");
+    	//$("#hint1").html("the letter at row " + row + ", column " + col + " is: " +letter);
+    } else if (msg.data.startsWith("ANAGRAM")) {
+    	console.log("msg data " + msg.data);
+    	var data = msg.data.split(";");
+    	var col = parseFloat(data[1]);
+    	var row = parseFloat(data[2]);
+    	var orientation = data[3];
+    	var anagram = data[4];
+    	var classes = $(".active").attr("class").split(" ");
+    	$("#hint2").html("the letters of across 3 are" + anagram);
+    	$("#hint2").css("background-color", "transparent");
+    	$("#hint2").off();
     }
     else {
 		if (players == "double"){

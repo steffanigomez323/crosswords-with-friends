@@ -50,6 +50,12 @@
 	</#list>
 </#list>
 </ul>
+<div class = "hints">Stuck? Get a hint:<p>
+<div id = "hint1">Expose a letter</div><br>
+<div id = "hint2">Get all letters of a word</div><br>
+<div id = "hint3">Expose clue</div><br>
+</div>
+
 </div>
 </div>
 <script src="js/jquery-2.1.1.js"></script>

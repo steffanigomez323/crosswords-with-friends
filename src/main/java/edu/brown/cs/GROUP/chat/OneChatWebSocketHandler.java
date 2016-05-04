@@ -18,7 +18,7 @@ public class OneChatWebSocketHandler {
 
   @OnWebSocketConnect
   public void onConnect(Session user) throws Exception {
-    int nextRoomNumber = GUI.onePlayerId.get();
+    int nextRoomNumber = GUI.onePlayerId.get()-1;
 
     List<Session> usersInRoom = new ArrayList<Session>();
     usersInRoom.add(user);
@@ -36,7 +36,10 @@ public class OneChatWebSocketHandler {
     if (message.startsWith("DATA")) {
       Chat.broadcastCorrect(message, userRoom.get(user));
     } else if (message.startsWith("LETTER")) {
-
+      System.out.println("user room get " + userRoom.get(user) + "user" + user);
+      Chat.broadcastLetter(message, userRoom.get(user));
+    } else if (message.startsWith("ANAGRAM")){
+      Chat.broadcastAnagram(message, userRoom.get(user));
     }
   }
 
