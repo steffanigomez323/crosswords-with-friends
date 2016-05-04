@@ -1,8 +1,9 @@
 package edu.brown.cs.GROUP.chat;
 
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.jetty.websocket.api.Session;
@@ -10,38 +11,35 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
-
 @WebSocket
-public class ChatWebSocketHandler {
+public class TwoChatWebSocketHandler {
 
-  private String sender, msg;
-  private HashSet users;
   private static HashMap<Session, Integer> userRoom = new HashMap<Session, Integer>();
-  private static int nextRoomNumber = GUI.id.get();
 
-  // static int nextRoomNumber = 1; //Assign to username for next connecting
-  // user
   @OnWebSocketConnect
   public void onConnect(Session user) throws Exception {
+
+    int nextRoomNumber = GUI.twoPlayerId.get();
     String username = "down" + nextRoomNumber;
+
+    //roomUsers maps room#s to list of sessions
     List<Session> usersInRoom = new ArrayList<Session>();
     if (Chat.roomUsers.get(nextRoomNumber) != null) {
       usersInRoom = Chat.roomUsers.get(nextRoomNumber);
-      // Chat.roomUsers.remove(nextRoomNumber);
     }
     usersInRoom.add(user);
+    Chat.roomUsers.put(nextRoomNumber, usersInRoom);
+
+    //userUsernameMap maps sessions to usernames
     if (Chat.userUsernameMap.containsValue(username)) {
       username = "across" + nextRoomNumber;
     }
-    Chat.roomUsers.put(nextRoomNumber, usersInRoom);
-    userRoom.put(user, nextRoomNumber);
     Chat.userUsernameMap.put(user, username);
-    Chat.broadcastStart(sender = "Server",
-        msg = (username + " joined the chat"), nextRoomNumber);
-    if (username.contains("across")) {
-      nextRoomNumber++;
-    }
+
+    //userRoom maps sessions to room#s
+    userRoom.put(user, nextRoomNumber);
+
+    Chat.broadcastStart("Server", (username + " joined the chat"), nextRoomNumber);
   }
 
   public static Integer getRoomNumber(Session user) {
@@ -51,14 +49,13 @@ public class ChatWebSocketHandler {
   @OnWebSocketMessage
   public void onMessage(Session user, String message) {
     if (message.startsWith("DATA")){
-      Chat.broadcastCorrect(sender = Chat.userUsernameMap.get(user), message, userRoom.get(user));
+      Chat.broadcastCorrect(message, userRoom.get(user));
     } else if (message.startsWith("LETTER")){
-      Chat.broadcastLetter(sender = Chat.userUsernameMap.get(user), message, userRoom.get(user));
+      Chat.broadcastLetter(message, userRoom.get(user));
     } else if (message.startsWith("ANAGRAM")){
-      Chat.broadcastLetter(sender = Chat.userUsernameMap.get(user), message, userRoom.get(user));
+      Chat.broadcastLetter(message, userRoom.get(user));
     } else {
-      System.out.println("sender " + Chat.userUsernameMap.get(user)  + "message " + message);
-      Chat.broadcastMessage(sender = Chat.userUsernameMap.get(user), msg = message, userRoom.get(user));
+      Chat.broadcastMessage(Chat.userUsernameMap.get(user), message, userRoom.get(user));
     }
   }
 

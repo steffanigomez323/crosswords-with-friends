@@ -6,7 +6,14 @@
 
 
 //Establish the WebSocket connection and set up event handlers
-var webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/chat/");
+var players = $("#player").attr("class");
+var url = "ws://" + location.hostname + ":" + location.port + "/chat/";
+if (players == "double"){
+	url+="two";
+} else {
+	url+="one";
+}
+var webSocket = new WebSocket(url);
 webSocket.onmessage = function (msg) { console.log("in on message"); updateChat(msg); };
 webSocket.onclose = function () { alert("WebSocket connection closed ") };
 
@@ -24,7 +31,7 @@ function n(n){
     return n > 9 ? "" + n: "0" + n;
 }
 
-function countdown(){
+function countdown(stop, timer){
 	var timeLeft = time(stop);
 	
 	$("#timer").text(n(timeLeft["minutes"])+":"+n(timeLeft["seconds"]));
@@ -290,13 +297,20 @@ function getNext(dir, i, j, word, classes){
 	return block;
 }
 
+function startTimer(){
+	var stop = new Date();
+	stop.setMinutes(stop.getMinutes() + 15);
+	var timer = setInterval(function(){
+		countdown(stop, timer);
+	}, 1000);
+}
 
 var orientation = "down";
 var numCol = 0;
 var numRow = 0;
-var stop = new Date();
-stop.setMinutes(stop.getMinutes() + 10);
-var timer = setInterval(countdown, 1000);
+var numWords = parseFloat($("#clues").attr("class").split("l")[1]);
+var foundWords = 0;
+var loading = 0;
 
 window.onload = function(response) {	
 
@@ -321,9 +335,9 @@ window.onload = function(response) {
 	if (numRow>0){
 		numCol = $(".r0").length;
 	}
-	
-	var players = $("#player").attr("class");
+		
 	if (players == "double"){
+		
 		var player = $("#player").text();
 		var playerWords = $("."+player).prev().each(function(){
 			var classes = $(this).attr("class").split(" ");
@@ -338,11 +352,13 @@ window.onload = function(response) {
 			} else {
 				enabled = checkCol(word, row, col, false);
 			} 
-			console.log(enabled);
 			$(enabled).attr("disabled", false);
 		});
+		$("#wait").toggle();
+		
 	} else {
 		$("textarea").attr("disabled", false);
+		startTimer();
 	}
 	
 	$("textarea").click(function(){

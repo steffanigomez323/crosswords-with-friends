@@ -49,6 +49,31 @@ body{
 	position: relative;
 }
 
+#wait{
+	position: absolute;
+	width: 110%;
+	height: 110%;
+	background-color: rgba(0,0,0,0.9);
+	display: none;
+	top: 0px;
+	left: 0px;
+}
+
+#waitText{
+	color: white;
+	text-transform: lowercase;
+	letter-spacing: 5px;
+	position: absolute;
+	margin: auto;
+	top: 200px;
+	left: 0;
+	right: 0;
+	height: 30px;
+	width: 550px;
+	font-size: 30px;
+	text-align: center;
+}
+
 textarea{
 	font-size: 30px;
 	text-align: center;
