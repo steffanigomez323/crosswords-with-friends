@@ -1,6 +1,10 @@
 body{
 	font-family: 'Montserrat', sans-serif;
+	min-width: 1200px;
+    background-color: #222222;
+    background: repeating-linear-gradient(45deg, #2b2b2b 0%, #2b2b2b 10%, #222222 0%, #222222 50%) 0 / 15px 15px;
 }
+
 
 .box{
 	width: 50px;
@@ -16,11 +20,27 @@ body{
 	
 }
 
+#timer, #player {
+	color: white;
+	font-size: 40px;
+}
+
+.crossword{
+	width: 1025px;
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+}
+
 #crosswordWrapper{
 	background-color: black;
 	padding: 2px 0 7px 0;
 	width: 500px;
-	margin: auto;
+	margin: 0;
+	position: absolute;
+	right: 0;
+	display: inline-block;
 }
 
 .row{
@@ -43,7 +63,7 @@ textarea{
 }
 
 .active{
-	background-color: yellow;
+	background-color: #FFDD1B;
 }
 
 
@@ -59,13 +79,6 @@ textarea{
 
 html {
     overflow-y: scroll;
-}
-
-iframe {
-    max-width: 480px;
-    border:1px solid #ccc;
-    width:80%; 
-    height:520px;
 }
 
 input {
@@ -115,12 +128,19 @@ li {
 }
 
 #chatwrapper {
-	width: 800px;
+	width: 500px;
 }
 
+#chat {
+	height: 400px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 #chat p {
     margin: 5px 0;
-    font-weight: 300
+    font-weight: 300;
+    font-size: 12px;
+    text-align: left;
 }
 
 #chat .timestamp {
@@ -152,14 +172,20 @@ li {
     to   { transform: none;        }
 }
 
-#clues{
-	width: 300px;
-	border: 1px black dashed;
+#leftWrapper{
+	width: 500px;
+	margin: 0;
 	position: absolute;
-	right: 0;
-	top: 0;
+	top: -15px;
+	display: inline-block;
+}
+
+#clues{
+	width: 500px;
+	border: 1px black dashed;
 	padding: 50px;
 	text-decoration: none;
+	background-color: white;
 }
 
 .numMarker{
@@ -177,24 +203,17 @@ input[disabled], input:disabled, textarea[disabled], textarea[disabled="disabled
 	background-color: green !important;
 }
 
-
-body {
-  background-color: #000;
-}
-
-body {
-  background-color: #222222;
-  background: repeating-linear-gradient(45deg, #2b2b2b 0%, #2b2b2b 10%, #222222 0%, #222222 50%) 0 / 15px 15px;
-}
-
 #container {
   width: 500px;
   margin: auto;
 }
 /*neeeeoooon*/
-a {
+
+
+#crossword_title{
   text-align: center;
   font-size: 3em;
+  margin: 20px 0 20px 0;
   text-decoration: none;
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
@@ -206,10 +225,79 @@ a {
   animation: neon1 1.5s;
 }
 
-
-a:hover {
-  color: #ffffff;
+b{
+	font-size: 12px;
 }
+
+
+
+#ctitle{
+	height: 300px;
+	width: 500px;
+	text-align: center;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+
+#cwf div{
+	display: inline-block;
+}
+
+#cwf {
+	margin: auto;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	height: 400px;
+	width: 1110px;
+}
+
+#one, #two{
+	display:block;
+	height: 300px;
+	width: 300px;
+	text-align: center;
+	background-color: #FFDD1B;
+	-moz-box-shadow: 0 0 5px #fff;
+	-webkit-box-shadow: 0 0 5px #fff;
+	box-shadow: 0px 0px 5px #fff;
+	line-height: 300px;
+	font-size: 1em;
+	top: 0;
+	position: absolute;
+	  text-align: center;
+	  font-size: 2em;
+	  margin: 20px 0 20px 0;
+	  text-decoration: none;
+	  -webkit-transition: all 0.5s;
+	  -moz-transition: all 0.5s;
+	  transition: all 0.5s;
+	  color: white;
+	  font-family: Monoton;
+	  text-shadow: 2px 2px 4px #000000;
+}
+
+#two{
+	right: 0;
+}
+
+
+#one:hover, #two:hover {
+	-moz-box-shadow: 0 0 100px #fff;
+	-webkit-box-shadow: 0 100 50px #fff;
+	box-shadow: 0px 0px 50px #fff;
+	background-color: #fff;;
+	color: black;
+	text-shadow: 2px 2px 4px #FFF;
+}
+
 
 @-webkit-keyframes neon1 {
   from {

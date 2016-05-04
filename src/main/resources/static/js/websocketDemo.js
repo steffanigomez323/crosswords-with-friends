@@ -1,10 +1,6 @@
 //Send message if "Send" is clicked
 var players = $("#player").attr("class");
 if (players == "double"){
-	id("send").addEventListener("click", function () {
-	    sendMessage(id("message").value);
-	});
-	
 	//Send message if enter is pressed in the input field
 	id("message").addEventListener("keypress", function (e) {
 	    if (e.keyCode === 13) { sendMessage(e.target.value); }
@@ -14,7 +10,7 @@ if (players == "double"){
 
 //Send a message if it's not empty, then clear the input field
 function sendMessage(message) {
-    if (message !== "") {
+    if (message !== "" && players == "double") {
     	console.log("typed + message" + message);
         webSocket.send(message);
         id("message").value = "";
@@ -51,10 +47,10 @@ function updateChat(msg) {
     	var col = parseFloat(data[1]);
     	var row = parseFloat(data[2]);
     	var letter = data[3];
-    	var classes = $(".active").attr("class").split(" ");
-    	$("#hint1").html("the letter at row " + row + ", column " + col + " is: " +letter);
-    	$("#hint1").css("background-color", "transparent");
-    	$("#hint1").off();
+    	$(".c"+col+".r"+row).val(letter);
+    	$(".c"+col+".r"+row).attr("disabled", "disabled");
+    	console.log("should have exposed letter ");
+    	//$("#hint1").html("the letter at row " + row + ", column " + col + " is: " +letter);
     } else if (msg.data.startsWith("ANAGRAM")) {
     	console.log("msg data " + msg.data);
     	var data = msg.data.split(";");

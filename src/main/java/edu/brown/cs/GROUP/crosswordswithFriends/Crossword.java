@@ -1,12 +1,12 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import edu.brown.cs.GROUP.database.Database;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import edu.brown.cs.GROUP.database.Database;
 
 public class Crossword {
 
@@ -30,23 +30,17 @@ public class Crossword {
     this.db = db;
     players = 1;
     String firstWord = unusedWords.remove(0);
-    System.out.println("firstWord: " + firstWord);
     fillPuzzle(firstWord);
-
-    // System.out.println("unused words: " + unusedWords);
   }
 
   public void fillPuzzle(String firstWord) {
 
     Collections.shuffle(unusedWords);
     fitAndAdd(firstWord);
-    System.out.println("where am i getting stuck");
     usedWords.add(firstWord);
 
     for (String word : unusedWords) {
-
       if (!usedWords.contains(word)) {
-        // System.out.println("word: " + word);
         fitAndAdd(word);
       }
     }
@@ -65,9 +59,6 @@ public class Crossword {
       }
     }
     if (acrossCount < 4 || downCount < 4) {
-      System.out.println("I'm refilling");
-      Collections.shuffle(unusedWords);
-      // System.out.println("final list: " + finalList);
       refill();
     }
 
@@ -87,8 +78,11 @@ public class Crossword {
     finalList = new ArrayList<Word>();
     unusedWords = new ArrayList<String>(originalList);
     usedWords = new HashSet<String>();
+    shuffleAndSortWords();
     String firstWord = unusedWords.remove(0);
-    System.out.println("firstWord: " + firstWord);
+    Collections.shuffle(unusedWords);
+
+
 
     fillPuzzle(firstWord);
   }
@@ -135,7 +129,6 @@ public class Crossword {
   }
 
   public void setWord(int col, int row, Orientation o, String word) {
-    // System.out.println(word + ": " + "(" + col + "," + row + ")" + ", " + o);
     String clue = db.getClue(word.toLowerCase());
     finalList.add(new Word(word, col, row, o, 1, clue));
     for (int i = 0; i < word.length(); i++) {
@@ -222,7 +215,36 @@ public class Crossword {
         if (currBox.getLetter() != currLetter) {
           return 0;
         }
+
         if (currBox.getLetter() == currLetter) {
+          if (i + 1 < length) {
+            if (o == Orientation.DOWN) {
+              if (row + 1 < ROWS) {
+                Box nextBox = puzzle[row + 1][col];
+                if (nextBox != null) {
+                  char nextLetterInPuzzle = nextBox.getLetter();
+                  char nextLetterInWord = Character.toUpperCase((word).charAt(i
+                      + 1));
+                  if (nextLetterInPuzzle == nextLetterInWord) {
+                    return 0;
+                  }
+
+                }
+              }
+            } else {
+              if (col + 1 < COLS) {
+                Box nextBox = puzzle[row][col + 1];
+                if (nextBox != null) {
+                  char nextLetterInPuzzle = nextBox.getLetter();
+                  char nextLetterInWord = Character.toUpperCase((word).charAt(i
+                      + 1));
+                  if (nextLetterInPuzzle == nextLetterInWord) {
+                    return 0;
+                  }
+                }
+              }
+            }
+          }
           score += 1;
         }
         if (o == Orientation.DOWN) {
@@ -283,7 +305,6 @@ public class Crossword {
       }
       else {
         if (o == Orientation.DOWN) {
-
           if (col < COLS - 1) {
             if (!isBoxEmpty(col + 1, row)) {
               return 0;
@@ -294,7 +315,6 @@ public class Crossword {
               return 0;
             }
           }
-
           if (letterCount == 1) {
             if (row > 0) {
               if (!isBoxEmpty(col, row - 1)) {

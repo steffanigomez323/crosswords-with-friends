@@ -47,18 +47,6 @@ public class Box{
     return clues;
   }
 
-  public void printLetter(){
-    if (letter == '\u0000'){
-      System.out.print("-");
-    } else {
-      System.out.print(letter);
-    }
-    //    if (!clues.isEmpty()){
-    //      System.out.print(clues.size());
-    //    }
-    //    System.out.print(" ");
-  }
-
   @Override
   public String toString() {
     return letter + "";

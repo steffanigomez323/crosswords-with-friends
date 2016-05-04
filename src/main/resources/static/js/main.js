@@ -2,6 +2,7 @@
 //Dissallow one-player orientation switching when not possible
 //Double clues error
 //Censoring words by room id
+//clear caches on exit
 
 
 //Establish the WebSocket connection and set up event handlers
@@ -294,20 +295,18 @@ var orientation = "down";
 var numCol = 0;
 var numRow = 0;
 var stop = new Date();
-stop.setMinutes(stop.getMinutes() + 5);
+stop.setMinutes(stop.getMinutes() + 10);
 var timer = setInterval(countdown, 1000);
 
 window.onload = function(response) {	
 
 	$("#hint1").click(function(){
-		console.log("hint 1 clicked");
 		var classes = $(".active").attr("class").split(" ");
 		console.log("classes " + classes);
 		var row = parseFloat(classes[2][1]);
 		var col = parseFloat(classes[1][1]);
-		console.log("row " + row + "col" + col);
 		exposeLetter(col, row);
-		
+		$("#hint1").hide();
 	});
 	
 	$("#hint2").click(function(){

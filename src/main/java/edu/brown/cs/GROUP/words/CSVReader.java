@@ -33,42 +33,44 @@ public class CSVReader {
    * @param path file path to read from
    * @param conn the database connection
    * @throws SQLException in case we are unable to add to the database
-   * @throws IOException in case we are unable to read from the file
    */
 
-  public void readtoDB(File path, Connection conn)
-      throws SQLException, IOException {
+  public void readtoDB(File path, Connection conn) throws SQLException {
 
-    FileInputStream fis = new FileInputStream(path);
-    InputStreamReader isr = new InputStreamReader(fis, "UTF8");
-    BufferedReader reader = new BufferedReader(isr);
+    try (FileInputStream fis = new FileInputStream(path)) {
+      try (InputStreamReader isr = new InputStreamReader(fis, "UTF8")) {
+        try (BufferedReader reader = new BufferedReader(isr)) {
 
-    String line = reader.readLine();
-    if (line != null) {
-      List<String> headers = Arrays.asList(line.split(","));
+          String line = reader.readLine();
+          if (line != null) {
+            List<String> headers = Arrays.asList(line.split(","));
 
-      int nameidx = headers.indexOf("Word");
-      int clueidx = headers.indexOf("Clue");
+            int nameidx = headers.indexOf("Word");
+            int clueidx = headers.indexOf("Clue");
 
-      String query = "INSERT OR IGNORE INTO cluewords(word, length, clue) VALUES (?,?,?)";
-      try (PreparedStatement ps = conn.prepareStatement(query)) {
+            String query = "INSERT OR IGNORE INTO cluewords(word, length, clue) VALUES (?,?,?)";
+            try (PreparedStatement ps = conn.prepareStatement(query)) {
 
-        while ((line = reader.readLine()) != null) {
-          String[] row = line.split(",");
+              while ((line = reader.readLine()) != null) {
+                String[] row = line.split(",");
 
-          ps.setString(1, row[nameidx].toLowerCase());
-          ps.setInt(2, row[nameidx].length());
-          ps.setString(3, row[clueidx].toLowerCase());
+                ps.setString(1, row[nameidx].toLowerCase());
+                ps.setInt(2, row[nameidx].length());
+                ps.setString(3, row[clueidx].toLowerCase());
 
-          ps.addBatch();
+                ps.addBatch();
 
+              }
+              ps.executeBatch();
+              ps.close();
+              reader.close();
+            }
+          }
         }
-        System.out.println("EXECUTING: ");
-        ps.executeBatch();
-        System.out.println("Done executing.");
-        ps.close();
-        reader.close();
       }
+    } catch (IOException e) {
+      System.err.println("ERROR: file cannot be read from.");
+      return;
     }
   }
 

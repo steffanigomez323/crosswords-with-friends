@@ -1,8 +1,6 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import java.util.HashMap;
 import java.util.Random;
-
 public class Word {
 
   private String word;
@@ -29,23 +27,24 @@ public class Word {
     clue = c;
   }
 
-  public String getWord(){
+  public String getWord() {
     return word;
   }
 
-  public int getXIndex(){
+
+  public int getXIndex() {
     return xIndex;
   }
 
-  public int getYIndex(){
+  public int getYIndex() {
     return yIndex;
   }
 
-  public Orientation getOrientation(){
+  public Orientation getOrientation() {
     return orientation;
   }
 
-  public String getClue(){
+  public String getClue() {
     return clue;
   }
 
@@ -55,6 +54,7 @@ public class Word {
 
   @Override
   public String toString() {
-    return word + ": " + "(" + xIndex + "," + yIndex + ")" + ", " + orientation;
+    return word + ": " + "(" + xIndex + "," + yIndex + ")" + ", "
+        + orientation;
   }
 }

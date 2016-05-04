@@ -1,8 +1,31 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
-<div id="timer">01:00</div>
-<div id="player" class="${players}">single player</div>
+<div id="timer">10:00</div>
+<div id="player" class="single">single player</div>
 <div id=${id} class="crossword">
+<div id = "leftWrapper">
+<ul id="clues">
+<#assign num=1>
+<#list crossword as row>
+	<#list row as col>
+		<#assign start=false>
+		<#if col.clues?? &&  (col.clues?size > 0)>
+			<#list col.clues as clue>
+					<#if clue.clue??>
+						<li>${clue.orientation} ${num} : ${clue.clue}</li>
+						<#assign start=true>
+					<#elseif clue.clue??>
+						<#assign start=true>
+					</#if>
+			</#list>
+			<#if start>
+		    	<#assign num = num + 1>
+		    </#if>
+		</#if>
+	</#list>
+</#list>
+</ul>
+</div>
 <div id="crosswordWrapper">
 <#assign num=1>
 <#list crossword as row>
@@ -27,27 +50,6 @@
 	</div>
 </#list>
 </div>
-<ul id="clues">
-<#assign num=1>
-<#list crossword as row>
-	<#list row as col>
-		<#assign start=false>
-		<#if col.clues?? &&  (col.clues?size > 0)>
-			<#list col.clues as clue>
-					<#if clue.clue??>
-						<li>${clue.orientation} ${num} : ${clue.clue}</li>
-						<#assign start=true>
-					<#elseif clue.clue??>
-						<#assign start=true>
-					</#if>
-			</#list>
-			<#if start>
-		    	<#assign num = num + 1>
-		    </#if>
-		</#if>
-	</#list>
-</#list>
-</ul>
 </div>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>

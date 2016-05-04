@@ -1,19 +1,17 @@
 package edu.brown.cs.GROUP.chat;
+
 import static j2html.TagCreator.article;
 import static j2html.TagCreator.b;
 import static j2html.TagCreator.p;
 import static j2html.TagCreator.span;
 import static spark.Spark.init;
 import static spark.Spark.webSocket;
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
-import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
-import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +22,10 @@ import java.util.Set;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
+
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+import edu.brown.cs.GROUP.crosswordswithFriends.Word;
+import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
 
 public class Chat {
 
@@ -36,19 +38,30 @@ public class Chat {
   }
 
   public static void initChatroom() throws IOException {
-    BufferedReader reader;
+    // BufferedReader reader;
     try {
-      reader = new BufferedReader(new FileReader(new File("cs032_stopwords.txt")));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        stopWords.add(line);
+      try (FileInputStream fis = new FileInputStream(
+          "cs032_stopwords.txt")) {
+        try (InputStreamReader isr = new InputStreamReader(fis, "UTF8")) {
+          try (BufferedReader reader = new BufferedReader(isr)) {
+            // reader = new BufferedReader(new FileReader(new
+            // File("cs032_stopwords.txt")));
+            String line;
+            while ((line = reader.readLine()) != null) {
+              stopWords.add(line);
+            }
+            reader.close();
+          }
+        }
       }
-      reader.close();
     } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      // e.printStackTrace();
+      System.err
+          .println("ERROR: The stop words corpus could not be found.");
+      return;
     }
-    //staticFileLocation("static"); //index.html is served at localhost:4567 (default port)
+    // staticFileLocation("static"); //index.html is served at localhost:4567
+    // (default port)
     webSocket("/chat", ChatWebSocketHandler.class);
     init();
   }
@@ -57,60 +70,63 @@ public class Chat {
     Set<String> censorWords = new HashSet<String>();
     for (Word word : toPass) {
       censorWords.add(word.getWord());
-      String cleanedClue = word.getClue().replace("[^a-zA-Z ]", "").toLowerCase();
+      String cleanedClue = word.getClue().replaceAll("[^a-zA-Z ]", "")
+          .toLowerCase();
       String[] clueWords = cleanedClue.split(" ");
-      System.out.println("clues " + word.getClue());
       for (String clueWord : clueWords) {
-        if (! stopWords.contains(clueWord)) {
-          censorWords.add(word.getWord());
+        if (!stopWords.contains(clueWord)) {
+          System.out.println("clueword " + clueWord);
+          censorWords.add(clueWord);
         }
       }
     }
-    wordsToCensor.put(roomId,  censorWords);
+    wordsToCensor.put(roomId, censorWords);
   }
 
-  public static String censorMessage(Set<String> censorList, String message) {
-    String cleanedMessage = message.replace("[^a-zA-Z ]", "").toLowerCase();
+  public static String censorMessage(Integer roomId, String message) {
+    Set<String> censorWords = wordsToCensor.get(roomId);
+    String cleanedMessage = message.replaceAll("[^a-zA-Z ]", "")
+        .toLowerCase();
+    System.out.println("message: " + cleanedMessage);
     String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
-      if (censorList.contains(messageArray[i])) {
+      if (censorWords.contains(messageArray[i])) {
         Integer numAstericks = messageArray[i].length();
-        String stars = "";
+        StringBuilder stars = new StringBuilder("");
         for (int g = 0; g < numAstericks; g++) {
-          stars += "-";
+          stars.append("-");
         }
-        messageArray[i] = stars;
+        messageArray[i] = stars.toString();
       } else {
-        for (String word : censorList) {
+        for (String word : censorWords) {
           Integer numToCensor = word.length();
           String wordInArray = messageArray[i];
-          String astericks = new String(new char[numToCensor]).replace("\0", "-");
+          String astericks = new String(new char[numToCensor])
+              .replace("\0", "-");
           String censored = wordInArray.replace(word, astericks);
           messageArray[i] = censored;
         }
       }
     }
-    String censored = "";
+    StringBuilder censored = new StringBuilder("");
     for (String word : messageArray) {
-      censored += word + " ";
+      censored.append(word).append(" ");
     }
-    return censored;
+    return censored.toString();
   }
 
-  //Sends a message from one user to all users, along with a list of current usernames
-  public static void broadcastMessage(String sender, String message, Integer roomId) {
+  // Sends a message from one user to all users, along with a list of current
+  // usernames
+  public static void broadcastStart(String sender, String message,
+      Integer roomId) {
     try {
-      System.out.println("room id " + roomId);
-      if (roomUsers.get(roomId) != null ) {
-        System.out.println("room id " + roomId + roomUsers.get(roomId));
+
+      if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
-          System.out.println("in broadcast message");
-          System.out.println("sender " + sender);
           if (session.isOpen()) {
-            System.out.println("sesion is open");
-            session.getRemote().sendString(String.valueOf(new JSONObject()
-                .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(wordsToCensor.get(roomId), message)))
-                ));
+            session.getRemote().sendString(
+                String.valueOf(new JSONObject().put("userMessage",
+                    createHtmlMessageFromSender(sender, censorMessage(roomId, message)))));
           }
         }
       }
@@ -119,22 +135,39 @@ public class Chat {
     }
   }
 
-  public static void broadcastCorrect(String sender, String message, Integer roomId) {
+  // Sends a message from one user to all users, along with a list of current
+  // usernames
+  public static void broadcastMessage(String sender, String message,
+      Integer roomId) {
+    try {
+      if (roomUsers.get(roomId) != null) {
+        for (Session session : roomUsers.get(roomId)) {
+          if (session.isOpen()) {
+            session.getRemote()
+                .sendString(String.valueOf(new JSONObject()
+                    .put("userMessage", createHtmlMessageFromSender(sender,
+                        censorMessage(roomId, message)))));
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void broadcastCorrect(String sender, String message,
+      Integer roomId) {
     String[] variables = message.split(";");
     int x = Integer.valueOf(variables[2]);
     int y = Integer.valueOf(variables[3]);
-    Orientation o = Orientation
-        .valueOf(variables[4]);
+    Orientation o = Orientation.valueOf(variables[4]);
     Integer id = Integer.valueOf(variables[5]);
-    System.out.println("x : "+x+" y: "+y);
     boolean valid = GUI.checkValid(variables[1], x, y, o, id);
-    System.out.println(valid);
-    if (valid){
+    if (valid) {
       try {
-        if (roomUsers.get(roomId) != null ) {
+        if (roomUsers.get(roomId) != null) {
           for (Session session : roomUsers.get(roomId)) {
             if (session.isOpen()) {
-              System.out.println("broadcastin");
               session.getRemote().sendString(message);
             }
           }
@@ -180,7 +213,7 @@ public class Chat {
       if (roomUsers.get(roomId) != null ) {
         for (Session session : roomUsers.get(roomId)) {
           if (session.isOpen()) {
-            String toSend = "ANAGRAM;" + x + ";" + y + ";" + letter.toString();
+            String toSend = "LETTER;" + x + ";" + y + ";" + letter.toString();
             System.out.println(toSend);
             session.getRemote().sendString(toSend);
           }
@@ -191,13 +224,14 @@ public class Chat {
     }
   }
 
-  //Builds a HTML element with a sender-name, a message, and a timestamp,
-  private static String createHtmlMessageFromSender(String sender, String message) {
-    return article().with(
-        b(sender + " says:"),
-        p(message),
-        span().withClass("timestamp").withText(new SimpleDateFormat("HH:mm:ss").format(new Date()))
-        ).render();
+  // Builds a HTML element with a sender-name, a message, and a timestamp,
+  private static String createHtmlMessageFromSender(String sender,
+      String message) {
+    return article()
+        .with(b(sender + " says:"), p(message),
+            span().withClass("timestamp").withText(
+                new SimpleDateFormat("HH:mm:ss").format(new Date())))
+        .render();
   }
 
 }
