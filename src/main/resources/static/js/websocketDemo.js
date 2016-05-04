@@ -1,5 +1,5 @@
-//Send message if "Send" is clicked
 var players = $("#player").attr("class");
+//Send message if "Send" is clicked
 if (players == "double"){
 	//Send message if enter is pressed in the input field
 	id("message").addEventListener("keypress", function (e) {
@@ -41,19 +41,36 @@ function updateChat(msg) {
         	$(r).attr("disabled", "disabled");
         	$(r).addClass("inactive");
         }
+        
+        foundWords += 1;
+        if (foundWords == numWords){
+        	alert("YOU WIN!");
+        }
+        
     } else if (msg.data.startsWith("LETTER;")) {
     
     }
     else {
-		var players = $("#player").attr("class");
 		if (players == "double"){
-	      var data = JSON.parse(msg.data);
-	      insert("chat", data.userMessage);
-	      console.log("inserted");
-	      id("userlist").innerHTML = "";
-	      data.userlist.forEach(function (user) {
-	          insert("userlist", "<li>" + user + "</li>");
-	      });
+			if (loading < 2){
+				loading ++;
+				var player = $("#player").text();
+				if (player == "ACROSS"){
+					loading = 2;
+					$("#wait").toggle();
+					startTimer();
+				} else if (loading==2){
+					$("#wait").toggle();
+					startTimer();
+				} 
+			}
+			var data = JSON.parse(msg.data);
+		      console.log(data.userMessage);
+		      insert("chat", data.userMessage);
+		      console.log("inserted");
+		      data.userlist.forEach(function (user) {
+		          insert("userlist", "<li>" + user + "</li>");
+		      });
 		}
     }
 }

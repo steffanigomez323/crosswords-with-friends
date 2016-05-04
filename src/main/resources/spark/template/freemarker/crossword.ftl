@@ -5,6 +5,7 @@
 <div id=${id} class="crossword">
 <div id="crosswordWrapper">
 <#assign num=1>
+<#assign total=0>
 <#list crossword as row>
 		<div class="row">
 	<#list row as col>
@@ -18,7 +19,7 @@
 			<textarea disabled = "disabled" class = "box c${col_index} r${row_index} <#list col.clues as clue>${clue.orientation}${clue.size} <#if clue.clue??><#assign start=true><#if clue.orientation=="ACROSS"><#assign across=true><#else><#assign down=true></#if></#if></#list>" spellcheck="false" maxlength="1" ></textarea>
 				
 			<#if start>
-		    	<div class="numMarker <#if across>ACROSS</#if> <#if down>DOWN</#if>">${num}</div>
+		    	<div class="numMarker <#if across>ACROSS<#assign total = total + 1></#if> <#if down>DOWN<#assign total = total + 1></#if>">${num}</div>
 		    	<#assign num = num + 1>
 		    </#if>
 		</#if>
@@ -28,7 +29,7 @@
 </#list>
 </div>
 <div id = "leftWrapper">
-<ul id="clues">
+<ul id="clues" class="total${total}">
 <#assign num=1>
 <#list crossword as row>
 	<#list row as col>
@@ -66,7 +67,7 @@
 
 
 </div>
-
+<div id="wait"><div id="waitText"><img id="loading" src="css/squares.svg"></img><br>waiting for second player</div></div>
 <p>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>

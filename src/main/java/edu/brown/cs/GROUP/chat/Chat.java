@@ -6,6 +6,9 @@ import static j2html.TagCreator.p;
 import static j2html.TagCreator.span;
 import static spark.Spark.init;
 import static spark.Spark.webSocket;
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
+import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -23,10 +26,6 @@ import java.util.Set;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
 
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
-import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
-import edu.brown.cs.GROUP.crosswordswithFriends.Word;
-
 public class Chat {
 
   static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
@@ -34,8 +33,8 @@ public class Chat {
   static Map<Integer, List<Session>> roomUsers = new HashMap<Integer, List<Session>>();
   static HashMap<Integer, Set<String>> wordsToCensor = new HashMap<Integer, Set<String>>();
 
-  public static void main(String[] args) throws IOException {
-  }
+//  public static void main(String[] args) throws IOException {
+//  }
 
   public static void initChatroom() throws IOException {
     // BufferedReader reader;
@@ -62,7 +61,8 @@ public class Chat {
     }
     // staticFileLocation("static"); //index.html is served at localhost:4567
     // (default port)
-    webSocket("/chat", ChatWebSocketHandler.class);
+    webSocket("/chat/one", OneChatWebSocketHandler.class);
+    webSocket("/chat/two", TwoChatWebSocketHandler.class);
     init();
   }
 
@@ -154,7 +154,7 @@ public class Chat {
     }
   }
 
-  public static void broadcastCorrect(String sender, String message,
+  public static void broadcastCorrect(String message,
       Integer roomId) {
     String[] variables = message.split(";");
     int x = Integer.valueOf(variables[2]);

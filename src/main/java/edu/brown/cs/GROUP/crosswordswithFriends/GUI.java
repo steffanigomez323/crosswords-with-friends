@@ -26,18 +26,21 @@ public class GUI {
   private static HashMap<Integer, Crossword> crosswordCache;
 
   private Database db;
-  public static AtomicInteger id;
+  public static AtomicInteger twoPlayerId;
+  public static AtomicInteger onePlayerId;
 
   /**
    * Constructor starts server on instantiation.
    *
    * @param port Port number specified by command line or 4567 by default
    * @param d Database connection path
+   * @throws IOException
    */
   public GUI(int port, Database d) {
     Spark.port(port);
     db = d;
-    id = new AtomicInteger(1000);
+    twoPlayerId = new AtomicInteger(1000);
+    onePlayerId = new AtomicInteger(1001);
     runSparkServer();
     crosswordCache = new HashMap<Integer, Crossword>();
   }
@@ -101,7 +104,6 @@ public class GUI {
     Spark.get("/home", new FrontHandler(), freeMarker);
     Spark.get("/two", new TwoHandler(db), freeMarker);
     Spark.get("/one", new OneHandler(db), freeMarker);
-    Spark.get("/chatroom", new ChatHandler(), freeMarker);
   }
 
   private static class FrontHandler implements TemplateViewRoute {
@@ -136,23 +138,22 @@ public class GUI {
 
       String player = "ACROSS";
 
-      Integer id2 = id.get();
+      Integer id2 = twoPlayerId.get();
 
       Crossword puzzle = crosswordCache.get(id2);
 
       if (puzzle == null){
+        System.out.println("A");
         puzzle = createCrossword();
         player = "DOWN";
       } else if (puzzle.getPlayers() != 2){
+        System.out.println("B");
         puzzle.addPlayer();
       } else {
-        while (puzzle.getPlayers() == 2) {
-          id2 = id.incrementAndGet();
-          puzzle = crosswordCache.get(id2);
-          if (puzzle == null){
-            puzzle = createCrossword();
-          }
-        }
+        System.out.println("C");
+        twoPlayerId.set(onePlayerId.get());
+        id2 = twoPlayerId.get();
+        puzzle = createCrossword();
         player = "DOWN";
       }
 
@@ -181,7 +182,7 @@ public class GUI {
 
     private Database db;
 
-    public OneHandler(Database db) {
+    public OneHandler(Database db){
       this.db = db;
     }
 
@@ -193,22 +194,14 @@ public class GUI {
     @Override
     public ModelAndView handle(Request req, Response res) {
 
-      Integer id2 = id.get()+1;
-      Crossword puzzle = crosswordCache.get(id2);
+      Integer id2 = onePlayerId.getAndIncrement();
 
-      if (puzzle == null){
-        puzzle = createCrossword();
-      } else {
-        while (puzzle.getPlayers() == 2) {
-          id2 = id2+1;
-          puzzle = crosswordCache.get(id2);
-          if (puzzle == null){
-            puzzle = createCrossword();
-          }
-        }
+      while (crosswordCache.containsKey(id2)) {
+          id2 = onePlayerId.getAndIncrement();
       }
-      puzzle.addPlayer();
 
+      Crossword puzzle = createCrossword();
+      puzzle.addPlayer();
 
       System.out.println("1 player");
       System.out.println(id2);
@@ -223,19 +216,6 @@ public class GUI {
           .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword_single.ftl");
-    }
-
-  }
-
-
-  /** Handler for serving chat page. */
-  private static class ChatHandler implements TemplateViewRoute {
-
-    @Override
-    public ModelAndView handle(Request req, Response res) {
-      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("roomNumber", id.get()).build();
-      return new ModelAndView(variables, "chat.ftl");
     }
 
   }
