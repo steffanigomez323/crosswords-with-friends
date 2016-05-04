@@ -315,12 +315,17 @@ var loading = 0;
 window.onload = function(response) {	
 
 	$("#hint1").click(function(){
+	if ($(".active").attr("class") != null){
+		console.log("was not null");
 		var classes = $(".active").attr("class").split(" ");
 		console.log("classes " + classes);
 		var row = parseFloat(classes[2][1]);
 		var col = parseFloat(classes[1][1]);
 		exposeLetter(col, row);
 		$("#hint1").hide();
+	} else {
+		$("#hint1").html("Select a box first, then click to expose the letter");
+	}
 	});
 	
 	$("#hint2").click(function(){

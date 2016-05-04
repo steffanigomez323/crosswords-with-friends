@@ -27,7 +27,14 @@
 	</#list>
 	</div>
 </#list>
+<br>
+<div class = "hints">Stuck?<p>
+<div id = "hint1">Expose letter</div>
+<div id = "hint2">Get letters of word</div>
+<div id = "hint3">Expose clue</div><br>
 </div>
+</div>
+
 <div id = "leftWrapper">
 <ul id="clues" class="total${total}">
 <#assign num=1>
@@ -50,11 +57,7 @@
 	</#list>
 </#list>
 </ul>
-<div class = "hints">Stuck? Get a hint:<p>
-<div id = "hint1">Expose a letter</div><br>
-<div id = "hint2">Get all letters of a word</div><br>
-<div id = "hint3">Expose clue</div><br>
-</div>
+
 
 </div>
 </div>
