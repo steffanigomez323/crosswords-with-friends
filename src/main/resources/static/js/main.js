@@ -64,18 +64,12 @@ function wordSize(classes, o){
 }
 
 function checkCol(c, row, x, check){
-	console.log("checking column");
-	console.log(c);
-	console.log(row); 
-	console.log(x); 
-	console.log(check);
-	
+
 	var foundUp = false;
 	var foundDown = false;
 	
 	var down = row+1;
 	var up=row-1;
-	console.log(numRow);
 	var block = c[row];
 	
 	var y = -1;
@@ -83,7 +77,7 @@ function checkCol(c, row, x, check){
 	
 	var word = $(block).val();
 	var cSize = wordSize($(block).attr("class").split(" "), "down");
-	console.log(cSize);
+
 	if (cSize>0){
 		y = row;
 	}
@@ -165,7 +159,6 @@ function checkRow(r, col, y, check){
 			if (!$(block).hasClass("filled")){
 				word = $(block).val()+word;
 				var rSize = wordSize($(block).attr("class").split(" "), "across");
-				console.log(rSize);
 				if (rSize>0){
 					x = left;
 				}
@@ -191,7 +184,6 @@ function checkRow(r, col, y, check){
 		}
 	}
 	
-	console.log(x+" "+y);
 	if (check && size>1 && word.length == size){
 		checkWord(word, x, y, "ACROSS");
 	}
@@ -250,7 +242,6 @@ function next(dir){
 	}
 	
 	var block = getNext(dir, col, row, word, classes);
-	console.log(block);
 	
 	if (orientation == "down"){
 		checkCol(word, row, col, true);
@@ -279,7 +270,6 @@ function getNext(dir, i, j, word, classes){
 	}
 	
 	var block = word[next];
-	console.log(block);
 	
 	if ($(block).hasClass("filled")){
 		var size = wordSize(classes, orientation);
@@ -291,7 +281,6 @@ function getNext(dir, i, j, word, classes){
 		block = word[next];
 	}
 	if ($(block).attr("disabled")=="disabled"){
-		console.log(dir+" "+i+" "+next);
 		return getNext(dir, i, next, word, $(block).attr("class").split(" "));
 	}
 	return block;
@@ -303,6 +292,22 @@ function startTimer(){
 	var timer = setInterval(function(){
 		countdown(stop, timer);
 	}, 1000);
+}
+
+function getAllPlayerWords(start, o){
+	var classes = $(start).attr("class").split(" ");
+	var row = parseFloat(classes[2][1]);
+	var col = parseFloat(classes[1][1]);
+	var size = 0;
+	if (o == "ACROSS"){
+		size = wordSize(classes, "across");
+	} else {
+		size = wordSize(classes, "down");
+	}	
+	
+	var id = $(".crossword").attr("id");
+	return toSend = "ANAGRAM;"+size+";"+col+";"+row+";"+o+";"+id;
+	
 }
 
 var orientation = "down";
@@ -340,10 +345,25 @@ window.onload = function(response) {
 	if (numRow>0){
 		numCol = $(".r0").length;
 	}
+	
 		
 	if (players == "double"){
 		
 		var player = $("#player").text();
+		
+		var playersWords = [];
+		
+		$("."+player).each(function(){
+			playersWords.push(this);
+		});
+		
+		for (word in playersWords){
+			console.log(player+" "+$(playersWords[word]).text());
+			var toSend = getAllPlayerWords($(playersWords[word]).prev(), player);
+			console.log(toSend);
+			//webSocket.send(toSend);
+		}
+		
 		var playerWords = $("."+player).prev().each(function(){
 			var classes = $(this).attr("class").split(" ");
 			var row = parseFloat(classes[2][1]);
@@ -362,6 +382,25 @@ window.onload = function(response) {
 		$("#wait").toggle();
 		
 	} else {
+		
+		var playersWords = [];
+		
+		$(".numMarker").each(function(){
+			playersWords.push(this);
+		});
+		
+		for (word in playersWords){
+			var classes = $(playersWords[word]).attr("class").split(" ");
+			for (c in classes){
+				if (c>0 && classes[c]!=""){
+					console.log(classes[c]+" "+$(playersWords[word]).text());
+					var toSend = getAllPlayerWords($(playersWords[word]).prev(), classes[c]);
+					console.log(toSend);
+					//webSocket.send(toSend);
+				}
+			}
+		}
+		
 		$("textarea").attr("disabled", false);
 		startTimer();
 	}
@@ -419,7 +458,6 @@ window.onload = function(response) {
 	        default:
 	        	if (event.keyCode>64 && event.keyCode<91){
 	        		$(this).val(String.fromCharCode(event.keyCode));
-	        		console.log("1");
 	        		next();
 	        	}
 	     }
