@@ -199,11 +199,15 @@ function checkWord(word, x, y, o){
 	webSocket.send(toSend);
 }
 
-function exposeLetter(x, y, o){
+function exposeLetter(x, y){
 	var id = $(".crossword").attr("id");
-	var toSend = "LETTER;"+x+";"+y+";"+o+";"+id;
+	var toSend = "LETTER;"+x+";"+y+";"+id;
+	console.log("in expose letter");
+	console.log("to send " + toSend);
 	webSocket.send(toSend);
 }
+
+
 
 function wordActive(block){
 	$(block).addClass("wordActive");
@@ -295,29 +299,23 @@ var timer = setInterval(countdown, 1000);
 
 window.onload = function(response) {	
 
-	$("hint1").click(function(){
-		$.get( "/hint1", function(data ) {
-			$("textarea").click(function(){
-				$(".active").removeClass("active");
-				$(this).addClass("active");
-				orient();
-			});
-		});
-		$("hint1").hide();
+	$("#hint1").click(function(){
+		console.log("hint 1 clicked");
+		var classes = $(".active").attr("class").split(" ");
+		console.log("classes " + classes);
+		var row = parseFloat(classes[2][1]);
+		var col = parseFloat(classes[1][1]);
+		console.log("row " + row + "col" + col);
+		exposeLetter(col, row);
+		
 	});
 	
-	$("hint2").click(function(){
-		$.get( "/hint2", function(data ) {
-			
-		});
-		$("hint2").hide();
+	$("#hint2").click(function(){
+		$("#hint2").hide();
 	});
 	
-	$("hint3").click(function(){
-		$.get( "/hint3", function(data ) {
-			
-		});
-		$("hint3").hide();
+	$("#hint3").click(function(){
+		$("#hint3").hide();
 	});
 	
 	numRow = $(".row").length;

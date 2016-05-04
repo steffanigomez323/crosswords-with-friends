@@ -3,10 +3,11 @@
 	<a id="two" href="/two">two player</a>
 	 <link rel="stylesheet" href="css/style.css">
 	
-	    <div>
-      <p>
+    <div class = "cwf">
+        <p>
       <a href ="">crosswords <br> 
           with <br> 
-          friends</a></p>
+          friends</a>
+            </p>
     </div>
 </div>

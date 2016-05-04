@@ -49,7 +49,7 @@
 </#list>
 </ul>
 
-<div class = "hints">Stuck? Get a hint:<br>
+<div class = "hints">Stuck? Get a hint:<p>
 <div id = "hint1">Expose a letter</div><br>
 <div id = "hint2">Get all letters of a word</div><br>
 <div id = "hint3">Expose clue</div><br>
@@ -62,10 +62,8 @@
 
 <div id="chatWrapper">
     <div id="chatControls">
-        <input id="message" placeholder="Type your message">
-        <button id="send">Send</button>
+        <input id="message" placeholder="Type your message. Press ">
     </div>
-    <ul id="userlist"></ul>
     <div id="chat"></div>
     </div>
 </div>

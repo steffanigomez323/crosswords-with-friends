@@ -33,19 +33,6 @@ public class Word {
     return word;
   }
 
-  public String getScrambledWord() {
-    Random random = new Random();
-    String scrambled = word;
-    char a[] = scrambled.toCharArray();
-    for(int i=0 ; i<a.length-1 ; i++) {
-      int j = random.nextInt(a.length-1);
-      char temp = a[i]; 
-      a[i] = a[j];  
-      a[j] = temp;
-    }       
-    return new String(a);
-  }
-
   public int getXIndex(){
     return xIndex;
   }

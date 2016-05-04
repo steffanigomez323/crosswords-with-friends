@@ -84,6 +84,7 @@ li {
 
 .hints{
 	float: right;
+	color: white;
 }
 #hint1, #hint2, #hint3 {
     background-color: #4CAF50; /* Green */
@@ -191,21 +192,13 @@ body {
   margin: auto;
 }
 /*neeeeoooon*/
-
-p {
+a {
   text-align: center;
   font-size: 3em;
-  margin: 20px 0 20px 0;
-}
-
-a {
   text-decoration: none;
   -webkit-transition: all 0.5s;
   -moz-transition: all 0.5s;
   transition: all 0.5s;
-}
-
-p:nth-child(1) a {
   color: #fff;
   font-family: Monoton;
   -webkit-animation: neon1 1.5s;
@@ -214,10 +207,9 @@ p:nth-child(1) a {
 }
 
 
-p a:hover {
+a:hover {
   color: #ffffff;
 }
-/*glow for webkit*/
 
 @-webkit-keyframes neon1 {
   from {
