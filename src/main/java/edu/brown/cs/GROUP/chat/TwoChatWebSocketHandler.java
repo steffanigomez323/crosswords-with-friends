@@ -53,7 +53,8 @@ public class TwoChatWebSocketHandler {
     } else if (message.startsWith("LETTER")){
       Chat.broadcastLetter(message, userRoom.get(user));
     } else if (message.startsWith("ANAGRAM")){
-      Chat.broadcastLetter(message, userRoom.get(user));
+      System.out.println("in anagram web socket " + message);
+      Chat.broadcastAnagram(message, userRoom.get(user));
     } else {
       Chat.broadcastMessage(Chat.userUsernameMap.get(user), message, userRoom.get(user));
     }

@@ -32,6 +32,9 @@
 <div id = "stuck">Stuck?</div><p>
 <div id = "hint1">Expose letter</div>
 <div id = "hint2">Get letters of word</div>
+<ul id = "anagramList">
+<div class = "anagramChoice"></div>
+</ul>
 <div id = "hint3">Expose clue</div>
 </div>
 </div>

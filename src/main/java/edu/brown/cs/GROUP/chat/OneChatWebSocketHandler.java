@@ -36,9 +36,10 @@ public class OneChatWebSocketHandler {
     if (message.startsWith("DATA")) {
       Chat.broadcastCorrect(message, userRoom.get(user));
     } else if (message.startsWith("LETTER")) {
-      System.out.println("user room get " + userRoom.get(user) + "user" + user);
+      //System.out.println("user room get " + userRoom.get(user) + "user" + user);
       Chat.broadcastLetter(message, userRoom.get(user));
     } else if (message.startsWith("ANAGRAM")){
+      System.out.println("in anagram web socket " + message);
       Chat.broadcastAnagram(message, userRoom.get(user));
     }
   }

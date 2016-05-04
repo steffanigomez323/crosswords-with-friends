@@ -121,7 +121,6 @@ li {
 }
 
 .hints{
-	float: right;
 	color: white;
 	text-align: center;
 }
@@ -227,7 +226,7 @@ li {
 }
 
 input[disabled], input:disabled, textarea[disabled], textarea[disabled="disabled"], textarea:disabled {
-    background: pink;
+    background: grey;
 }
 
 .inactive{

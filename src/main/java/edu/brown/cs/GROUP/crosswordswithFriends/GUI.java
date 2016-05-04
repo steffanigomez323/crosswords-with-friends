@@ -66,10 +66,23 @@ public class GUI {
     return true;
   }
 
-  public static String getAnagram(String word, int x, int y,  Orientation orientation, Integer id) {
+  public static String getAnagram(int length, int x, int y,  Orientation orientation, Integer id) {
     if (!crosswordCache.containsKey(id)) {
       return "";
     }
+    Crossword puzzle = crosswordCache.get(id);
+    Box[][] crossword = puzzle.getArray();
+    String word = "";
+    for (int i = 0; i < length; i++) {
+      Box box = crossword[y][x];
+      word += String.valueOf(crossword[y][x].getLetter());
+      if (orientation == Orientation.ACROSS) {
+        x++;
+      } else {
+        y++;
+      }
+    }
+    System.out.println("word " + word);
     Random random = new Random();
     String scrambled = word;
     char a[] = scrambled.toCharArray();
@@ -87,7 +100,7 @@ public class GUI {
       System.out.println(crosswordCache.keySet());
       return (Character) null;
     }
-    System.out.println("letter letter : ");
+    //System.out.println("letter letter : ");
     Crossword puzzle = crosswordCache.get(id);
     Box[][] crossword = puzzle.getArray();
     Box box = crossword[y][x];

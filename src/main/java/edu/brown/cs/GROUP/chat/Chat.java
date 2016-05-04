@@ -204,19 +204,20 @@ public class Chat {
   public static void broadcastAnagram(String message, Integer roomId) {
     String[] variables = message.split(";");
     System.out.println("ANAGRAM " );
-    int x = Integer.valueOf(variables[1]);
-    int y = Integer.valueOf(variables[2]);
-    Integer id = Integer.valueOf(variables[3]);
-    Character letter = GUI.getLetter(x, y, roomId);
-    System.out.println(letter);
+    int length = Integer.valueOf(variables[1]);
+    int x = Integer.valueOf(variables[2]);
+    int y = Integer.valueOf(variables[3]);
+    Orientation o = Orientation.valueOf(variables[4]);
+    int wordId = Integer.valueOf(variables[5]);
+    Integer id = Integer.valueOf(variables[6]);
+    String scrambled = GUI.getAnagram(length, x, y, o, id);
+    System.out.println("scrambled "+ scrambled);
     try {
-      if (roomUsers.get(roomId) != null ) {
+      if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
-          if (session.isOpen()) {
-            String toSend = "LETTER;" + x + ";" + y + ";" + letter.toString();
-            System.out.println(toSend);
-            session.getRemote().sendString(toSend);
-          }
+          String toSend = "ANAGRAM;" + x + ";" + y + ";" + o + ";" + wordId +";" + scrambled;
+          System.out.println(toSend);
+          session.getRemote().sendString(toSend);
         }
       }
     } catch (Exception e) {
