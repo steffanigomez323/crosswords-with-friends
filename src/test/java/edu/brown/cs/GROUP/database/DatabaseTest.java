@@ -1,4 +1,4 @@
-package edu.brown.cs.GROUP;
+package edu.brown.cs.GROUP.database;
 
 import java.sql.SQLException;
 

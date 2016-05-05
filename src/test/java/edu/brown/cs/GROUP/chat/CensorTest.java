@@ -1,3 +1,5 @@
+package edu.brown.cs.GROUP.chat;
+
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;

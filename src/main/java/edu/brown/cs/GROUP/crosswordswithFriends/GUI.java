@@ -222,6 +222,8 @@ public class GUI {
 
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
+      //System.out.println("length: " + originalList.size());
+      
       return new Crossword(originalList, db);
     }
 
@@ -277,6 +279,8 @@ public class GUI {
 
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
+      int length = db.getAllUnderNineLength();
+      System.out.println("length: " + length);
       return new Crossword(originalList, db);
     }
 
