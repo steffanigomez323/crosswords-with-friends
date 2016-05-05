@@ -3,6 +3,13 @@ package edu.brown.cs.GROUP.words;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * This interface outlines the functionality of a "getter" object, which takes
+ * care of getting information from the database.
+ * @author smg1
+ *
+ */
+
 public interface ClueWord {
 
   /**

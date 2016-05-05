@@ -28,7 +28,7 @@ public class CSVReader {
   }
 
   /**
-   * This method reads information from the csv file and puts it into the
+   * This method reads information from the .csv file and puts it into the
    * database.
    * @param path file path to read from
    * @param conn the database connection
@@ -48,7 +48,8 @@ public class CSVReader {
             int nameidx = headers.indexOf("Word");
             int clueidx = headers.indexOf("Clue");
 
-            String query = "INSERT OR IGNORE INTO cluewords(word, length, clue) VALUES (?,?,?)";
+            String query = "INSERT OR IGNORE INTO "
+                + "cluewords(word, length, clue) VALUES (?,?,?)";
             try (PreparedStatement ps = conn.prepareStatement(query)) {
 
               while ((line = reader.readLine()) != null) {
