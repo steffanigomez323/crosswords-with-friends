@@ -35,7 +35,7 @@ import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 public class Chat {
 
   /**
-   * This is a hashmap mapping users to usernames.
+   * This is a hashmap mapping sessions to usernames.
    */
 
   static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
@@ -48,7 +48,7 @@ public class Chat {
   static Set<String> stopWords = new HashSet<String>();
 
   /**
-   * This is a hashmap of rooms to users, to handle multiple people messaging
+   * This is a hashmap of room IDs to users, to handle multiple people messaging
    * with different exclusive people.
    */
 
@@ -215,7 +215,8 @@ public class Chat {
   }
 
   /**
-   * This method broadcasts the correct (?).
+   * This method sends the correct word to the front end when
+   * all letters have been filled out in a row or a column.
    * @param message the message
    * @param roomId the room id
    */
@@ -243,7 +244,8 @@ public class Chat {
   }
 
   /**
-   * This method broadcasts a letter to the front end.
+   * This method broadcasts a letter to the front end when the
+   * "expose letter" hint is used.
    * @param message the message
    * @param roomId the room id
    */
@@ -271,12 +273,14 @@ public class Chat {
   }
 
   /**
-   * This method broadcasts an anagram of the answer to the chatroom (?).
+   * This method broadcasts an anagram of the answer to the chatroom.
    * @param message the message
    * @param roomId the room id
    */
 
   public static void broadcastAnagram(String message, Integer roomId) {
+    
+    
     String[] variables = message.split(";");
     System.out.println("ANAGRAM ");
     int length = Integer.valueOf(variables[1]);
@@ -290,10 +294,12 @@ public class Chat {
     try {
       if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
-          String toSend = "ANAGRAM;" + x + ";" + y + ";" + o + ";" + wordId
-              + ";" + scrambled;
-          System.out.println(toSend);
-          session.getRemote().sendString(toSend);
+          if (session.isOpen()) {
+            String toSend = "ANAGRAM;" + x + ";" + y + ";" + o + ";" + wordId
+                + ";" + scrambled;
+            System.out.println(toSend);
+            session.getRemote().sendString(toSend);
+          }
         }
       }
     } catch (Exception e) {

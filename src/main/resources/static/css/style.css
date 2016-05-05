@@ -130,6 +130,10 @@ li {
 	color: black;
 }
 
+.anagramChoice{
+	color: white;
+}
+
 #hint1, #hint2, #hint3 {
     background-color: #4CAF50; /* Green */
     border: none;

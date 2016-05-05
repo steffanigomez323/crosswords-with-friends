@@ -309,6 +309,21 @@ function getAllPlayerWords(start, o, wordId){
 	
 }
 
+function getPlayerWords(start, o, wordId){
+	var classes = $(start).attr("class").split(" ");
+	var row = parseFloat(classes[2][1]);
+	var col = parseFloat(classes[1][1]);
+	var size = 0;
+	if (o == "ACROSS"){
+		size = wordSize(classes, "across");
+	} else {
+		size = wordSize(classes, "down");
+	}	
+	var id = $(".crossword").attr("id");
+	return toSend = "ANAGRAM;"+size+";"+col+";"+row+";"+o+";" + wordId +";"+id;
+	
+}
+
 var orientation = "down";
 var numCol = 0;
 var numRow = 0;
@@ -336,9 +351,7 @@ window.onload = function(response) {
         if (players == "double") {
             console.log("doble");
             var player = $("#player").text();
-
             var playersWords = [];
-
             $("." + player).each(function() {
                 playersWords.push(this);
             });
@@ -358,24 +371,37 @@ window.onload = function(response) {
                 webSocket.send(toSend);
             });
         } else {
-
+        	console.log("in one player");
             var playersWords = [];
-
+            var dir = [];
             $(".numMarker").each(function() {
                 playersWords.push(this);
+				console.log("this" + this);
             });
-            
+            var anagramHtml = "";
+            var anagramNum = 0;
+            console.log("playerwords " + playersWords);
             for (word in playersWords) {
-                var classes = $(playersWords[word]).attr("class").split(" ");
-                for (c in classes) {
-                    if (c > 0 && classes[c] != "") {
-                        console.log(classes[c] + " " + $(playersWords[word]).text());
-                        var toSend = getAllPlayerWords($(playersWords[word]).prev(), classes[c]);
-                        console.log(toSend);
-                        webSocket.send(toSend);
-                    }
-                }
-            }
+            	var classes = $(playersWords[word]).attr("class").split(" ");
+            	var dir = classes[1];
+            	if (dir == ""){
+            		dir = "DOWN";
+            	}
+            	anagramHtml = anagramHtml + "<li value = " + anagramNum + " name = " + dir + " id =" + anagramNum + " >" + dir + " " + $(playersWords[word]).text() + "</li><br>";
+                anagramNum++;
+            };
+
+            $(".anagramChoice").append(anagramHtml);
+             $("li").click(function() {
+                var toSend = getAllPlayerWords($(playersWords[$(this).val()]).prev(), $(this).attr('name'), $(playersWords[$(this).val()]).text());
+                var correctToSend = toSend.split(";");
+                correctToSend[1] = parseFloat(correctToSend[1]) + 1;
+                var sendThis = "";
+           		for (var i = 0; i < correctToSend.length; i++) {
+           			sendThis = sendThis + correctToSend[i] + ";"
+           		}
+                webSocket.send(sendThis);
+            });
         }
     });
 
@@ -391,15 +417,11 @@ window.onload = function(response) {
 	
 		
 	if (players == "double"){
-		
 		var player = $("#player").text();
-		
 		var playersWords = [];
-		
 		$("."+player).each(function(){
 			playersWords.push(this);
 		});
-		
 		var playerWords = $("."+player).prev().each(function(){
 			var classes = $(this).attr("class").split(" ");
 			var row = parseFloat(classes[2][1]);
@@ -424,18 +446,6 @@ window.onload = function(response) {
 		$(".numMarker").each(function(){
 			playersWords.push(this);
 		});
-		
-		for (word in playersWords){
-			var classes = $(playersWords[word]).attr("class").split(" ");
-			for (c in classes){
-				if (c>0 && classes[c]!=""){
-					console.log(classes[c]+" "+$(playersWords[word]).text());
-					var toSend = getAllPlayerWords($(playersWords[word]).prev(), classes[c]);
-					console.log(toSend);
-					//webSocket.send(toSend);
-				}
-			}
-		}
 		
 		$("textarea").attr("disabled", false);
 		startTimer();
