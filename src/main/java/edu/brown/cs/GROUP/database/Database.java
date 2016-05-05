@@ -84,6 +84,21 @@ public class Database {
     }
     return words;
   }
+  public int getAllUnderNineLength() {
+	int length = 0;
+	String query = "SELECT count(*) FROM cluewords WHERE length<=9 ORDER BY length DESC;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+    	try (ResultSet rs = prep.executeQuery()) {
+    		if (rs.next()) {
+    			length = rs.getInt(1);
+    		}
+    	}
+	    	
+	} catch (SQLException e) {
+	      System.out.println("ERROR: Problem querying the database");
+	}
+    return length;
+  }
 
   public String getClue(String word) {
     String clue = "";
