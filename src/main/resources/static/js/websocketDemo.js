@@ -56,18 +56,18 @@ function updateChat(msg) {
     	$(".c"+col+".r"+row).val(letter);
     	$(".c"+col+".r"+row).attr("disabled", "disabled");
     	console.log("should have exposed letter ");
-    	//$("#hint1").html("the letter at row " + row + ", column " + col + " is: " +letter);
     } else if (msg.data.startsWith("ANAGRAM")) {
     	console.log("msg data " + msg.data);
     	var data = msg.data.split(";");
     	var col = parseFloat(data[1]);
     	var row = parseFloat(data[2]);
     	var orientation = data[3];
-    	var anagram = data[4];
-    	var classes = $(".active").attr("class").split(" ");
-    	$("#hint2").html("the letters of across 3 are" + anagram);
-    	$("#hint2").css("background-color", "transparent");
+    	var wordId = data[4];
+    	var anagram = data[5];
+    	$("#anagramList").hide();
+    	$("#hint2").html("the letters of " + orientation + " " + wordId + " are " + "'" + anagram + "'");
     	$("#hint2").off();
+    	$("#hint2").css("background-color", "transparent");
     }
     else {
 		if (players == "double"){

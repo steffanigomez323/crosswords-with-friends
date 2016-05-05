@@ -294,7 +294,7 @@ function startTimer(){
 	}, 1000);
 }
 
-function getAllPlayerWords(start, o){
+function getAllPlayerWords(start, o, wordId){
 	var classes = $(start).attr("class").split(" ");
 	var row = parseFloat(classes[2][1]);
 	var col = parseFloat(classes[1][1]);
@@ -304,9 +304,8 @@ function getAllPlayerWords(start, o){
 	} else {
 		size = wordSize(classes, "down");
 	}	
-	
 	var id = $(".crossword").attr("id");
-	return toSend = "ANAGRAM;"+size+";"+col+";"+row+";"+o+";"+id;
+	return toSend = "ANAGRAM;"+size+";"+col+";"+row+";"+o+";" + wordId +";"+id;
 	
 }
 
@@ -333,9 +332,53 @@ window.onload = function(response) {
 	}
 	});
 	
-	$("#hint2").click(function(){
-		$("#hint2").hide();
-	});
+    $("#hint2").click(function() {
+        if (players == "double") {
+            console.log("doble");
+            var player = $("#player").text();
+
+            var playersWords = [];
+
+            $("." + player).each(function() {
+                playersWords.push(this);
+            });
+            var anagramHtml = "";
+            var anagramNum = 0;
+            for (word in playersWords) {
+                anagramHtml = anagramHtml + "<li value = " + anagramNum + " id =" + anagramNum + " >" + player + " " + $(playersWords[word]).text() + "</li><br>";
+                anagramNum++;
+            }
+            $(".anagramChoice").append(anagramHtml);
+			console.log(anagramHtml);
+            $("li").click(function() {
+                console.log("playerw word word" + $(playersWords[word]));
+                console.log("this val " +$(this).val());
+                var toSend = getAllPlayerWords($(playersWords[$(this).val()]).prev(), player, $(playersWords[$(this).val()]).text());
+                console.log(toSend);
+                webSocket.send(toSend);
+            });
+        } else {
+
+            var playersWords = [];
+
+            $(".numMarker").each(function() {
+                playersWords.push(this);
+            });
+            
+            for (word in playersWords) {
+                var classes = $(playersWords[word]).attr("class").split(" ");
+                for (c in classes) {
+                    if (c > 0 && classes[c] != "") {
+                        console.log(classes[c] + " " + $(playersWords[word]).text());
+                        var toSend = getAllPlayerWords($(playersWords[word]).prev(), classes[c]);
+                        console.log(toSend);
+                        webSocket.send(toSend);
+                    }
+                }
+            }
+        }
+    });
+
 	
 	$("#hint3").click(function(){
 		$("#hint3").hide();
@@ -356,13 +399,6 @@ window.onload = function(response) {
 		$("."+player).each(function(){
 			playersWords.push(this);
 		});
-		
-		for (word in playersWords){
-			console.log(player+" "+$(playersWords[word]).text());
-			var toSend = getAllPlayerWords($(playersWords[word]).prev(), player);
-			console.log(toSend);
-			//webSocket.send(toSend);
-		}
 		
 		var playerWords = $("."+player).prev().each(function(){
 			var classes = $(this).attr("class").split(" ");

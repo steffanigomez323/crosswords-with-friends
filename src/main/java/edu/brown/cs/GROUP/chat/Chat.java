@@ -115,7 +115,6 @@ public class Chat {
       String[] clueWords = cleanedClue.split(" ");
       for (String clueWord : clueWords) {
         if (!stopWords.contains(clueWord)) {
-          System.out.println("clueword " + clueWord);
           censorWords.add(clueWord);
         }
       }
@@ -135,7 +134,6 @@ public class Chat {
     Set<String> censorWords = wordsToCensor.get(roomId);
     String cleanedMessage = message.replaceAll("[^a-zA-Z ]", "")
         .toLowerCase();
-    System.out.println("message: " + cleanedMessage);
     String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
       if (censorWords.contains(messageArray[i])) {
@@ -244,14 +242,18 @@ public class Chat {
     }
   }
 
+  /**
+   * This method broadcasts a letter to the front end.
+   * @param message the message
+   * @param roomId the room id
+   */
+
   public static void broadcastLetter(String message, Integer roomId) {
     String[] variables = message.split(";");
-    System.out.println("BROADCAST LETTER ");
     int x = Integer.valueOf(variables[1]);
     int y = Integer.valueOf(variables[2]);
     // Integer id = Integer.valueOf(variables[3]);
     Character letter = GUI.getLetter(x, y, roomId);
-    System.out.println(letter);
     try {
       if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
@@ -277,20 +279,21 @@ public class Chat {
   public static void broadcastAnagram(String message, Integer roomId) {
     String[] variables = message.split(";");
     System.out.println("ANAGRAM ");
-    int x = Integer.valueOf(variables[1]);
-    int y = Integer.valueOf(variables[2]);
-    // Integer id = Integer.valueOf(variables[3]);
-    Character letter = GUI.getLetter(x, y, roomId);
-    System.out.println(letter);
+    int length = Integer.valueOf(variables[1]);
+    int x = Integer.valueOf(variables[2]);
+    int y = Integer.valueOf(variables[3]);
+    Orientation o = Orientation.valueOf(variables[4]);
+    int wordId = Integer.valueOf(variables[5]);
+    Integer id = Integer.valueOf(variables[6]);
+    String scrambled = GUI.getAnagram(length, x, y, o, id);
+    System.out.println("scrambled " + scrambled);
     try {
       if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
-          if (session.isOpen()) {
-            String toSend = "LETTER;" + x + ";" + y + ";"
-                + letter.toString();
-            System.out.println(toSend);
-            session.getRemote().sendString(toSend);
-          }
+          String toSend = "ANAGRAM;" + x + ";" + y + ";" + o + ";" + wordId
+              + ";" + scrambled;
+          System.out.println(toSend);
+          session.getRemote().sendString(toSend);
         }
       }
     } catch (Exception e) {
