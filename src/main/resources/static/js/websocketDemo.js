@@ -19,6 +19,7 @@ function sendMessage(message) {
 
 //Update the chat-panel, and the list of connected users
 function updateChat(msg) {
+	console.log("recieved");
     if (msg.data.startsWith("DATA;")){
     	var data = msg.data.split(";");
     	var word = data[1];
@@ -43,7 +44,8 @@ function updateChat(msg) {
         }
         
         foundWords += 1;
-        if (foundWords == numWords){
+        console.log(timer);
+        if (foundWords == numWords && timer){
         	$("#win").toggle();
         	
         }
@@ -56,6 +58,7 @@ function updateChat(msg) {
     	var letter = data[3];
     	$(".c"+col+".r"+row).val(letter);
     	$(".c"+col+".r"+row).attr("disabled", "disabled");
+    	$(".c"+col+".r"+row).addClass("inactive");
     	console.log("should have exposed letter ");
     } else if (msg.data.startsWith("ANAGRAM")) {
     	console.log("msg data " + msg.data);
@@ -70,6 +73,8 @@ function updateChat(msg) {
     	$("#hint2").off();
     	$("#hint2").css("background-color", "transparent");
     } else if (msg.data.startsWith("**ALL**")) {
+    	console.log("showing all");
+    	console.log(msg.data);
     	var data = msg.data.split(":")[1].split("\n");
     	for (row in data){
     		var cols = data[row].split(" ");
@@ -81,6 +86,36 @@ function updateChat(msg) {
     	}
     	clearInterval(timerGlobal);
     	$("#end").text("new game");
+    	$("#end2").toggle();
+    	webSocket.close();
+    } else if (msg.data.startsWith("**CONVERT**")) {
+    	$(".hiddenEnd").toggle();
+    	players = "single";
+    	$("textarea").attr("disabled",false);
+    	$(".inactive").attr("disabled","disabled");
+    	var clues = msg.data.split("/:/");
+    	var player = $("#player").text();
+    	console.log(clues.length-2);
+    	var total = clues.length-2;
+		var html = "<ul id='clues' class='total"+total+"'>";
+		html+= "<span style='color:white'>"+player+" CLUES</span>";
+    	for (var i in clues){
+    		if (i>0 && i<clues.length-1){
+				var data = clues[i].split(";");
+				var o = data[2];
+				if (o==player){
+					var col = data[0];
+					var row = data[1];
+					var clue = data[3];
+					html+="<li>"+$(".c"+col+".r"+row).next().text()+" : "+clue+"</li>";
+				}
+    		}
+    	}
+    	html+="</ul>";
+		$(html).insertAfter("#clues");
+		timer = false;
+		timerGlobal = false;
+    	
     } else {
 		if (players == "double"){
 			if (loading < 2){
@@ -96,12 +131,12 @@ function updateChat(msg) {
 				} 
 			}
 			var data = JSON.parse(msg.data);
-		      console.log(data.userMessage);
+		      var innerMessage = data.userMessage.split("<p>")[1].split("</p>")[0];
+		      console.log("."+innerMessage+".");
+		      if (innerMessage=="down left the chat " || innerMessage=="across left the chat "){
+		    	  convertToOnePlayer();
+		      }
 		      insert("chat", data.userMessage);
-		      console.log("inserted");
-		      data.userlist.forEach(function (user) {
-		          insert("userlist", "<li>" + user + "</li>");
-		      });
 		}
     }
 }

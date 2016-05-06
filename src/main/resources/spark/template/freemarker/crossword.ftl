@@ -1,8 +1,10 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
 <div id="timer">10:00</div>
+<div id="end" class="hiddenEnd">end game & show answers</div>
+<div id="alert"><#if player =="ACROSS">DOWN<#else>ACROSS</#if> <span>exited the game</span>. You have been converted to a one player.<img id="remove" src="css/x.png"></img></div>
+<div id="end2">new game</div>
 <div id="player" class="double">${player}</div>
-<div id="end">end game & show answers</div>
 <div id=${id} class="crossword">
 <div id="crosswordWrapper">
 <#assign num=1>
@@ -32,15 +34,16 @@
 <div class = "hints">
 <div id = "stuck">Stuck?</div><p>
 <div id = "hint1">Expose letter</div>
-<!--<div id = "hint2">Get letters of word</div>
+<div id = "hint2">Get letters of word</div>
 <ul id = "anagramList">
 <div class = "anagramChoice"></div>
 </ul>
-<div id = "hint3">Expose clue</div>-->
+<div id = "hint3">Expose clue</div>
 </div>
 </div>
 <div id = "leftWrapper">
 <ul id="clues" class="total${total}">
+<span style="color:white"><#if player =="ACROSS">DOWN<#else>ACROSS</#if> CLUES</span>
 <#assign num=1>
 <#list crossword as row>
 	<#list row as col>
@@ -48,7 +51,7 @@
 		<#if col.clues?? &&  (col.clues?size > 0)>
 			<#list col.clues as clue>
 					<#if clue.clue?? && clue.orientation != player >
-						<li>${clue.orientation} ${num} : ${clue.clue}</li>
+						<li>${num} : ${clue.clue}</li>
 						<#assign start=true>
 					<#elseif clue.clue??>
 						<#assign start=true>
@@ -75,7 +78,8 @@
 
 </div>
 <div id="wait"><div id="waitText"><img id="loading" src="css/squares.svg"></img><br>waiting for second player</div></div>
-<div id="win"><div id="winText">YOU WON!</div><a id="newGame" href="../home">new game</a></div>
+<div id="win"><div id="winText">YOU WON!<br><a id="newGame" href="../home">new game</a></div></div>
+<div id="lose"><div id="loseText">Sorry, you lose. :(<br><div id="answers">show answers</div><br><div id="continue">continue playing</div></div></div>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>
 <script src="js/main.js"></script>

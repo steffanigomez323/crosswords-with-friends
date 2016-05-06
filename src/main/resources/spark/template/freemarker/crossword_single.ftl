@@ -31,16 +31,15 @@
 </#list>
 <br>
 <div id = "hint1">Expose letter</div>
-<!--<div id = "hint2">Get letters of word</div>
+<div id = "hint2">Get letters of word</div>
 <ul id = "anagramList">
 <div class = "anagramChoice"></div>
 </ul>
-<div id = "hint3">Expose clue</div>-->
 </div>
 
 <div id = "leftWrapper">
 <ul id="clues" class="total${total} clueACROSS">
-<span style="color:white">ACROSS</span>
+<span style="color:white">ACROSS CLUES</span>
 <#assign num=1>
 <#list crossword as row>
 	<#list row as col>
@@ -62,7 +61,7 @@
 </#list>
 </ul>
 <ul id="clues" class="total${total} clueDOWN">
-<span style="color:white">DOWN</span>
+<span style="color:white">DOWN CLUES</span>
 <#assign num=1>
 <#list crossword as row>
 	<#list row as col>
@@ -87,7 +86,8 @@
 </div>
 </div>
 
-<div id="win"><div id="winText">YOU WON!</div><a id="newGame" href="../home">new game</a></div>
+<div id="win"><div id="winText">YOU WON!<a id="newGame" href="../home">new game</a></div></div>
+<div id="lose"><div id="loseText">Sorry, you lose. :(<br><div id="answers">show answers</div><br><div id="continue">continue playing</div></div></div>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>
 <script src="js/main.js"></script>

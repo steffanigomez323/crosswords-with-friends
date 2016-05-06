@@ -1,8 +1,8 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
 <div id="timer">10:00</div>
+<div id="end2">new game</div>
 <div id="player" class="double">${player}</div>
-<div id="end">end game & show answers</div>
 <div id=${id} class="crossword">
 <div id="crosswordWrapper">
 <#assign num=1>
@@ -32,15 +32,16 @@
 <div class = "hints">
 <div id = "stuck">Stuck?</div><p>
 <div id = "hint1">Expose letter</div>
-<!--<div id = "hint2">Get letters of word</div>
+<div id = "hint2">Get letters of word</div>
 <ul id = "anagramList">
 <div class = "anagramChoice"></div>
 </ul>
-<div id = "hint3">Expose clue</div>-->
+<div id = "hint3">Expose clue</div>
 </div>
 </div>
 <div id = "leftWrapper">
 <ul id="clues" class="total${total}">
+<span style="color:white"><#if player =="ACROSS">DOWN<#else>ACROSS</#if> CLUES</span>
 <#assign num=1>
 <#list crossword as row>
 	<#list row as col>
@@ -75,7 +76,8 @@
 
 </div>
 <div id="wait"><div id="waitText"><img id="loading" src="css/squares.svg"></img><br>waiting for second player</div></div>
-<div id="win"><div id="winText">YOU WON!</div><a id="newGame" href="../home">new game</a></div>
+<div id="win"><div id="winText">YOU WON!<br><a id="newGame" href="../home">new game</a></div></div>
+<div id="lose"><div id="loseText">Sorry, you lose. :(<br><div id="answers">show answers</div><br><div id="continue">continue playing</div></div></div>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>
 <script src="js/main.js"></script>

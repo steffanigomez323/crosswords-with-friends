@@ -5,7 +5,6 @@
 //convert to one player when second player leaves
 //instruction box
 
-
 //Establish the WebSocket connection and set up event handlers
 var players = $("#player").attr("class");
 var url = "ws://" + location.hostname + ":" + location.port + "/chat/";
@@ -37,8 +36,9 @@ function countdown(stop, timer){
 	
 	$("#timer").text(n(timeLeft["minutes"])+":"+n(timeLeft["seconds"]));
 	if (timeLeft["minutes"]==0 && timeLeft["seconds"]==0){
-		alert("you lose :(");
 		clearInterval(timer);
+		$("#lose").toggle();
+		$("#end").text("new game");
 	}
 }
 
@@ -289,7 +289,7 @@ function getNext(dir, i, j, word, classes){
 
 function startTimer(){
 	var stop = new Date();
-	stop.setMinutes(stop.getMinutes() + 15);
+	stop.setMinutes(stop.getMinutes() + 1);
 	var timer = setInterval(function(){
 		countdown(stop, timer);
 	}, 1000);
@@ -297,6 +297,21 @@ function startTimer(){
 }
 
 function getAllPlayerWords(start, o, wordId){
+	var classes = $(start).attr("class").split(" ");
+	var row = parseFloat(classes[2][1]);
+	var col = parseFloat(classes[1][1]);
+	var size = 0;
+	if (o == "ACROSS"){
+		size = wordSize(classes, "across");
+	} else {
+		size = wordSize(classes, "down");
+	}	
+	var id = $(".crossword").attr("id");
+	return toSend = "ANAGRAM;"+size+";"+col+";"+row+";"+o+";" + wordId +";"+id;
+	
+}
+
+function getPlayerWords(start, o, wordId){
 	var classes = $(start).attr("class").split(" ");
 	var row = parseFloat(classes[2][1]);
 	var col = parseFloat(classes[1][1]);
@@ -339,9 +354,7 @@ window.onload = function(response) {
         if (players == "double") {
             console.log("doble");
             var player = $("#player").text();
-
             var playersWords = [];
-
             $("." + player).each(function() {
                 playersWords.push(this);
             });
@@ -361,24 +374,37 @@ window.onload = function(response) {
                 webSocket.send(toSend);
             });
         } else {
-
+        	console.log("in one player");
             var playersWords = [];
-
+            var dir = [];
             $(".numMarker").each(function() {
                 playersWords.push(this);
+				console.log("this" + this);
             });
-            
+            var anagramHtml = "";
+            var anagramNum = 0;
+            console.log("playerwords " + playersWords);
             for (word in playersWords) {
-                var classes = $(playersWords[word]).attr("class").split(" ");
-                for (c in classes) {
-                    if (c > 0 && classes[c] != "") {
-                        console.log(classes[c] + " " + $(playersWords[word]).text());
-                        var toSend = getAllPlayerWords($(playersWords[word]).prev(), classes[c]);
-                        console.log(toSend);
-                        webSocket.send(toSend);
-                    }
-                }
-            }
+            	var classes = $(playersWords[word]).attr("class").split(" ");
+            	var dir = classes[1];
+            	if (dir == ""){
+            		dir = "DOWN";
+            	}
+            	anagramHtml = anagramHtml + "<li value = " + anagramNum + " name = " + dir + " id =" + anagramNum + " >" + dir + " " + $(playersWords[word]).text() + "</li><br>";
+                anagramNum++;
+            };
+
+            $(".anagramChoice").append(anagramHtml);
+             $("li").click(function() {
+                var toSend = getAllPlayerWords($(playersWords[$(this).val()]).prev(), $(this).attr('name'), $(playersWords[$(this).val()]).text());
+                var correctToSend = toSend.split(";");
+                correctToSend[1] = parseFloat(correctToSend[1]) + 1;
+                var sendThis = "";
+           		for (var i = 0; i < correctToSend.length; i++) {
+           			sendThis = sendThis + correctToSend[i] + ";"
+           		}
+                webSocket.send(sendThis);
+            });
         }
     });
 
@@ -394,15 +420,11 @@ window.onload = function(response) {
 	
 		
 	if (players == "double"){
-		
 		var player = $("#player").text();
-		
 		var playersWords = [];
-		
 		$("."+player).each(function(){
 			playersWords.push(this);
 		});
-		
 		var playerWords = $("."+player).prev().each(function(){
 			var classes = $(this).attr("class").split(" ");
 			var row = parseFloat(classes[2][1]);
@@ -427,18 +449,6 @@ window.onload = function(response) {
 		$(".numMarker").each(function(){
 			playersWords.push(this);
 		});
-		
-		for (word in playersWords){
-			var classes = $(playersWords[word]).attr("class").split(" ");
-			for (c in classes){
-				if (c>0 && classes[c]!=""){
-					console.log(classes[c]+" "+$(playersWords[word]).text());
-					var toSend = getAllPlayerWords($(playersWords[word]).prev(), classes[c]);
-					console.log(toSend);
-					//webSocket.send(toSend);
-				}
-			}
-		}
 		
 		$("textarea").attr("disabled", false);
 		timerGlobal = startTimer();
@@ -510,5 +520,28 @@ window.onload = function(response) {
 			webSocket.send("**ALL**");
 		}
 	});
+	
+	$("#end2").click(function(){
+		window.location.replace("../home");
+	});
+	
+	$("#answers").click(function(){
+		if ($(this).text()=="new game"){
+			window.location.replace("../home");
+		} else {
+			webSocket.send("**ALL**");
+			$("#lose").toggle();
+		}
+	});
+	
+	$("#continue").click(function(){
+		$("#lose").toggle();
+		if (players=="double"){
+			console.log("here");
+			payers = "single";
+			$("#chatWrapper").hide();
+			webSocket.send("**CONVERT**");
+		}
+	})
 	
 }

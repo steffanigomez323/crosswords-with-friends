@@ -22,28 +22,36 @@ body{
 	position: relative;
 }
 
-#timer, #player, #end {
+#timer, #player, #end, #end2 {
 	color: white;
 	font-size: 30px;
 	left: 20px;
-	top: 30px;
+	top:50px;
 	position: fixed;
 	text-transform: uppercase;
 	letter-spacing: 5px;
 }
 
-#timer {
-	top: 70px;
+#end2{
+	display: none;
 }
 
-#end{
-	top: 120px;
+.hiddenEnd{
+	display: none;
+}
+
+#timer {
+	top: 90px;
+}
+
+#end, #end2{
+	top: 140px;
 	font-size: 11px;
 	border: 1px dashed white;
 	padding: 10px;
 }
 
-#end:hover{
+#end:hover, #end2:hover{
 	background-color: rgba(0,0,0,0.8);
 }
 
@@ -53,7 +61,7 @@ body{
 	margin: auto;
 	left: 0;
 	right: 0;
-	top: 170px;
+	top: 190px;
 }
 
 #crosswordWrapper{
@@ -73,17 +81,52 @@ body{
 	top: 0;
 }
 
-#wait, #win{
+#alert{
+	position: fixed;
+	top: 0;
+	left:0;
+	width: 100%;
+	height: 40px;
+	font-size: 12px;
+	background-color: rgba(255,0,0,0.3);
+	color: white;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	padding: 15px;
+	text-align: center; 
+	font-family: 'Montserrat', sans-serif;
+	display: none;
+}
+
+#remove{
+	position: fixed;
+	text-align: center;
+	height: 40px;
+	width: 40px;
+	right: 5px;
+	top: 5px;
+	border: 1px dashed rgba(250,250,250,0.7);
+	line-height: 30px;
+}
+
+#remove:hover{
+	cursor: pointer;
+	border: 1px dashed white;
+	background-color: red;
+}
+
+#wait, #win, #lose{
 	position: absolute;
-	width: 110%;
-	height: 110%;
+	width: 100%;
+	height: 100%;
 	background-color: rgba(0,0,0,0.9);
 	top: 0px;
 	left: 0px;
 	display: none;
 }
 
-#waitText, #winText, #newGame{
+
+#waitText, #winText, #newGame, #loseText{
 	color: white;
 	text-transform: lowercase;
 	letter-spacing: 5px;
@@ -93,26 +136,28 @@ body{
 	left: 0;
 	right: 0;
 	height: 30px;
-	width: 550px;
 	font-size: 30px;
 	text-align: center;
 }
 
-#winText{
+#winText, #loseText{
 	font-size: 60px;
 }
 
-#newGame{
-	width: 250px;
-	height: 100px;
-	top: 400px;
+#newGame, #answers, #continue{
+	width: 500px;
+	margin: 20px auto 20px auto;
+	display: inline-block;
+	height: 60px;
 	text-decoration: none;
 	color: yellow;
-	line-height: 100px;
 	border: 1px dashed white;
+	font-size: 25px;
+	padding: 30px 100px 60px 100px;
+	top: 100px;
 }
 
-#newGame:hover{
+#newGame:hover, #answers:hover, #continue:hover{
 	background-color: black;
 	color: white;
 }
@@ -177,6 +222,10 @@ li {
 #hint1:hover, #hint2:hover, #hint3:hover{
 	background-color: #c9edc3;
 	color: black;
+}
+
+.anagramChoice{
+	color: white;
 }
 
 #hint1, #hint2, #hint3 {
