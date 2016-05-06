@@ -159,8 +159,7 @@ public class Chat {
           if (session.isOpen()) {
             session.getRemote()
                 .sendString(String.valueOf(new JSONObject()
-                    .put("userMessage", createHtmlMessageFromSender(sender,
-                        censorMessage(roomId, message)))));
+                    .put("userMessage", createHtmlMessageFromSender(sender, message))));
           }
         }
       }
@@ -253,6 +252,25 @@ public class Chat {
         }
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  public static void broadcastEnd(String message, Session user, Integer roomId) {
+    String toSend = "**END**:";
+    String choice = message.split(":")[1];
+    System.out.println(choice);
+    if (choice.equals("continue")){
+      //get other's choice
+      toSend += "show";
+      try {
+        if (user.isOpen()) {
+          user.getRemote().sendString(toSend);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else if (choice.equals("show")){
+
     }
   }
 

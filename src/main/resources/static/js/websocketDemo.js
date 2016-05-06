@@ -88,6 +88,14 @@ function updateChat(msg) {
     	$("#end").text("new game");
     	$("#end2").toggle();
     	webSocket.close();
+    } else if (msg.data.startsWith("**END**")) {
+    	var data = msg.data.split(":");
+    	var other = data[1];
+    	console.log(other);
+    	if (other=="show"){
+			$("#alert span").text("chose not to continue");
+			convertToOnePlayer();
+    	}
     } else if (msg.data.startsWith("**CONVERT**")) {
     	$(".hiddenEnd").toggle();
     	players = "single";

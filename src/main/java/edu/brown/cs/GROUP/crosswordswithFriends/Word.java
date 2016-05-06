@@ -69,6 +69,7 @@ public class Word {
   /**
    * This is the other constructor that sets the word, the x-index, the y-index,
    * the orientation, the score, and the clue values.
+   * 
    * @param w the word
    * @param x the x-index
    * @param y the y-index

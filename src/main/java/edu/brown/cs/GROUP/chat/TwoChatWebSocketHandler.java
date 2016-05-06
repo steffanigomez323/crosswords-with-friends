@@ -100,6 +100,8 @@ public class TwoChatWebSocketHandler {
       Chat.broadcastAnagram(message, userRoom.get(user));
     } else if (message.startsWith("**CONVERT**")){
       Chat.broadcastConvert(user, userRoom.get(user));
+    } else if (message.startsWith("**END**")){
+      Chat.broadcastEnd(message, user, userRoom.get(user));
     } else {
       Chat.broadcastMessage(Chat.userUsernameMap.get(user), message,
           userRoom.get(user));

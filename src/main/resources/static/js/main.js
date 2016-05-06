@@ -2,7 +2,7 @@
 //Dissallow one-player orientation switching when not possible
 //clear caches on exit?
 //when first player leaves before second player joins
-//convert to one player when second player leaves
+//points system
 //instruction box
 
 //Establish the WebSocket connection and set up event handlers
@@ -539,14 +539,16 @@ window.onload = function(response) {
 		} else {
 			webSocket.send("**ALL**");
 			$("#lose").toggle();
+			if (players=="double"){
+				webSocket.send("**END**:show");
+			}
 		}
 	});
 	
 	$("#continue").click(function(){
 		$("#lose").toggle();
 		if (players=="double"){
-			$("#alert span").text("chose not to continue");
-			convertToOnePlayer();
+			webSocket.send("**END**:continue");
 		}
 	})
 	

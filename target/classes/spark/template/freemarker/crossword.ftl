@@ -1,6 +1,8 @@
 <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/style.css">
 <div id="timer">10:00</div>
+<div id="end" class="hiddenEnd">end game & show answers</div>
+<div id="alert"><#if player =="ACROSS">DOWN<#else>ACROSS</#if> <span>exited the game</span>. You have been converted to a one player.<img id="remove" src="css/x.png"></img></div>
 <div id="end2">new game</div>
 <div id="player" class="double">${player}</div>
 <div id=${id} class="crossword">
@@ -49,7 +51,7 @@
 		<#if col.clues?? &&  (col.clues?size > 0)>
 			<#list col.clues as clue>
 					<#if clue.clue?? && clue.orientation != player >
-						<li>${clue.orientation} ${num} : ${clue.clue}</li>
+						<li>${num} : ${clue.clue}</li>
 						<#assign start=true>
 					<#elseif clue.clue??>
 						<#assign start=true>

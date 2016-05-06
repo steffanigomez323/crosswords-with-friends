@@ -2,7 +2,7 @@
 //Dissallow one-player orientation switching when not possible
 //clear caches on exit?
 //when first player leaves before second player joins
-//convert to one player when second player leaves
+//points system
 //instruction box
 
 //Establish the WebSocket connection and set up event handlers
@@ -15,7 +15,6 @@ if (players == "double"){
 }
 var webSocket = new WebSocket(url);
 webSocket.onmessage = function (msg) { console.log("in on message"); updateChat(msg); };
-webSocket.onclose = function () { alert("WebSocket connection closed ") };
 
 function time(stop){
 	  var t = Date.parse(stop) - Date.parse(new Date());
@@ -36,9 +35,10 @@ function countdown(stop, timer){
 	
 	$("#timer").text(n(timeLeft["minutes"])+":"+n(timeLeft["seconds"]));
 	if (timeLeft["minutes"]==0 && timeLeft["seconds"]==0){
+		console.log("here");
 		clearInterval(timer);
+		timer = false;
 		$("#lose").toggle();
-		$("#end").text("new game");
 	}
 }
 
@@ -326,6 +326,14 @@ function getPlayerWords(start, o, wordId){
 	
 }
 
+function convertToOnePlayer(){
+	$("#end").text("end game and show answers");
+	payers = "single";
+	$("#chatWrapper").hide();
+	$("#alert").toggle();
+	webSocket.send("**CONVERT**");
+}
+
 var orientation = "down";
 var numCol = 0;
 var numRow = 0;
@@ -531,17 +539,21 @@ window.onload = function(response) {
 		} else {
 			webSocket.send("**ALL**");
 			$("#lose").toggle();
+			if (players=="double"){
+				webSocket.send("**END**:show");
+			}
 		}
 	});
 	
 	$("#continue").click(function(){
 		$("#lose").toggle();
 		if (players=="double"){
-			console.log("here");
-			payers = "single";
-			$("#chatWrapper").hide();
-			webSocket.send("**CONVERT**");
+			webSocket.send("**END**:continue");
 		}
+	})
+	
+	$("#remove").click(function(){
+		$("#alert").toggle();
 	})
 	
 }
