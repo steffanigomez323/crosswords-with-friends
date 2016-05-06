@@ -33,6 +33,7 @@ public class OneChatWebSocketHandler {
 
   @OnWebSocketMessage
   public void onMessage(Session user, String message) {
+    System.out.println(message);
     if (message.startsWith("DATA")) {
       Chat.broadcastCorrect(message, userRoom.get(user));
     } else if (message.startsWith("LETTER")) {
@@ -41,6 +42,8 @@ public class OneChatWebSocketHandler {
     } else if (message.startsWith("ANAGRAM")){
       System.out.println("in anagram web socket " + message);
       Chat.broadcastAnagram(message, userRoom.get(user));
+    } else if (message.startsWith("**ALL**")){
+      Chat.broadcastAll(userRoom.get(user));
     }
   }
 

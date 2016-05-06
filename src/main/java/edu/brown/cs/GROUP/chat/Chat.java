@@ -6,6 +6,7 @@ import static j2html.TagCreator.p;
 import static j2html.TagCreator.span;
 import static spark.Spark.init;
 import static spark.Spark.webSocket;
+import edu.brown.cs.GROUP.crosswordswithFriends.Crossword;
 import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
 import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
 import edu.brown.cs.GROUP.crosswordswithFriends.Word;
@@ -173,6 +174,23 @@ public class Chat {
       } catch (Exception e) {
         e.printStackTrace();
       }
+    }
+  }
+
+  public static void broadcastAll(Integer roomId) {
+    Crossword crossword = GUI.getCrossword(roomId);
+    String puzzle = "**ALL**:"+crossword.toString();
+    System.out.println(puzzle);
+    try {
+      if (roomUsers.get(roomId) != null) {
+        for (Session session : roomUsers.get(roomId)) {
+          if (session.isOpen()) {
+            session.getRemote().sendString(puzzle);
+          }
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 

@@ -1,8 +1,9 @@
 //TO DO
 //Dissallow one-player orientation switching when not possible
-//Double clues error
-//Censoring words by room id
-//clear caches on exit
+//clear caches on exit?
+//when first player leaves before second player joins
+//convert to one player when second player leaves
+//instruction box
 
 
 //Establish the WebSocket connection and set up event handlers
@@ -292,6 +293,7 @@ function startTimer(){
 	var timer = setInterval(function(){
 		countdown(stop, timer);
 	}, 1000);
+	return timer;
 }
 
 function getAllPlayerWords(start, o, wordId){
@@ -315,6 +317,7 @@ var numRow = 0;
 var numWords = parseFloat($("#clues").attr("class").split("l")[1]);
 var foundWords = 0;
 var loading = 0;
+var timerGlobal;
 
 window.onload = function(response) {	
 
@@ -438,7 +441,7 @@ window.onload = function(response) {
 		}
 		
 		$("textarea").attr("disabled", false);
-		startTimer();
+		timerGlobal = startTimer();
 	}
 	
 	$("textarea").click(function(){
@@ -499,5 +502,13 @@ window.onload = function(response) {
 	     }
 	     event.preventDefault();
 	 });
+	
+	$("#end").click(function(){
+		if ($(this).text()=="new game"){
+			window.location.replace("../home");
+		} else {
+			webSocket.send("**ALL**");
+		}
+	});
 	
 }

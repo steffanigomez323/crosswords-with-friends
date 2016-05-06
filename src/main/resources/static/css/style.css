@@ -3,40 +3,62 @@ body{
 	min-width: 1200px;
     background-color: #222222;
     background: repeating-linear-gradient(45deg, #2b2b2b 0%, #2b2b2b 10%, #222222 0%, #222222 50%) 0 / 15px 15px;
+    
 }
 
 
 .box{
 	width: 50px;
 	height: 50px;
-	border-top: 5px solid black;
+	position: absolute;
 }
 
 .boxWrap{
 	display: inline-block;
-	width: 50px;
-	height: 50px;
+	width: 45px;
+	height: 45px;
+	padding: 0;
+	margin: 0;
 	position: relative;
-	
 }
 
-#timer, #player {
+#timer, #player, #end {
 	color: white;
-	font-size: 40px;
+	font-size: 30px;
+	left: 20px;
+	top: 30px;
+	position: fixed;
+	text-transform: uppercase;
+	letter-spacing: 5px;
+}
+
+#timer {
+	top: 70px;
+}
+
+#end{
+	top: 120px;
+	font-size: 11px;
+	border: 1px dashed white;
+	padding: 10px;
+}
+
+#end:hover{
+	background-color: rgba(0,0,0,0.8);
 }
 
 .crossword{
-	width: 1025px;
+	width: 948px;
 	position: absolute;
 	margin: auto;
 	left: 0;
 	right: 0;
+	top: 170px;
 }
 
 #crosswordWrapper{
-	background-color: black;
-	padding: 2px 0 7px 0;
-	width: 500px;
+	width: 448px;
+	height: 518px;
 	margin: 0;
 	position: absolute;
 	right: 0;
@@ -45,21 +67,23 @@ body{
 
 .row{
 	height: 50px;
-	left: 7px;
-	position: relative;
+	width: 450px;
+	margin: 0;
+	text-align: left;
+	top: 0;
 }
 
-#wait{
+#wait, #win{
 	position: absolute;
 	width: 110%;
 	height: 110%;
 	background-color: rgba(0,0,0,0.9);
-	display: none;
 	top: 0px;
 	left: 0px;
+	display: none;
 }
 
-#waitText{
+#waitText, #winText, #newGame{
 	color: white;
 	text-transform: lowercase;
 	letter-spacing: 5px;
@@ -74,28 +98,53 @@ body{
 	text-align: center;
 }
 
+#winText{
+	font-size: 60px;
+}
+
+#newGame{
+	width: 250px;
+	height: 100px;
+	top: 400px;
+	text-decoration: none;
+	color: yellow;
+	line-height: 100px;
+	border: 1px dashed white;
+}
+
+#newGame:hover{
+	background-color: black;
+	color: white;
+}
+
 textarea{
 	font-size: 30px;
-	text-align: center;
 	overflow: hidden;
 	resize: none;
 	line-height: 50px;
 	text-transform: uppercase;
-	border: none;
+	text-align: center;
+	border: 1px dashed rgba(250,250,250,0.8);
+	background: rgba(250,250,250,0.3);
+	padding: 0;
+	color: white;
+		font-family: 'Montserrat', sans-serif;
 }
+
 .wordActive {
-	background-color: #c9edc3;
+	background-color: rgba(201, 237, 195, 0.4);
 }
 
 .active{
-	background-color: #FFDD1B;
+	background-color: rgba(255, 221, 27, 0.4);
 }
 
 
 .filled{
-	background-color: black;
 	margin: 0;
-	position: relative;
+	border: 0;
+	width: 50px;
+	height: 50px;
 }
 
 * {
@@ -208,29 +257,49 @@ li {
 	position: absolute;
 	top: -15px;
 	display: inline-block;
+	height: 548px;
 }
 
 #clues{
 	width: 500px;
-	border: 1px black dashed;
 	padding: 50px;
 	text-decoration: none;
-	background-color: white;
+	background-color: rgba(0,0,0,0.4);
+	color: grey;
+	border-radius: 90px 90px 90px 0px;
+     -moz-border-radius: 90px 00px 90px 90px;
+     -webkit-border-radius: 90px 00px 90px 90px;
+     list-style-type: none;
+     font-size: 10px;
+     letter-spacing: 1px;
 }
+
+.clueACROSS{
+	position: absolute;
+	bottom: 5px;
+}
+
+.clueDOWN{
+	top: 5px;
+	position: absolute;
+}
+
 
 .numMarker{
 	position: absolute;
 	top: 5px;
 	left: 5px;
 	font-size: 8px;
+	color: white;
 }
 
 input[disabled], input:disabled, textarea[disabled], textarea[disabled="disabled"], textarea:disabled {
-    background: grey;
+    background: rgba(0,0,0,0.8);
 }
 
 .inactive{
-	background-color: green !important;
+	background-color: #003300 !important;
+	color: white !important;
 }
 
 #container {

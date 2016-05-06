@@ -66,6 +66,10 @@ public class GUI {
     return true;
   }
 
+  public static Crossword getCrossword(Integer roomId){
+    return crosswordCache.get(roomId);
+  }
+
   public static String getAnagram(int length, int x, int y,  Orientation orientation, Integer id) {
     if (!crosswordCache.containsKey(id)) {
       return "";

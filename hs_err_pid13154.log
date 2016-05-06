@@ -1,0 +1,799 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007fbc5a2d44dd, pid=13154, tid=140446914422528
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_25-b17) (build 1.8.0_25-b17)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.25-b02 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# V  [libjvm.so+0x61e4dd]  InstanceKlass::oop_push_contents(PSPromotionManager*, oopDesc*)+0xbd
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007fbc5401e800):  GCTaskThread [stack: 0x00007fbc5861a000,0x00007fbc5871b000] [id=13156]
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 2 (SEGV_ACCERR), si_addr: 0x00000000e8653358
+
+Registers:
+RAX=0x00000000e8653358, RBX=0x0000000100001938, RCX=0x0000000000000000, RDX=0x00000000e8653358
+RSP=0x00007fbc58719ad0, RBP=0x00007fbc58719b20, RSI=0x0000000000000000, RDI=0x0000000000000000
+R8 =0x00007fbc5abe4a40, R9 =0x00007fbc5ac10430, R10=0x00007fbc5406fd18, R11=0x00007fbc58719b50
+R12=0x00000000e46e8f4c, R13=0x00000000e46e8f4c, R14=0x0000000100001938, R15=0x00000000e46e8f40
+RIP=0x00007fbc5a2d44dd, EFLAGS=0x0000000000010202, CSGSFS=0x0000000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007fbc58719ad0)
+0x00007fbc58719ad0:   00007fbc58719b50 00007fbc5ac10430
+0x00007fbc58719ae0:   000000008ca7099d 00007fbc5406fce0
+0x00007fbc58719af0:   00007fbc58719b50 00000000e46e8f40
+0x00007fbc58719b00:   00000000e0653340 0000000000000005
+0x00007fbc58719b10:   0000000000000000 0000000000000003
+0x00007fbc58719b20:   00007fbc58719ba0 00007fbc5a601186
+0x00007fbc58719b30:   00000000e6090048 00007fbc5ac022f9
+0x00007fbc58719b40:   0000000000000018 00007fbc5406fc80
+0x00007fbc58719b50:   00000000e46c4045 00007fbc58719bc0
+0x00007fbc58719b60:   00000000e054a3b2 0000000000001000
+0x00007fbc58719b70:   00007fbc58719ba0 00000000e46c4038
+0x00007fbc58719b80:   00007fbc5406fc80 00007fbc5abe4a40
+0x00007fbc58719b90:   0000000000000000 00007fbc5406fce8
+0x00007fbc58719ba0:   00007fbc58719c90 00007fbc5a600958
+0x00007fbc58719bb0:   00007fbc58719bf0 00007fbc58719c20
+0x00007fbc58719bc0:   00007fbc58719c30 00007fbc58719bf0
+0x00007fbc58719bd0:   00007fbc58719c00 00007fbc58719c50
+0x00007fbc58719be0:   01007fbc58719ca0 00007fbc5406fd18
+0x00007fbc58719bf0:   0000000000000000 00007fbc5a111694
+0x00007fbc58719c00:   00007fbc5401f060 00007fbc1c3ca6e0
+0x00007fbc58719c10:   00007fbc5406fc80 0000000000000001
+0x00007fbc58719c20:   00007fbc5401f060 00007fbc5a7af953
+0x00007fbc58719c30:   00007fbc58719cf0 00007fbc5a604182
+0x00007fbc58719c40:   0000000000000000 00007fbc5a7af967
+0x00007fbc58719c50:   00000000e46c4039 00007fbc58719c00
+0x00007fbc58719c60:   00007fbc5abbc670 00007fbc1c3ca800
+0x00007fbc58719c70:   00007fbc5401e800 0000000000000000
+0x00007fbc58719c80:   00007fbc5401f060 00007fbc5a7af979
+0x00007fbc58719c90:   00007fbc58719cf0 00007fbc5a604390
+0x00007fbc58719ca0:   00007fbc1c3ca800 00007fbc5406fc80
+0x00007fbc58719cb0:   00007fbc58719cf0 00007fbc5a264617
+0x00007fbc58719cc0:   00007fbc58719cf0 00007fbc1c3ca800 
+
+Instructions: (pc=0x00007fbc5a2d44dd)
+0x00007fbc5a2d44bd:   49 3b 01 0f 82 88 00 00 00 4c 8b 05 8b e2 8e 00
+0x00007fbc5a2d44cd:   41 8b 70 08 49 8b 38 89 f1 48 d3 e0 48 8d 14 07
+0x00007fbc5a2d44dd:   48 8b 02 83 e0 03 48 83 f8 03 0f 85 3b 01 00 00
+0x00007fbc5a2d44ed:   48 8b 05 a4 27 8f 00 48 8b 12 80 38 00 74 10 48 
+
+Register to memory mapping:
+
+RAX=0x00000000e8653358 is an unallocated location in the heap
+RBX=0x0000000100001938 is pointing into metadata
+RCX=0x0000000000000000 is an unknown value
+RDX=0x00000000e8653358 is an unallocated location in the heap
+RSP=0x00007fbc58719ad0 is an unknown value
+RBP=0x00007fbc58719b20 is an unknown value
+RSI=0x0000000000000000 is an unknown value
+RDI=0x0000000000000000 is an unknown value
+R8 =0x00007fbc5abe4a40: <offset 0xf2ea40> in /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/server/libjvm.so at 0x00007fbc59cb6000
+R9 =0x00007fbc5ac10430: <offset 0xf5a430> in /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/server/libjvm.so at 0x00007fbc59cb6000
+R10=0x00007fbc5406fd18 is an unknown value
+R11=0x00007fbc58719b50 is an unknown value
+R12=0x00000000e46e8f4c is an unknown value
+R13=0x00000000e46e8f4c is an unknown value
+R14=0x0000000100001938 is pointing into metadata
+R15=0x00000000e46e8f40 is an oop
+java.lang.String 
+ - klass: 'java/lang/String'
+
+
+Stack: [0x00007fbc5861a000,0x00007fbc5871b000],  sp=0x00007fbc58719ad0,  free space=1022k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0x61e4dd]  InstanceKlass::oop_push_contents(PSPromotionManager*, oopDesc*)+0xbd
+V  [libjvm.so+0x94b186]  oopDesc* PSPromotionManager::copy_to_survivor_space<false>(oopDesc*)+0x486
+V  [libjvm.so+0x94a958]  PSPromotionManager::drain_stacks_depth(bool)+0x808
+V  [libjvm.so+0x94e390]  StealTask::do_it(GCTaskManager*, unsigned int)+0x30
+V  [libjvm.so+0x5afb5f]  GCTaskThread::run()+0x12f
+V  [libjvm.so+0x8e7d48]  java_start(Thread*)+0x108
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007fbbd4009000 JavaThread "qtp809477512-30" [_thread_blocked, id=13605, stack(0x00007fbc359df000,0x00007fbc35ae0000)]
+  0x00007fbbd4001000 JavaThread "qtp809477512-29" [_thread_blocked, id=13581, stack(0x00007fbc35ee4000,0x00007fbc35fe5000)]
+  0x00007fbbd0002800 JavaThread "qtp809477512-27" [_thread_in_native, id=13516, stack(0x00007fbc35be1000,0x00007fbc35ce2000)]
+  0x00007fbbe0013800 JavaThread "qtp809477512-25" [_thread_blocked, id=13385, stack(0x00007fbc34dc2000,0x00007fbc34ec3000)]
+  0x00007fbbd0001000 JavaThread "qtp809477512-24" [_thread_blocked, id=13384, stack(0x00007fbc34ec3000,0x00007fbc34fc4000)]
+  0x00007fbc04006000 JavaThread "Scheduler-998114232" [_thread_blocked, id=13181, stack(0x00007fbc355db000,0x00007fbc356dc000)]
+  0x00007fbc00143800 JavaThread "org.eclipse.jetty.server.session.HashSessionManager@850620cTimer" daemon [_thread_blocked, id=13180, stack(0x00007fbc356dc000,0x00007fbc357dd000)]
+  0x00007fbc0013e000 JavaThread "org.eclipse.jetty.server.session.HashSessionManager@15555e71Timer" daemon [_thread_blocked, id=13179, stack(0x00007fbc357dd000,0x00007fbc358de000)]
+  0x00007fbc00135800 JavaThread "qtp809477512-15-acceptor-0@32550a4-ServerConnector@5675bc18{HTTP/1.1,[http/1.1]}{0.0.0.0:9998}" [_thread_in_native, id=13174, stack(0x00007fbc35ce2000,0x00007fbc35de3000)]
+  0x00007fbc00133800 JavaThread "qtp809477512-14" [_thread_in_native, id=13173, stack(0x00007fbc35de3000,0x00007fbc35ee4000)]
+  0x00007fbc00131000 JavaThread "qtp809477512-12" [_thread_blocked, id=13171, stack(0x00007fbc35fe5000,0x00007fbc360e6000)]
+  0x00007fbc54423000 JavaThread "Thread-1" [_thread_blocked, id=13169, stack(0x00007fbc36917000,0x00007fbc36a18000)]
+  0x00007fbc540b6800 JavaThread "Service Thread" daemon [_thread_blocked, id=13167, stack(0x00007fbc36dee000,0x00007fbc36eef000)]
+  0x00007fbc540af000 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=13166, stack(0x00007fbc36eef000,0x00007fbc36ff0000)]
+  0x00007fbc540ad800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=13165, stack(0x00007fbc36ff0000,0x00007fbc370f1000)]
+  0x00007fbc540aa800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=13164, stack(0x00007fbc370f1000,0x00007fbc371f2000)]
+  0x00007fbc540a8800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=13163, stack(0x00007fbc371f2000,0x00007fbc372f3000)]
+  0x00007fbc5407c000 JavaThread "Finalizer" daemon [_thread_blocked, id=13162, stack(0x00007fbc372f3000,0x00007fbc373f4000)]
+  0x00007fbc54079800 JavaThread "Reference Handler" daemon [_thread_blocked, id=13161, stack(0x00007fbc373f4000,0x00007fbc374f5000)]
+  0x00007fbc54009000 JavaThread "main" [_thread_in_native, id=13155, stack(0x00007fbc5b6f4000,0x00007fbc5b7f5000)]
+
+Other Threads:
+  0x00007fbc54072800 VMThread [stack: 0x00007fbc374f5000,0x00007fbc375f6000] [id=13160]
+  0x00007fbc540b9000 WatcherThread [stack: 0x00007fbc36ced000,0x00007fbc36dee000] [id=13168]
+
+=>0x00007fbc5401e800 (exited) GCTaskThread [stack: 0x00007fbc5861a000,0x00007fbc5871b000] [id=13156]
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007fbc54007b40] Threads_lock - owner thread: 0x00007fbc54072800
+[0x00007fbc54008040] Heap_lock - owner thread: 0x00007fbbe0013800
+
+Heap:
+ PSYoungGen      total 179200K, used 178826K [0x00000000d6900000, 0x00000000e6800000, 0x0000000100000000)
+  eden space 171520K, 100% used [0x00000000d6900000,0x00000000e1080000,0x00000000e1080000)
+  from space 7680K, 95% used [0x00000000e6080000,0x00000000e67a2930,0x00000000e6800000)
+  to   space 17408K, 44% used [0x00000000e4600000,0x00000000e4d8a930,0x00000000e5700000)
+ ParOldGen       total 174080K, used 154506K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 88% used [0x0000000083a00000,0x000000008d0e2860,0x000000008e400000)
+ Metaspace       used 14405K, capacity 14572K, committed 14848K, reserved 1062912K
+  class space    used 1669K, capacity 1704K, committed 1792K, reserved 1048576K
+
+Card table byte_map: [0x00007fbc589b3000,0x00007fbc58d97000] byte_map_base: 0x00007fbc58596000
+
+Marking Bits: (ParMarkBitMap*) 0x00007fbc5ac102c0
+ Begin Bits: [0x00007fbc3c1d0000, 0x00007fbc3e0e8000)
+ End Bits:   [0x00007fbc3e0e8000, 0x00007fbc40000000)
+
+Polling page: 0x00007fbc5b839000
+
+CodeCache: size=245760Kb used=6407Kb max_used=6419Kb free=239352Kb
+ bounds [0x00007fbc45000000, 0x00007fbc45660000, 0x00007fbc54000000]
+ total_blobs=2184 nmethods=1793 adapters=306
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 1004.430 Thread 0x00007fbc540af000 2028       1       org.eclipse.jetty.websocket.common.extensions.ExtensionStack::access$200 (5 bytes)
+Event: 1004.430 Thread 0x00007fbc540af000 nmethod 2028 0x00007fbc4563f990 code [0x00007fbc4563fae0, 0x00007fbc4563fbd0]
+Event: 1029.661 Thread 0x00007fbc540af000 2029   !   3       org.eclipse.jetty.websocket.common.io.FrameFlusher$Flusher::process (326 bytes)
+Event: 1029.668 Thread 0x00007fbc540af000 nmethod 2029 0x00007fbc45649990 code [0x00007fbc45649d20, 0x00007fbc4564bff8]
+Event: 1029.668 Thread 0x00007fbc540af000 2030   !   3       org.eclipse.jetty.util.IteratingCallback::succeeded (204 bytes)
+Event: 1029.676 Thread 0x00007fbc540af000 nmethod 2030 0x00007fbc4564d350 code [0x00007fbc4564d6e0, 0x00007fbc4564f838]
+Event: 1067.005 Thread 0x00007fbc540af000 2031       1       org.eclipse.jetty.websocket.common.io.FrameFlusher::access$1400 (5 bytes)
+Event: 1067.005 Thread 0x00007fbc540af000 nmethod 2031 0x00007fbc4563f6d0 code [0x00007fbc4563f820, 0x00007fbc4563f910]
+Event: 1067.006 Thread 0x00007fbc540aa800 2032       4       java.util.concurrent.locks.ReentrantLock::lock (8 bytes)
+Event: 1067.007 Thread 0x00007fbc540aa800 nmethod 2032 0x00007fbc4563f3d0 code [0x00007fbc4563f520, 0x00007fbc4563f608]
+
+GC Heap History (10 events):
+Event: 881.603 GC heap after
+Heap after GC invocations=28 (full 2):
+ PSYoungGen      total 205312K, used 1722K [0x00000000d6900000, 0x00000000e8400000, 0x0000000100000000)
+  eden space 203264K, 0% used [0x00000000d6900000,0x00000000d6900000,0x00000000e2f80000)
+  from space 2048K, 84% used [0x00000000e8200000,0x00000000e83ae8c8,0x00000000e8400000)
+  to   space 17408K, 0% used [0x00000000e6200000,0x00000000e6200000,0x00000000e7300000)
+ ParOldGen       total 174080K, used 134697K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 77% used [0x0000000083a00000,0x000000008bd8a728,0x000000008e400000)
+ Metaspace       used 14267K, capacity 14368K, committed 14592K, reserved 1062912K
+  class space    used 1667K, capacity 1702K, committed 1792K, reserved 1048576K
+}
+Event: 882.226 GC heap before
+{Heap before GC invocations=29 (full 2):
+ PSYoungGen      total 205312K, used 204986K [0x00000000d6900000, 0x00000000e8400000, 0x0000000100000000)
+  eden space 203264K, 100% used [0x00000000d6900000,0x00000000e2f80000,0x00000000e2f80000)
+  from space 2048K, 84% used [0x00000000e8200000,0x00000000e83ae8c8,0x00000000e8400000)
+  to   space 17408K, 0% used [0x00000000e6200000,0x00000000e6200000,0x00000000e7300000)
+ ParOldGen       total 174080K, used 134697K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 77% used [0x0000000083a00000,0x000000008bd8a728,0x000000008e400000)
+ Metaspace       used 14267K, capacity 14368K, committed 14592K, reserved 1062912K
+  class space    used 1667K, capacity 1702K, committed 1792K, reserved 1048576K
+Event: 882.229 GC heap after
+Heap after GC invocations=29 (full 2):
+ PSYoungGen      total 196608K, used 1818K [0x00000000d6900000, 0x00000000e8280000, 0x0000000100000000)
+  eden space 194560K, 0% used [0x00000000d6900000,0x00000000d6900000,0x00000000e2700000)
+  from space 2048K, 88% used [0x00000000e6200000,0x00000000e63c68c8,0x00000000e6400000)
+  to   space 17408K, 0% used [0x00000000e7180000,0x00000000e7180000,0x00000000e8280000)
+ ParOldGen       total 174080K, used 134697K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 77% used [0x0000000083a00000,0x000000008bd8a728,0x000000008e400000)
+ Metaspace       used 14267K, capacity 14368K, committed 14592K, reserved 1062912K
+  class space    used 1667K, capacity 1702K, committed 1792K, reserved 1048576K
+}
+Event: 882.886 GC heap before
+{Heap before GC invocations=30 (full 2):
+ PSYoungGen      total 196608K, used 196378K [0x00000000d6900000, 0x00000000e8280000, 0x0000000100000000)
+  eden space 194560K, 100% used [0x00000000d6900000,0x00000000e2700000,0x00000000e2700000)
+  from space 2048K, 88% used [0x00000000e6200000,0x00000000e63c68c8,0x00000000e6400000)
+  to   space 17408K, 0% used [0x00000000e7180000,0x00000000e7180000,0x00000000e8280000)
+ ParOldGen       total 174080K, used 134697K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 77% used [0x0000000083a00000,0x000000008bd8a728,0x000000008e400000)
+ Metaspace       used 14268K, capacity 14368K, committed 14592K, reserved 1062912K
+  class space    used 1667K, capacity 1702K, committed 1792K, reserved 1048576K
+Event: 882.890 GC heap after
+Heap after GC invocations=30 (full 2):
+ PSYoungGen      total 189440K, used 2906K [0x00000000d6900000, 0x00000000e7480000, 0x0000000100000000)
+  eden space 186368K, 0% used [0x00000000d6900000,0x00000000d6900000,0x00000000e1f00000)
+  from space 3072K, 94% used [0x00000000e7180000,0x00000000e74568c8,0x00000000e7480000)
+  to   space 16896K, 0% used [0x00000000e5380000,0x00000000e5380000,0x00000000e6400000)
+ ParOldGen       total 174080K, used 134697K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 77% used [0x0000000083a00000,0x000000008bd8a728,0x000000008e400000)
+ Metaspace       used 14268K, capacity 14368K, committed 14592K, reserved 1062912K
+  class space    used 1667K, capacity 1702K, committed 1792K, reserved 1048576K
+}
+Event: 979.946 GC heap before
+{Heap before GC invocations=31 (full 2):
+ PSYoungGen      total 189440K, used 189274K [0x00000000d6900000, 0x00000000e7480000, 0x0000000100000000)
+  eden space 186368K, 100% used [0x00000000d6900000,0x00000000e1f00000,0x00000000e1f00000)
+  from space 3072K, 94% used [0x00000000e7180000,0x00000000e74568c8,0x00000000e7480000)
+  to   space 16896K, 0% used [0x00000000e5380000,0x00000000e5380000,0x00000000e6400000)
+ ParOldGen       total 174080K, used 134697K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 77% used [0x0000000083a00000,0x000000008bd8a728,0x000000008e400000)
+ Metaspace       used 14335K, capacity 14502K, committed 14848K, reserved 1062912K
+  class space    used 1668K, capacity 1703K, committed 1792K, reserved 1048576K
+Event: 979.957 GC heap after
+Heap after GC invocations=31 (full 2):
+ PSYoungGen      total 192000K, used 12928K [0x00000000d6900000, 0x00000000e7200000, 0x0000000100000000)
+  eden space 178688K, 0% used [0x00000000d6900000,0x00000000d6900000,0x00000000e1780000)
+  from space 13312K, 97% used [0x00000000e5380000,0x00000000e60200d0,0x00000000e6080000)
+  to   space 17920K, 0% used [0x00000000e6080000,0x00000000e6080000,0x00000000e7200000)
+ ParOldGen       total 174080K, used 137507K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 78% used [0x0000000083a00000,0x000000008c048ff0,0x000000008e400000)
+ Metaspace       used 14335K, capacity 14502K, committed 14848K, reserved 1062912K
+  class space    used 1668K, capacity 1703K, committed 1792K, reserved 1048576K
+}
+Event: 1001.876 GC heap before
+{Heap before GC invocations=32 (full 2):
+ PSYoungGen      total 192000K, used 191616K [0x00000000d6900000, 0x00000000e7200000, 0x0000000100000000)
+  eden space 178688K, 100% used [0x00000000d6900000,0x00000000e1780000,0x00000000e1780000)
+  from space 13312K, 97% used [0x00000000e5380000,0x00000000e60200d0,0x00000000e6080000)
+  to   space 17920K, 0% used [0x00000000e6080000,0x00000000e6080000,0x00000000e7200000)
+ ParOldGen       total 174080K, used 137507K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 78% used [0x0000000083a00000,0x000000008c048ff0,0x000000008e400000)
+ Metaspace       used 14386K, capacity 14508K, committed 14848K, reserved 1062912K
+  class space    used 1669K, capacity 1704K, committed 1792K, reserved 1048576K
+Event: 1001.890 GC heap after
+Heap after GC invocations=32 (full 2):
+ PSYoungGen      total 179200K, used 7306K [0x00000000d6900000, 0x00000000e6800000, 0x0000000100000000)
+  eden space 171520K, 0% used [0x00000000d6900000,0x00000000d6900000,0x00000000e1080000)
+  from space 7680K, 95% used [0x00000000e6080000,0x00000000e67a2930,0x00000000e6800000)
+  to   space 17408K, 0% used [0x00000000e4600000,0x00000000e4600000,0x00000000e5700000)
+ ParOldGen       total 174080K, used 147905K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 84% used [0x0000000083a00000,0x000000008ca707f8,0x000000008e400000)
+ Metaspace       used 14386K, capacity 14508K, committed 14848K, reserved 1062912K
+  class space    used 1669K, capacity 1704K, committed 1792K, reserved 1048576K
+}
+Event: 1111.118 GC heap before
+{Heap before GC invocations=33 (full 2):
+ PSYoungGen      total 179200K, used 178826K [0x00000000d6900000, 0x00000000e6800000, 0x0000000100000000)
+  eden space 171520K, 100% used [0x00000000d6900000,0x00000000e1080000,0x00000000e1080000)
+  from space 7680K, 95% used [0x00000000e6080000,0x00000000e67a2930,0x00000000e6800000)
+  to   space 17408K, 0% used [0x00000000e4600000,0x00000000e4600000,0x00000000e5700000)
+ ParOldGen       total 174080K, used 147905K [0x0000000083a00000, 0x000000008e400000, 0x00000000d6900000)
+  object space 174080K, 84% used [0x0000000083a00000,0x000000008ca707f8,0x000000008e400000)
+ Metaspace       used 14405K, capacity 14572K, committed 14848K, reserved 1062912K
+  class space    used 1669K, capacity 1704K, committed 1792K, reserved 1048576K
+
+Deoptimization events (4 events):
+Event: 5.263 Thread 0x00007fbc00133800 Uncommon trap: reason=unreached action=reinterpret pc=0x00007fbc45324f74 method=edu.brown.cs.GROUP.crosswordswithFriends.Crossword.checkFit(IILedu/brown/cs/GROUP/crosswordswithFriends/Orientation;Ljava/lang/String;)I @ 533
+Event: 5.582 Thread 0x00007fbc00133800 Uncommon trap: reason=unloaded action=reinterpret pc=0x00007fbc453bf454 method=sun.text.normalizer.Trie.getCodePointOffset(I)I @ 41
+Event: 426.781 Thread 0x00007fbc00132000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007fbc4510f558 method=freemarker.template.DefaultObjectWrapper.wrap(Ljava/lang/Object;)Lfreemarker/template/TemplateModel; @ 188
+Event: 432.090 Thread 0x00007fbc00139000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007fbc4510f558 method=freemarker.template.DefaultObjectWrapper.wrap(Ljava/lang/Object;)Lfreemarker/template/TemplateModel; @ 188
+
+Internal exceptions (10 events):
+Event: 982.949 Thread 0x00007fbbd0001000 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dbaa0a38) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 982.949 Thread 0x00007fbbd0001000 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dbaa0e58) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1002.433 Thread 0x00007fbbd0002800 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dfbb1e40) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1002.433 Thread 0x00007fbbd0002800 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dfbb2418) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1002.433 Thread 0x00007fbbd0002800 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dfbb28c0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1002.433 Thread 0x00007fbbd0002800 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dfbb2ce0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1004.428 Thread 0x00007fbbd4009000 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dffbd880) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1004.428 Thread 0x00007fbbd4009000 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dffbde78) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1004.428 Thread 0x00007fbbd4009000 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dffbe320) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+Event: 1004.428 Thread 0x00007fbbd4009000 Exception <a 'sun/nio/fs/UnixException'> (0x00000000dffbe740) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u25/1514/hotspot/src/share/vm/prims/jni.cpp, line 716]
+
+Events (10 events):
+Event: 1067.004 Executing VM operation: RevokeBias done
+Event: 1067.005 Executing VM operation: RevokeBias
+Event: 1067.005 Executing VM operation: RevokeBias done
+Event: 1067.005 Executing VM operation: RevokeBias
+Event: 1067.005 Executing VM operation: RevokeBias done
+Event: 1067.005 Executing VM operation: RevokeBias
+Event: 1067.005 Executing VM operation: RevokeBias done
+Event: 1067.005 Executing VM operation: RevokeBias
+Event: 1067.005 Executing VM operation: RevokeBias done
+Event: 1111.118 Executing VM operation: ParallelGCFailedAllocation
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 00:25 138267735                          /gpfs/main/course/cs032/bin/jdk1.8.0_25/bin/java
+00600000-00601000 rw-p 00000000 00:25 138267735                          /gpfs/main/course/cs032/bin/jdk1.8.0_25/bin/java
+0242b000-0244c000 rw-p 00000000 00:00 0                                  [heap]
+83a00000-8e400000 rw-p 00000000 00:00 0 
+8e400000-d6900000 ---p 00000000 00:00 0 
+d6900000-e6800000 rw-p 00000000 00:00 0 
+e6800000-100000000 ---p 00000000 00:00 0 
+100000000-1001c0000 rw-p 00000000 00:00 0 
+1001c0000-140000000 ---p 00000000 00:00 0 
+7fbbcc000000-7fbbcc2fd000 rw-p 00000000 00:00 0 
+7fbbcc2fd000-7fbbd0000000 ---p 00000000 00:00 0 
+7fbbd0000000-7fbbd0021000 rw-p 00000000 00:00 0 
+7fbbd0021000-7fbbd4000000 ---p 00000000 00:00 0 
+7fbbd4000000-7fbbd42fd000 rw-p 00000000 00:00 0 
+7fbbd42fd000-7fbbd8000000 ---p 00000000 00:00 0 
+7fbbd8000000-7fbbd8021000 rw-p 00000000 00:00 0 
+7fbbd8021000-7fbbdc000000 ---p 00000000 00:00 0 
+7fbbdc000000-7fbbdc021000 rw-p 00000000 00:00 0 
+7fbbdc021000-7fbbe0000000 ---p 00000000 00:00 0 
+7fbbe0000000-7fbbe0021000 rw-p 00000000 00:00 0 
+7fbbe0021000-7fbbe4000000 ---p 00000000 00:00 0 
+7fbbe4000000-7fbbe4021000 rw-p 00000000 00:00 0 
+7fbbe4021000-7fbbe8000000 ---p 00000000 00:00 0 
+7fbbe8000000-7fbbe82fe000 rw-p 00000000 00:00 0 
+7fbbe82fe000-7fbbec000000 ---p 00000000 00:00 0 
+7fbbec000000-7fbbec30a000 rw-p 00000000 00:00 0 
+7fbbec30a000-7fbbf0000000 ---p 00000000 00:00 0 
+7fbbf0000000-7fbbf0021000 rw-p 00000000 00:00 0 
+7fbbf0021000-7fbbf4000000 ---p 00000000 00:00 0 
+7fbbf4000000-7fbbf42fd000 rw-p 00000000 00:00 0 
+7fbbf42fd000-7fbbf8000000 ---p 00000000 00:00 0 
+7fbbf8000000-7fbbf83ee000 rw-p 00000000 00:00 0 
+7fbbf83ee000-7fbbfc000000 ---p 00000000 00:00 0 
+7fbbfc000000-7fbbfc8ac000 rw-p 00000000 00:00 0 
+7fbbfc8ac000-7fbc00000000 ---p 00000000 00:00 0 
+7fbc00000000-7fbc00173000 rw-p 00000000 00:00 0 
+7fbc00173000-7fbc04000000 ---p 00000000 00:00 0 
+7fbc04000000-7fbc0434a000 rw-p 00000000 00:00 0 
+7fbc0434a000-7fbc08000000 ---p 00000000 00:00 0 
+7fbc08000000-7fbc08021000 rw-p 00000000 00:00 0 
+7fbc08021000-7fbc0c000000 ---p 00000000 00:00 0 
+7fbc0c000000-7fbc0c021000 rw-p 00000000 00:00 0 
+7fbc0c021000-7fbc10000000 ---p 00000000 00:00 0 
+7fbc10000000-7fbc10486000 rw-p 00000000 00:00 0 
+7fbc10486000-7fbc14000000 ---p 00000000 00:00 0 
+7fbc14000000-7fbc14c4c000 rw-p 00000000 00:00 0 
+7fbc14c4c000-7fbc18000000 ---p 00000000 00:00 0 
+7fbc18000000-7fbc18021000 rw-p 00000000 00:00 0 
+7fbc18021000-7fbc1c000000 ---p 00000000 00:00 0 
+7fbc1c000000-7fbc1c658000 rw-p 00000000 00:00 0 
+7fbc1c658000-7fbc20000000 ---p 00000000 00:00 0 
+7fbc20000000-7fbc20021000 rw-p 00000000 00:00 0 
+7fbc20021000-7fbc24000000 ---p 00000000 00:00 0 
+7fbc24000000-7fbc24021000 rw-p 00000000 00:00 0 
+7fbc24021000-7fbc28000000 ---p 00000000 00:00 0 
+7fbc28000000-7fbc28021000 rw-p 00000000 00:00 0 
+7fbc28021000-7fbc2c000000 ---p 00000000 00:00 0 
+7fbc2c000000-7fbc2c07d000 rw-p 00000000 00:00 0 
+7fbc2c07d000-7fbc30000000 ---p 00000000 00:00 0 
+7fbc30000000-7fbc30021000 rw-p 00000000 00:00 0 
+7fbc30021000-7fbc34000000 ---p 00000000 00:00 0 
+7fbc34cce000-7fbc34d0b000 r--s 00000000 00:2a 317971934                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/jquery-2.1.1.js
+7fbc34d48000-7fbc34d85000 r--s 00000000 00:2a 317971934                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/jquery-2.1.1.js
+7fbc34d85000-7fbc34dc2000 r--s 00000000 00:2a 317971934                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/jquery-2.1.1.js
+7fbc34dc2000-7fbc34dc5000 ---p 00000000 00:00 0 
+7fbc34dc5000-7fbc34ec3000 rw-p 00000000 00:00 0                          [stack:13385]
+7fbc34ec3000-7fbc34ec6000 ---p 00000000 00:00 0 
+7fbc34ec6000-7fbc34fc4000 rw-p 00000000 00:00 0                          [stack:13384]
+7fbc34fc4000-7fbc34fc7000 ---p 00000000 00:00 0 
+7fbc34fc7000-7fbc350c5000 rw-p 00000000 00:00 0 
+7fbc350c5000-7fbc35102000 r--s 00000000 00:2a 317971934                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/jquery-2.1.1.js
+7fbc35102000-7fbc351c2000 rw-p 00000000 00:00 0 
+7fbc351c2000-7fbc35302000 ---p 00000000 00:00 0 
+7fbc3531c000-7fbc35359000 r--s 00000000 00:2a 317971934                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/jquery-2.1.1.js
+7fbc35359000-7fbc35396000 r--s 00000000 00:2a 317971934                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/jquery-2.1.1.js
+7fbc35396000-7fbc35399000 r--s 00000000 00:2a 303496950                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/main.js
+7fbc35399000-7fbc3539a000 r--s 00000000 00:2a 303496339                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/websocketDemo.js
+7fbc3539a000-7fbc3539b000 r--s 00000000 00:2a 315100356                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/squares.svg
+7fbc3539b000-7fbc3539d000 r--s 00000000 00:2a 304325191                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/style.css
+7fbc353a0000-7fbc353a8000 rw-p 00000000 00:00 0 
+7fbc353a8000-7fbc353a9000 r--s 00000000 00:2a 303496339                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/websocketDemo.js
+7fbc353a9000-7fbc353ac000 r--s 00000000 00:2a 303496950                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/main.js
+7fbc353ac000-7fbc353ad000 r--s 00000000 00:2a 315100356                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/squares.svg
+7fbc353ad000-7fbc353af000 r--s 00000000 00:2a 304325191                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/style.css
+7fbc353af000-7fbc353b2000 r--s 00000000 00:2a 303496950                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/main.js
+7fbc353b2000-7fbc353b3000 r--s 00000000 00:2a 303496339                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/websocketDemo.js
+7fbc353b3000-7fbc353b5000 r--s 00000000 00:2a 304325191                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/style.css
+7fbc353b5000-7fbc353b6000 r--s 00000000 00:2a 315100356                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/squares.svg
+7fbc353b6000-7fbc353b7000 r--s 00000000 00:2a 315100356                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/squares.svg
+7fbc353b7000-7fbc353ba000 r--s 00000000 00:2a 303496950                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/main.js
+7fbc353ba000-7fbc353bd000 r--s 00000000 00:2a 303496950                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/main.js
+7fbc353bd000-7fbc353be000 r--s 00000000 00:2a 303496339                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/websocketDemo.js
+7fbc353be000-7fbc353c1000 r--s 00000000 00:2a 303496950                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/main.js
+7fbc353c1000-7fbc353c3000 r--s 00000000 00:2a 304325191                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/style.css
+7fbc353c3000-7fbc353c4000 r--s 00000000 00:2a 315100356                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/squares.svg
+7fbc353c4000-7fbc353c6000 r--s 00000000 00:2a 304325191                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/style.css
+7fbc353c6000-7fbc353c7000 r--s 00000000 00:2a 303496339                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/websocketDemo.js
+7fbc353c7000-7fbc353c8000 r--s 00000000 00:2a 315100356                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/squares.svg
+7fbc353c8000-7fbc353db000 r--s 00344000 00:25 136611768                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/resources.jar
+7fbc353db000-7fbc355db000 rw-p 00000000 00:00 0 
+7fbc355db000-7fbc355de000 ---p 00000000 00:00 0 
+7fbc355de000-7fbc356dc000 rw-p 00000000 00:00 0                          [stack:13181]
+7fbc356dc000-7fbc356df000 ---p 00000000 00:00 0 
+7fbc356df000-7fbc357dd000 rw-p 00000000 00:00 0                          [stack:13180]
+7fbc357dd000-7fbc357e0000 ---p 00000000 00:00 0 
+7fbc357e0000-7fbc358de000 rw-p 00000000 00:00 0                          [stack:13179]
+7fbc358de000-7fbc358e1000 ---p 00000000 00:00 0 
+7fbc358e1000-7fbc359df000 rw-p 00000000 00:00 0 
+7fbc359df000-7fbc359e2000 ---p 00000000 00:00 0 
+7fbc359e2000-7fbc35ae0000 rw-p 00000000 00:00 0                          [stack:13605]
+7fbc35ae0000-7fbc35ae3000 ---p 00000000 00:00 0 
+7fbc35ae3000-7fbc35be1000 rw-p 00000000 00:00 0 
+7fbc35be1000-7fbc35be4000 ---p 00000000 00:00 0 
+7fbc35be4000-7fbc35ce2000 rw-p 00000000 00:00 0                          [stack:13516]
+7fbc35ce2000-7fbc35ce5000 ---p 00000000 00:00 0 
+7fbc35ce5000-7fbc35de3000 rw-p 00000000 00:00 0                          [stack:13174]
+7fbc35de3000-7fbc35de6000 ---p 00000000 00:00 0 
+7fbc35de6000-7fbc35ee4000 rw-p 00000000 00:00 0                          [stack:13173]
+7fbc35ee4000-7fbc35ee7000 ---p 00000000 00:00 0 
+7fbc35ee7000-7fbc35fe5000 rw-p 00000000 00:00 0                          [stack:13581]
+7fbc35fe5000-7fbc35fe8000 ---p 00000000 00:00 0 
+7fbc35fe8000-7fbc360e6000 rw-p 00000000 00:00 0                          [stack:13171]
+7fbc360e6000-7fbc360fc000 r-xp 00000000 00:25 136610987                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libnet.so
+7fbc360fc000-7fbc362fc000 ---p 00016000 00:25 136610987                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libnet.so
+7fbc362fc000-7fbc362fd000 rw-p 00016000 00:25 136610987                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libnet.so
+7fbc362fd000-7fbc3630e000 r-xp 00000000 00:25 136611464                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libnio.so
+7fbc3630e000-7fbc3650d000 ---p 00011000 00:25 136611464                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libnio.so
+7fbc3650d000-7fbc3650e000 rw-p 00010000 00:25 136611464                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libnio.so
+7fbc3650e000-7fbc3670e000 rw-p 00000000 00:00 0 
+7fbc3670e000-7fbc36716000 r-xp 00000000 00:25 136610852                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libmanagement.so
+7fbc36716000-7fbc36916000 ---p 00008000 00:25 136610852                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libmanagement.so
+7fbc36916000-7fbc36917000 rw-p 00008000 00:25 136610852                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libmanagement.so
+7fbc36917000-7fbc3691a000 ---p 00000000 00:00 0 
+7fbc3691a000-7fbc36a18000 rw-p 00000000 00:00 0                          [stack:13169]
+7fbc36a18000-7fbc36acc000 r-xp 00000000 fe:03 125                        /tmp/sqlite-3.8.7-0e44cdcf-5b6e-4da9-beec-abdc2241d24f-libsqlitejdbc.so
+7fbc36acc000-7fbc36ccc000 ---p 000b4000 fe:03 125                        /tmp/sqlite-3.8.7-0e44cdcf-5b6e-4da9-beec-abdc2241d24f-libsqlitejdbc.so
+7fbc36ccc000-7fbc36cd1000 rw-p 000b4000 fe:03 125                        /tmp/sqlite-3.8.7-0e44cdcf-5b6e-4da9-beec-abdc2241d24f-libsqlitejdbc.so
+7fbc36cd1000-7fbc36ced000 r--s 00393000 00:25 136611667                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/ext/cldrdata.jar
+7fbc36ced000-7fbc36cee000 ---p 00000000 00:00 0 
+7fbc36cee000-7fbc36dee000 rw-p 00000000 00:00 0                          [stack:13168]
+7fbc36dee000-7fbc36df1000 ---p 00000000 00:00 0 
+7fbc36df1000-7fbc36eef000 rw-p 00000000 00:00 0                          [stack:13167]
+7fbc36eef000-7fbc36ef2000 ---p 00000000 00:00 0 
+7fbc36ef2000-7fbc36ff0000 rw-p 00000000 00:00 0                          [stack:13166]
+7fbc36ff0000-7fbc36ff3000 ---p 00000000 00:00 0 
+7fbc36ff3000-7fbc370f1000 rw-p 00000000 00:00 0                          [stack:13165]
+7fbc370f1000-7fbc370f4000 ---p 00000000 00:00 0 
+7fbc370f4000-7fbc371f2000 rw-p 00000000 00:00 0                          [stack:13164]
+7fbc371f2000-7fbc371f5000 ---p 00000000 00:00 0 
+7fbc371f5000-7fbc372f3000 rw-p 00000000 00:00 0                          [stack:13163]
+7fbc372f3000-7fbc372f6000 ---p 00000000 00:00 0 
+7fbc372f6000-7fbc373f4000 rw-p 00000000 00:00 0                          [stack:13162]
+7fbc373f4000-7fbc373f7000 ---p 00000000 00:00 0 
+7fbc373f7000-7fbc374f5000 rw-p 00000000 00:00 0                          [stack:13161]
+7fbc374f5000-7fbc374f6000 ---p 00000000 00:00 0 
+7fbc374f6000-7fbc38000000 rw-p 00000000 00:00 0                          [stack:13160]
+7fbc38000000-7fbc38021000 rw-p 00000000 00:00 0 
+7fbc38021000-7fbc3c000000 ---p 00000000 00:00 0 
+7fbc3c000000-7fbc3c001000 r--s 00000000 00:2a 303496339                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/js/websocketDemo.js
+7fbc3c001000-7fbc3c003000 r--s 00000000 00:2a 304325191                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/src/main/resources/static/css/style.css
+7fbc3c003000-7fbc3c007000 r--s 00093000 00:25 136611567                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/jsse.jar
+7fbc3c007000-7fbc3c011000 r--s 00116000 00:25 136611642                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/ext/localedata.jar
+7fbc3c011000-7fbc3c022000 r--s 000d3000 00:2a 265837652                  /gpfs/main/home/acritsch/.m2/repository/org/freemarker/freemarker/2.3.19/freemarker-2.3.19.jar
+7fbc3c022000-7fbc3c023000 r--s 00000000 00:2a 262524715                  /gpfs/main/home/acritsch/.m2/repository/com/sparkjava/spark-template-freemarker/2.0.0/spark-template-freemarker-2.0.0.jar
+7fbc3c023000-7fbc3c026000 r--s 00019000 00:2a 173936189                  /gpfs/main/home/acritsch/.m2/repository/com/googlecode/jarjar/jarjar/1.1/jarjar-1.1.jar
+7fbc3c026000-7fbc3c029000 r--s 00006000 00:2a 173936129                  /gpfs/main/home/acritsch/.m2/repository/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar
+7fbc3c029000-7fbc3c02b000 r--s 00002000 00:2a 279140579                  /gpfs/main/home/acritsch/.m2/repository/org/apache/ant/ant-launcher/1.8.2/ant-launcher-1.8.2.jar
+7fbc3c02b000-7fbc3c049000 r--s 001bb000 00:2a 279140590                  /gpfs/main/home/acritsch/.m2/repository/org/apache/ant/ant/1.8.2/ant-1.8.2.jar
+7fbc3c049000-7fbc3c04b000 r--s 0000a000 00:2a 173936046                  /gpfs/main/home/acritsch/.m2/repository/org/json/json/20090211/json-20090211.jar
+7fbc3c04b000-7fbc3c051000 r--s 00068000 00:2a 173935951                  /gpfs/main/home/acritsch/.m2/repository/com/google/protobuf/protobuf-java/2.4.1/protobuf-java-2.4.1.jar
+7fbc3c051000-7fbc3c083000 r--s 0031c000 00:2a 172278808                  /gpfs/main/home/acritsch/.m2/repository/com/google/javascript/closure-compiler/r2388/closure-compiler-r2388.jar
+7fbc3c083000-7fbc3c0ae000 r--s 001fc000 00:2a 272464928                  /gpfs/main/home/acritsch/.m2/repository/com/google/guava/guava/18.0/guava-18.0.jar
+7fbc3c0ae000-7fbc40000000 rw-p 00000000 00:00 0 
+7fbc40000000-7fbc40282000 rw-p 00000000 00:00 0 
+7fbc40282000-7fbc44000000 ---p 00000000 00:00 0 
+7fbc44000000-7fbc44002000 r--s 0000c000 00:2a 173107768                  /gpfs/main/home/acritsch/.m2/repository/args4j/args4j/2.0.16/args4j-2.0.16.jar
+7fbc44002000-7fbc44009000 r--s 00064000 00:2a 173935746                  /gpfs/main/home/acritsch/.m2/repository/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar
+7fbc44009000-7fbc4400b000 r--s 00008000 00:2a 173935668                  /gpfs/main/home/acritsch/.m2/repository/com/j2html/j2html/0.7/j2html-0.7.jar
+7fbc4400b000-7fbc4400e000 r--s 00009000 00:2a 173108216                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/websocket/websocket-api/9.3.2.v20150730/websocket-api-9.3.2.v20150730.jar
+7fbc4400e000-7fbc44010000 r--s 00003000 00:2a 172278807                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/websocket/websocket-servlet/9.3.2.v20150730/websocket-servlet-9.3.2.v20150730.jar
+7fbc44010000-7fbc44011000 r--s 00008000 00:2a 170622381                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/websocket/websocket-client/9.3.2.v20150730/websocket-client-9.3.2.v20150730.jar
+7fbc44011000-7fbc44016000 r--s 00029000 00:2a 173107732                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/websocket/websocket-common/9.3.2.v20150730/websocket-common-9.3.2.v20150730.jar
+7fbc44016000-7fbc44019000 r--s 00014000 00:2a 173107695                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-security/9.3.2.v20150730/jetty-security-9.3.2.v20150730.jar
+7fbc44019000-7fbc45000000 rw-p 00000000 00:00 0 
+7fbc45000000-7fbc45660000 rwxp 00000000 00:00 0 
+7fbc45660000-7fbc54000000 ---p 00000000 00:00 0 
+7fbc54000000-7fbc5448b000 rw-p 00000000 00:00 0 
+7fbc5448b000-7fbc58000000 ---p 00000000 00:00 0 
+7fbc58000000-7fbc58002000 r--s 00008000 00:2a 173107715                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/websocket/websocket-server/9.3.2.v20150730/websocket-server-9.3.2.v20150730.jar
+7fbc58002000-7fbc58004000 r--s 0001a000 00:2a 173107330                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-servlet/9.3.2.v20150730/jetty-servlet-9.3.2.v20150730.jar
+7fbc58004000-7fbc58006000 r--s 0000b000 00:2a 173107691                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-xml/9.3.2.v20150730/jetty-xml-9.3.2.v20150730.jar
+7fbc58006000-7fbc58008000 r--s 00019000 00:2a 173107682                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-webapp/9.3.2.v20150730/jetty-webapp-9.3.2.v20150730.jar
+7fbc58008000-7fbc5800b000 r--s 00017000 00:2a 173107677                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-io/9.3.2.v20150730/jetty-io-9.3.2.v20150730.jar
+7fbc5800b000-7fbc58011000 r--s 0005e000 00:2a 163995447                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-util/9.3.2.v20150730/jetty-util-9.3.2.v20150730.jar
+7fbc58011000-7fbc58013000 r--s 0001a000 00:2a 159852978                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-http/9.3.2.v20150730/jetty-http-9.3.2.v20150730.jar
+7fbc58013000-7fbc58019000 r--s 0006b000 00:2a 173107535                  /gpfs/main/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-server/9.3.2.v20150730/jetty-server-9.3.2.v20150730.jar
+7fbc58019000-7fbc580cb000 rw-p 00000000 00:00 0 
+7fbc580cb000-7fbc582a1000 r--s 03caa000 00:25 136611550                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/rt.jar
+7fbc582a1000-7fbc58317000 rw-p 00000000 00:00 0 
+7fbc58317000-7fbc58318000 ---p 00000000 00:00 0 
+7fbc58318000-7fbc58418000 rw-p 00000000 00:00 0                          [stack:13159]
+7fbc58418000-7fbc58419000 ---p 00000000 00:00 0 
+7fbc58419000-7fbc58519000 rw-p 00000000 00:00 0                          [stack:13158]
+7fbc58519000-7fbc5851a000 ---p 00000000 00:00 0 
+7fbc5851a000-7fbc5861a000 rw-p 00000000 00:00 0                          [stack:13157]
+7fbc5861a000-7fbc5861b000 ---p 00000000 00:00 0 
+7fbc5861b000-7fbc58770000 rw-p 00000000 00:00 0                          [stack:13156]
+7fbc58770000-7fbc589b3000 ---p 00000000 00:00 0 
+7fbc589b3000-7fbc58a08000 rw-p 00000000 00:00 0 
+7fbc58a08000-7fbc58c4a000 ---p 00000000 00:00 0 
+7fbc58c4a000-7fbc58cca000 rw-p 00000000 00:00 0 
+7fbc58cca000-7fbc58d96000 ---p 00000000 00:00 0 
+7fbc58d96000-7fbc58db1000 rw-p 00000000 00:00 0 
+7fbc58db1000-7fbc59157000 ---p 00000000 00:00 0 
+7fbc59157000-7fbc59171000 r-xp 00000000 00:25 136610880                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libzip.so
+7fbc59171000-7fbc59371000 ---p 0001a000 00:25 136610880                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libzip.so
+7fbc59371000-7fbc59372000 rw-p 0001a000 00:25 136610880                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libzip.so
+7fbc59372000-7fbc5939c000 r-xp 00000000 00:25 136610822                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libjava.so
+7fbc5939c000-7fbc5959c000 ---p 0002a000 00:25 136610822                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libjava.so
+7fbc5959c000-7fbc5959e000 rw-p 0002a000 00:25 136610822                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libjava.so
+7fbc5959e000-7fbc595ab000 r-xp 00000000 00:25 136610855                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libverify.so
+7fbc595ab000-7fbc597ab000 ---p 0000d000 00:25 136610855                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libverify.so
+7fbc597ab000-7fbc597ad000 rw-p 0000d000 00:25 136610855                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/libverify.so
+7fbc597ad000-7fbc597b4000 r-xp 00000000 fe:00 1482                       /lib/x86_64-linux-gnu/librt-2.19.so
+7fbc597b4000-7fbc599b3000 ---p 00007000 fe:00 1482                       /lib/x86_64-linux-gnu/librt-2.19.so
+7fbc599b3000-7fbc599b4000 r--p 00006000 fe:00 1482                       /lib/x86_64-linux-gnu/librt-2.19.so
+7fbc599b4000-7fbc599b5000 rw-p 00007000 fe:00 1482                       /lib/x86_64-linux-gnu/librt-2.19.so
+7fbc599b5000-7fbc59ab5000 r-xp 00000000 fe:00 1458                       /lib/x86_64-linux-gnu/libm-2.19.so
+7fbc59ab5000-7fbc59cb4000 ---p 00100000 fe:00 1458                       /lib/x86_64-linux-gnu/libm-2.19.so
+7fbc59cb4000-7fbc59cb5000 r--p 000ff000 fe:00 1458                       /lib/x86_64-linux-gnu/libm-2.19.so
+7fbc59cb5000-7fbc59cb6000 rw-p 00100000 fe:00 1458                       /lib/x86_64-linux-gnu/libm-2.19.so
+7fbc59cb6000-7fbc5a923000 r-xp 00000000 00:25 136611394                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/server/libjvm.so
+7fbc5a923000-7fbc5ab22000 ---p 00c6d000 00:25 136611394                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/server/libjvm.so
+7fbc5ab22000-7fbc5abf8000 rw-p 00c6c000 00:25 136611394                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/jre/lib/amd64/server/libjvm.so
+7fbc5abf8000-7fbc5ac3b000 rw-p 00000000 00:00 0 
+7fbc5ac3b000-7fbc5addd000 r-xp 00000000 fe:00 1449                       /lib/x86_64-linux-gnu/libc-2.19.so
+7fbc5addd000-7fbc5afdc000 ---p 001a2000 fe:00 1449                       /lib/x86_64-linux-gnu/libc-2.19.so
+7fbc5afdc000-7fbc5afe0000 r--p 001a1000 fe:00 1449                       /lib/x86_64-linux-gnu/libc-2.19.so
+7fbc5afe0000-7fbc5afe2000 rw-p 001a5000 fe:00 1449                       /lib/x86_64-linux-gnu/libc-2.19.so
+7fbc5afe2000-7fbc5afe6000 rw-p 00000000 00:00 0 
+7fbc5afe6000-7fbc5afe9000 r-xp 00000000 fe:00 1456                       /lib/x86_64-linux-gnu/libdl-2.19.so
+7fbc5afe9000-7fbc5b1e8000 ---p 00003000 fe:00 1456                       /lib/x86_64-linux-gnu/libdl-2.19.so
+7fbc5b1e8000-7fbc5b1e9000 r--p 00002000 fe:00 1456                       /lib/x86_64-linux-gnu/libdl-2.19.so
+7fbc5b1e9000-7fbc5b1ea000 rw-p 00003000 fe:00 1456                       /lib/x86_64-linux-gnu/libdl-2.19.so
+7fbc5b1ea000-7fbc5b1ff000 r-xp 00000000 00:25 174988983                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/lib/amd64/jli/libjli.so
+7fbc5b1ff000-7fbc5b3fe000 ---p 00015000 00:25 174988983                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/lib/amd64/jli/libjli.so
+7fbc5b3fe000-7fbc5b3ff000 rw-p 00014000 00:25 174988983                  /gpfs/main/course/cs032/bin/jdk1.8.0_25/lib/amd64/jli/libjli.so
+7fbc5b3ff000-7fbc5b417000 r-xp 00000000 fe:00 1396                       /lib/x86_64-linux-gnu/libpthread-2.19.so
+7fbc5b417000-7fbc5b616000 ---p 00018000 fe:00 1396                       /lib/x86_64-linux-gnu/libpthread-2.19.so
+7fbc5b616000-7fbc5b617000 r--p 00017000 fe:00 1396                       /lib/x86_64-linux-gnu/libpthread-2.19.so
+7fbc5b617000-7fbc5b618000 rw-p 00018000 fe:00 1396                       /lib/x86_64-linux-gnu/libpthread-2.19.so
+7fbc5b618000-7fbc5b61c000 rw-p 00000000 00:00 0 
+7fbc5b61c000-7fbc5b63c000 r-xp 00000000 fe:00 1419                       /lib/x86_64-linux-gnu/ld-2.19.so
+7fbc5b63c000-7fbc5b63f000 r--s 00015000 00:2a 173107561                  /gpfs/main/home/acritsch/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar
+7fbc5b63f000-7fbc5b640000 r--s 00002000 00:2a 173107520                  /gpfs/main/home/acritsch/.m2/repository/org/slf4j/slf4j-simple/1.7.12/slf4j-simple-1.7.12.jar
+7fbc5b640000-7fbc5b643000 r--s 00018000 00:2a 173107516                  /gpfs/main/home/acritsch/.m2/repository/com/sparkjava/spark-core/2.3/spark-core-2.3.jar
+7fbc5b643000-7fbc5b648000 r--s 0002f000 00:2a 274121882                  /gpfs/main/home/acritsch/.m2/repository/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar
+7fbc5b648000-7fbc5b64a000 r--s 00006000 00:2a 270808507                  /gpfs/main/home/acritsch/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar
+7fbc5b64a000-7fbc5b650000 r--s 00045000 00:2a 264180928                  /gpfs/main/home/acritsch/.m2/repository/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar
+7fbc5b650000-7fbc5b6f4000 rw-p 00000000 00:00 0 
+7fbc5b6f4000-7fbc5b6f7000 ---p 00000000 00:00 0 
+7fbc5b6f7000-7fbc5b7f9000 rw-p 00000000 00:00 0                          [stack:13155]
+7fbc5b7f9000-7fbc5b7fa000 r--s 00001000 00:2a 265009766                  /gpfs/main/home/acritsch/.m2/repository/org/slf4j/slf4j-jdk14/1.7.7/slf4j-jdk14-1.7.7.jar
+7fbc5b7fa000-7fbc5b7fc000 r--s 00009000 00:2a 274121833                  /gpfs/main/home/acritsch/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
+7fbc5b7fc000-7fbc5b802000 r--s 00036000 00:2a 271636916                  /gpfs/main/home/acritsch/.m2/repository/junit/junit/4.11/junit-4.11.jar
+7fbc5b802000-7fbc5b804000 r--s 0000e000 00:2a 274121814                  /gpfs/main/home/acritsch/.m2/repository/net/sf/jopt-simple/jopt-simple/4.8/jopt-simple-4.8.jar
+7fbc5b804000-7fbc5b807000 r--s 003c4000 00:2a 261182924                  /gpfs/main/home/acritsch/.m2/repository/org/xerial/sqlite-jdbc/3.8.7/sqlite-jdbc-3.8.7.jar
+7fbc5b807000-7fbc5b809000 r--s 0001d000 00:2a 287757215                  /gpfs/main/home/acritsch/course/cs032/crosswords-with-friends/target/crosswords-with-friends-1.0.jar
+7fbc5b809000-7fbc5b830000 rw-p 00000000 00:00 0 
+7fbc5b830000-7fbc5b838000 rw-s 00000000 fe:03 102                        /tmp/hsperfdata_acritsch/13154
+7fbc5b838000-7fbc5b839000 rw-p 00000000 00:00 0 
+7fbc5b839000-7fbc5b83a000 ---p 00000000 00:00 0 
+7fbc5b83a000-7fbc5b83c000 rw-p 00000000 00:00 0 
+7fbc5b83c000-7fbc5b83d000 r--p 00020000 fe:00 1419                       /lib/x86_64-linux-gnu/ld-2.19.so
+7fbc5b83d000-7fbc5b83e000 rw-p 00021000 fe:00 1419                       /lib/x86_64-linux-gnu/ld-2.19.so
+7fbc5b83e000-7fbc5b83f000 rw-p 00000000 00:00 0 
+7ffc0175e000-7ffc01780000 rw-p 00000000 00:00 0                          [stack]
+7ffc017b1000-7ffc017b3000 r-xp 00000000 00:00 0                          [vdso]
+7ffc017b3000-7ffc017b5000 r--p 00000000 00:00 0                          [vvar]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -ea 
+java_command: edu.brown.cs.GROUP.crosswordswithFriends.Main --db data/cluewords.sqlite3 data/1000words.csv
+java_class_path (initial): target/crosswords-with-friends-1.0.jar:/home/acritsch/.m2/repository/org/xerial/sqlite-jdbc/3.8.7/sqlite-jdbc-3.8.7.jar:/home/acritsch/.m2/repository/net/sf/jopt-simple/jopt-simple/4.8/jopt-simple-4.8.jar:/home/acritsch/.m2/repository/junit/junit/4.11/junit-4.11.jar:/home/acritsch/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/acritsch/.m2/repository/org/hamcrest/hamcrest-all/1.3/hamcrest-all-1.3.jar:/home/acritsch/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar:/home/acritsch/.m2/repository/org/slf4j/slf4j-jdk14/1.7.7/slf4j-jdk14-1.7.7.jar:/home/acritsch/.m2/repository/com/google/guava/guava/18.0/guava-18.0.jar:/home/acritsch/.m2/repository/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar:/home/acritsch/.m2/repository/com/sparkjava/spark-core/2.3/spark-core-2.3.jar:/home/acritsch/.m2/repository/org/slf4j/slf4j-simple/1.7.12/slf4j-simple-1.7.12.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-server/9.3.2.v20150730/jetty-server-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-http/9.3.2.v20150730/jetty-http-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-util/9.3.2.v20150730/jetty-util-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-io/9.3.2.v20150730/jetty-io-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-webapp/9.3.2.v20150730/jetty-webapp-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-xml/9.3.2.v20150730/jetty-xml-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-servlet/9.3.2.v20150730/jetty-servlet-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/jetty-security/9.3.2.v20150730/jetty-security-9.3.2.v20150730.jar:/home/acritsch/.m2/repository/org/eclipse/jetty/websocket/websocket-server/9.3.2.v20150730/websocket-server-9.3.
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/course/cs032/bin/jdk1.8.0_25
+PATH=/course/cs032/bin:/local/bin:/usr/local/bin:/bin:/usr/bin:/usr/X11R6/bin:/usr/games:/contrib/bin:/course/cs032/bin:/course/cs173/bin:/course/cs1973/bin
+SHELL=/bin/bash
+DISPLAY=:0.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xa79a80], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xa79a80], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x8e24e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x8e24e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x8e24e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x8e24e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x8e3d10], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x8e50d0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0x8e50d0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0x8e50d0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x8e50d0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
+NAME="Debian GNU/Linux"
+VERSION_ID="8"
+VERSION="8 (jessie)"
+ID=debian
+HOME_URL="http://www.debian.org/"
+SUPPORT_URL="http://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+uname:Linux 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt25-1 (2016-03-06) x86_64
+libc:glibc 2.19 NPTL 2.19 
+rlimit: STACK 8192k, CORE 0k, NPROC 31751, NOFILE 4096, AS infinity
+load average:0.54 0.53 0.49
+
+/proc/meminfo:
+MemTotal:        8146836 kB
+MemFree:          296188 kB
+MemAvailable:    5064236 kB
+Buffers:          377672 kB
+Cached:          4190204 kB
+SwapCached:         3072 kB
+Active:          4648704 kB
+Inactive:        2527444 kB
+Active(anon):    2347148 kB
+Inactive(anon):   305116 kB
+Active(file):    2301556 kB
+Inactive(file):  2222328 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:       8388604 kB
+SwapFree:        8361168 kB
+Dirty:               272 kB
+Writeback:             0 kB
+AnonPages:       2605744 kB
+Mapped:           369800 kB
+Shmem:             44352 kB
+Slab:             542184 kB
+SReclaimable:     497568 kB
+SUnreclaim:        44616 kB
+KernelStack:        8672 kB
+PageTables:        31780 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    12462020 kB
+Committed_AS:    5448508 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      120600 kB
+VmallocChunk:   34359600124 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      397576 kB
+DirectMap2M:     6893568 kB
+DirectMap1G:     1048576 kB
+
+
+CPU:total 4 (4 cores per cpu, 1 threads per core) family 6 model 60 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, lzcnt, tsc, tscinvbit, bmi1, bmi2
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4690 CPU @ 3.50GHz
+stepping	: 3
+microcode	: 0x1c
+cpu MHz		: 3783.281
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 7000.32
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4690 CPU @ 3.50GHz
+stepping	: 3
+microcode	: 0x1c
+cpu MHz		: 3790.253
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 4
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 7000.32
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4690 CPU @ 3.50GHz
+stepping	: 3
+microcode	: 0x1c
+cpu MHz		: 3700.019
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 2
+cpu cores	: 4
+apicid		: 4
+initial apicid	: 4
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 7000.32
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 60
+model name	: Intel(R) Core(TM) i5-4690 CPU @ 3.50GHz
+stepping	: 3
+microcode	: 0x1c
+cpu MHz		: 3788.476
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 4
+core id		: 3
+cpu cores	: 4
+apicid		: 6
+initial apicid	: 6
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 7000.32
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 8146836k(296188k free), swap 8388604k(8361168k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.25-b02) for linux-amd64 JRE (1.8.0_25-b17), built on Sep 17 2014 17:32:11 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Wed May  4 21:13:24 2016
+elapsed time: 1111 seconds (0d 0h 18m 31s)
+

@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="css/style.css">
 <div id="timer">10:00</div>
 <div id="player" class="double">${player}</div>
+<div id="end">end game & show answers</div>
 <div id=${id} class="crossword">
 <div id="crosswordWrapper">
 <#assign num=1>
@@ -74,7 +75,7 @@
 
 </div>
 <div id="wait"><div id="waitText"><img id="loading" src="css/squares.svg"></img><br>waiting for second player</div></div>
-<p>
+<div id="win"><div id="winText">YOU WON!</div><a id="newGame" href="../home">new game</a></div>
 <script src="js/jquery-2.1.1.js"></script>
 <script src="/js/websocketDemo.js"></script>
 <script src="js/main.js"></script>

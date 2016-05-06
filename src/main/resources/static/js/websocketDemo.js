@@ -44,7 +44,8 @@ function updateChat(msg) {
         
         foundWords += 1;
         if (foundWords == numWords){
-        	alert("YOU WIN!");
+        	$("#win").toggle();
+        	
         }
         
     } else if (msg.data.startsWith("LETTER;")) {
@@ -68,8 +69,19 @@ function updateChat(msg) {
     	$("#hint2").html("the letters of " + orientation + " " + wordId + " are " + "'" + anagram + "'");
     	$("#hint2").off();
     	$("#hint2").css("background-color", "transparent");
-    }
-    else {
+    } else if (msg.data.startsWith("**ALL**")) {
+    	var data = msg.data.split(":")[1].split("\n");
+    	for (row in data){
+    		var cols = data[row].split(" ");
+    		for (col in cols){
+    			var letter = "S";
+    			$(".c"+col+".r"+row).val(cols[col]);
+    			$(".c"+col+".r"+row).attr("disabled", "disabled");
+    		}
+    	}
+    	clearInterval(timerGlobal);
+    	$("#end").text("new game");
+    } else {
 		if (players == "double"){
 			if (loading < 2){
 				loading ++;
@@ -77,10 +89,10 @@ function updateChat(msg) {
 				if (player == "ACROSS"){
 					loading = 2;
 					$("#wait").toggle();
-					startTimer();
+					timerGlobal = startTimer();
 				} else if (loading==2){
 					$("#wait").toggle();
-					startTimer();
+					timerGlobal = startTimer();
 				} 
 			}
 			var data = JSON.parse(msg.data);
