@@ -4,8 +4,6 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
-import edu.brown.cs.GROUP.database.Database;
-
 public class DatabaseTest {
 
   /**
@@ -20,6 +18,16 @@ public class DatabaseTest {
     } catch (SQLException | ClassNotFoundException e) {
       e.printStackTrace();
     }
+
+  }
+
+  @Test
+  public void getAllUnderNineTest() {
+
+  }
+
+  @Test
+  public void getClueTest() {
 
   }
 
