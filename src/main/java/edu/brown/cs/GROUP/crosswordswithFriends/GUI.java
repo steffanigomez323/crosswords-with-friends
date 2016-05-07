@@ -1,11 +1,5 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import com.google.common.collect.ImmutableMap;
-
-import edu.brown.cs.GROUP.chat.Chat;
-import edu.brown.cs.GROUP.database.Database;
-import freemarker.template.Configuration;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +7,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.common.collect.ImmutableMap;
+
+import edu.brown.cs.GROUP.chat.Chat;
+import edu.brown.cs.GROUP.database.Database;
+import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -285,7 +284,6 @@ public class GUI {
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
       int length = db.getAllUnderNineLength();
-      System.out.println("length: " + length);
       return new Crossword(originalList, db);
     }
 
