@@ -50,6 +50,7 @@ public class Chat {
    */
   static Map<Integer, List<Session>> roomUsers = new HashMap<Integer, List<Session>>();
 
+  static Map<List<Session>, Integer> endGameData = new HashMap<List<Session>, Integer>();
   /**
    * This is a hashmap of rooms to words to censor.
    */
@@ -159,7 +160,7 @@ public class Chat {
           if (session.isOpen()) {
             session.getRemote()
                 .sendString(String.valueOf(new JSONObject()
-                    .put("userMessage", createHtmlMessageFromSender(sender, message))));
+                    .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(roomId, message)))));
           }
         }
       }
@@ -236,7 +237,6 @@ public class Chat {
   }
 
   public static void broadcastConvert(Session user, Integer roomId) {
-    System.out.println("Converting.");
     Crossword crossword = GUI.getCrossword(roomId);
     String toSend = "**CONVERT**/:/";
 
@@ -247,7 +247,6 @@ public class Chat {
 
     try {
         if (user.isOpen()) {
-          System.out.println(toSend);
           user.getRemote().sendString(toSend);
         }
     } catch (Exception e) {
@@ -255,13 +254,46 @@ public class Chat {
     }
   }
 
+  //0 first player decided to continue
+  //1 first player decided to show
+  //2 second player decided to continue
+  //3 second player decided to show
   public static void broadcastEnd(String message, Session user, Integer roomId) {
     String toSend = "**END**:";
     String choice = message.split(":")[1];
     System.out.println(choice);
+    List<Session> room = roomUsers.get(roomId);
+    if (room != null){
+
+    }
     if (choice.equals("continue")){
       //get other's choice
-      toSend += "show";
+      Integer combined = endGameData.get(room);
+      if (combined == null){
+        endGameData.put(room, 0);
+        while (true){
+          combined = endGameData.get(room);
+          if (combined!=0){
+            break;
+          }
+        }
+        if (combined == 2){
+          System.out.println("2");
+          toSend += "continue";
+        } else if (combined==3) {
+          System.out.println("3");
+          toSend += "show";
+        }
+      } else {
+        endGameData.put(room, 2);
+        if (combined == 0){
+          System.out.println("0");
+          toSend += "continue";
+        } else if (combined==1) {
+          System.out.println("1");
+          toSend += "show";
+        }
+      }
       try {
         if (user.isOpen()) {
           user.getRemote().sendString(toSend);
@@ -270,7 +302,13 @@ public class Chat {
         e.printStackTrace();
       }
     } else if (choice.equals("show")){
-
+      if (!endGameData.containsKey(room)){
+        System.out.println("first player showing");
+        endGameData.put(room, 1);
+      } else {
+        System.out.println("second player showing");
+        endGameData.put(room, 3);
+      }
     }
   }
 

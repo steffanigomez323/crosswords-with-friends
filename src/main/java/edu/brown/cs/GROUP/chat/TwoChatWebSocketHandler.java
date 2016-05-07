@@ -36,12 +36,14 @@ public class TwoChatWebSocketHandler {
   public void onConnect(Session user) throws Exception {
 
     int nextRoomNumber = GUI.twoPlayerId.get();
-
     // roomUsers maps room#s to list of sessions
     List<Session> usersInRoom = new ArrayList<Session>();
     if (Chat.roomUsers.get(nextRoomNumber) != null) {
+      System.out.println("Second player joins room");
       usersInRoom = Chat.roomUsers.get(nextRoomNumber);
       GUI.twoPlayerId.getAndIncrement();
+    } else {
+      System.out.println("First player joins room");
     }
 
     usersInRoom.add(user);
@@ -57,7 +59,7 @@ public class TwoChatWebSocketHandler {
     // userRoom maps sessions to room#s
     userRoom.put(user, nextRoomNumber);
 
-    System.out.println(username);
+    System.out.println(username + " just joined");
     Chat.broadcastStart("Server", (username + " joined the chat"),
         nextRoomNumber);
   }
@@ -74,9 +76,24 @@ public class TwoChatWebSocketHandler {
 
   @OnWebSocketClose
   public void onClose(Session user, int statusCode, String reason) {
+    //if the only person in the chat room, set roomUsers(roomNumber) to null
+    System.out.println("closing");
       String username = Chat.userUsernameMap.get(user);
       Chat.userUsernameMap.remove(user);
-      Chat.broadcastMessage("Server", (username + " left the chat"), userRoom.get(user));
+
+      Integer roomNumber = userRoom.get(user);
+      userRoom.remove(user);
+
+      List<Session> usersInChat = Chat.roomUsers.get(roomNumber);
+      if (usersInChat.size() == 1){
+        System.out.println("Removing first player");
+        Chat.roomUsers.remove(roomNumber);
+        GUI.removeCrossword(roomNumber);
+      } else {
+        System.out.println("Removing second player");
+        usersInChat.remove(user);
+      }
+      Chat.broadcastMessage("Server", (username + " left the chat"), roomNumber);
   }
 
   /**
@@ -88,7 +105,6 @@ public class TwoChatWebSocketHandler {
    */
   @OnWebSocketMessage
   public void onMessage(Session user, String message) {
-    System.out.println(message);
     if (message.startsWith("DATA")) {
       Chat.broadcastCorrect(message, userRoom.get(user));
     } else if (message.startsWith("**ALL**")){
@@ -101,6 +117,7 @@ public class TwoChatWebSocketHandler {
     } else if (message.startsWith("**CONVERT**")){
       Chat.broadcastConvert(user, userRoom.get(user));
     } else if (message.startsWith("**END**")){
+      System.out.println(message);
       Chat.broadcastEnd(message, user, userRoom.get(user));
     } else {
       Chat.broadcastMessage(Chat.userUsernameMap.get(user), message,

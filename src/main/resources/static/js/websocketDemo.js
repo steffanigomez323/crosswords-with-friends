@@ -87,7 +87,6 @@ function updateChat(msg) {
     	clearInterval(timerGlobal);
     	$("#end").text("new game");
     	$("#end2").toggle();
-    	webSocket.close();
     } else if (msg.data.startsWith("**END**")) {
     	var data = msg.data.split(":");
     	var other = data[1];
@@ -95,9 +94,13 @@ function updateChat(msg) {
     	if (other=="show"){
 			$("#alert span").text("chose not to continue");
 			convertToOnePlayer();
+    	} else {
+    		$("#end").toggle();
     	}
     } else if (msg.data.startsWith("**CONVERT**")) {
-    	$(".hiddenEnd").toggle();
+    	if (!$("#end").is(":visible")){
+    		$(".hiddenEnd").toggle();
+    	}
     	players = "single";
     	$("textarea").attr("disabled",false);
     	$(".inactive").attr("disabled","disabled");
@@ -142,7 +145,9 @@ function updateChat(msg) {
 		      var innerMessage = data.userMessage.split("<p>")[1].split("</p>")[0];
 		      console.log("."+innerMessage+".");
 		      if (innerMessage=="down left the chat " || innerMessage=="across left the chat "){
-		    	  convertToOnePlayer();
+		    	  if (!$("#end2").is(":visible")){
+			    	  convertToOnePlayer();
+		    	  }
 		      }
 		      insert("chat", data.userMessage);
 		}

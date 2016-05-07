@@ -95,6 +95,10 @@ public class GUI {
     return crosswordCache.get(roomId);
   }
 
+  public static void removeCrossword(Integer roomId){
+    crosswordCache.remove(roomId);
+  }
+
 
   /**
    * This method gets an anagram of the answer of the word located at that

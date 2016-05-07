@@ -537,16 +537,17 @@ window.onload = function(response) {
 		if ($(this).text()=="new game"){
 			window.location.replace("../home");
 		} else {
-			webSocket.send("**ALL**");
 			$("#lose").toggle();
 			if (players=="double"){
 				webSocket.send("**END**:show");
 			}
+			webSocket.send("**ALL**");
 		}
 	});
 	
 	$("#continue").click(function(){
 		$("#lose").toggle();
+		console.log("continuing");
 		if (players=="double"){
 			webSocket.send("**END**:continue");
 		}
