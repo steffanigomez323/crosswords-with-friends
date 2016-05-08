@@ -311,21 +311,6 @@ function getAllPlayerWords(start, o, wordId){
 	
 }
 
-function getPlayerWords(start, o, wordId){
-	var classes = $(start).attr("class").split(" ");
-	var row = parseFloat(classes[2][1]);
-	var col = parseFloat(classes[1][1]);
-	var size = 0;
-	if (o == "ACROSS"){
-		size = wordSize(classes, "across");
-	} else {
-		size = wordSize(classes, "down");
-	}	
-	var id = $(".crossword").attr("id");
-	return toSend = "ANAGRAM;"+size+";"+col+";"+row+";"+o+";" + wordId +";"+id;
-	
-}
-
 function convertToOnePlayer(){
 	$("#end").text("end game and show answers");
 	payers = "single";
