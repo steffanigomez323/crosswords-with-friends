@@ -6,6 +6,10 @@ import static j2html.TagCreator.p;
 import static j2html.TagCreator.span;
 import static spark.Spark.init;
 import static spark.Spark.webSocket;
+import edu.brown.cs.GROUP.crosswordswithFriends.Crossword;
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
+import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -23,77 +27,57 @@ import java.util.Set;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
 
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
-import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
-import edu.brown.cs.GROUP.crosswordswithFriends.Word;
-
 /**
  * This class implements the creation of a chat between users.
  *
  */
-
 public class Chat {
 
   /**
    * This is a hashmap mapping sessions to usernames.
    */
-
   static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
 
   /**
    * This is a hashset of all the stop words, the words to definitely not
    * censor.
    */
-
   static Set<String> stopWords = new HashSet<String>();
 
   /**
    * This is a hashmap of room IDs to users, to handle multiple people messaging
    * with different exclusive people.
    */
-
   static Map<Integer, List<Session>> roomUsers = new HashMap<Integer, List<Session>>();
 
   /**
    * This is a hashmap of rooms to words to censor.
    */
-
   static HashMap<Integer, Set<String>> wordsToCensor = new HashMap<Integer, Set<String>>();
-
-  // public static void main(String[] args) throws IOException {
-  // }
 
   /**
    * This constructor instantiates the chatroom and reads in the stop words from
    * a stop words file and sets up two users to talk to each other.
    * @throws IOException in case the stop words file is unable to be opened.
    */
-
   public static void initChatroom() throws IOException {
-    // BufferedReader reader;
-    try {
-      try (FileInputStream fis = new FileInputStream(
-          "cs032_stopwords.txt")) {
-        try (InputStreamReader isr = new InputStreamReader(fis, "UTF8")) {
-          try (BufferedReader reader = new BufferedReader(isr)) {
-            // reader = new BufferedReader(new FileReader(new
-            // File("cs032_stopwords.txt")));
-            String line;
-            while ((line = reader.readLine()) != null) {
-              stopWords.add(line);
-            }
-            reader.close();
-          }
+    try (FileInputStream fis = new FileInputStream(
+      "cs032_stopwords.txt");
+      InputStreamReader isr = new InputStreamReader(fis, "UTF8");
+      BufferedReader reader = new BufferedReader(isr)) {
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+          stopWords.add(line);
         }
-      }
+        reader.close();
+
     } catch (FileNotFoundException e) {
-      // e.printStackTrace();
       System.err
           .println("ERROR: The stop words corpus could not be found.");
       return;
     }
-    // staticFileLocation("static"); //index.html is served at localhost:4567
-    // (default port)
+
     webSocket("/chat/one", OneChatWebSocketHandler.class);
     webSocket("/chat/two", TwoChatWebSocketHandler.class);
     init();
@@ -105,7 +89,6 @@ public class Chat {
    * @param roomId the room id
    * @param toPass the words in the clues
    */
-
   public static void setCensorWords(Integer roomId, List<Word> toPass) {
     Set<String> censorWords = new HashSet<String>();
     for (Word word : toPass) {
@@ -129,7 +112,6 @@ public class Chat {
    * @param message the message that was sent
    * @return the string that the other user will see, the censored string
    */
-
   public static String censorMessage(Integer roomId, String message) {
     Set<String> censorWords = wordsToCensor.get(roomId);
     String cleanedMessage = message.replaceAll("[^a-zA-Z ]", "")
@@ -168,7 +150,6 @@ public class Chat {
    * @param message the message
    * @param roomId the room id
    */
-
   public static void broadcastStart(String sender, String message,
       Integer roomId) {
     try {
@@ -178,8 +159,7 @@ public class Chat {
           if (session.isOpen()) {
             session.getRemote()
                 .sendString(String.valueOf(new JSONObject()
-                    .put("userMessage", createHtmlMessageFromSender(sender,
-                        censorMessage(roomId, message)))));
+                    .put("userMessage", createHtmlMessageFromSender(sender, message))));
           }
         }
       }
@@ -195,7 +175,6 @@ public class Chat {
    * @param message the message
    * @param roomId the room id
    */
-
   public static void broadcastMessage(String sender, String message,
       Integer roomId) {
     try {
@@ -220,7 +199,6 @@ public class Chat {
    * @param message the message
    * @param roomId the room id
    */
-
   public static void broadcastCorrect(String message, Integer roomId) {
     String[] variables = message.split(";");
     int x = Integer.valueOf(variables[2]);
@@ -243,13 +221,65 @@ public class Chat {
     }
   }
 
+
+  public static void broadcastAll(Session user, Integer roomId) {
+
+    Crossword crossword = GUI.getCrossword(roomId);
+    String puzzle = "**ALL**:"+crossword.toString();
+    try {
+        if (user.isOpen()) {
+          user.getRemote().sendString(puzzle);
+        }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void broadcastConvert(Session user, Integer roomId) {
+    System.out.println("Converting.");
+    Crossword crossword = GUI.getCrossword(roomId);
+    String toSend = "**CONVERT**/:/";
+
+    List<Word> words = crossword.getFinalList();
+    for (Word w : words){
+      toSend+=w.getXIndex()+";"+w.getYIndex()+";"+w.getOrientation()+";"+w.getClue()+"/:/";
+    }
+
+    try {
+        if (user.isOpen()) {
+          System.out.println(toSend);
+          user.getRemote().sendString(toSend);
+        }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void broadcastEnd(String message, Session user, Integer roomId) {
+    String toSend = "**END**:";
+    String choice = message.split(":")[1];
+    System.out.println(choice);
+    if (choice.equals("continue")){
+      //get other's choice
+      toSend += "show";
+      try {
+        if (user.isOpen()) {
+          user.getRemote().sendString(toSend);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else if (choice.equals("show")){
+
+    }
+  }
+
   /**
    * This method broadcasts a letter to the front end when the
    * "expose letter" hint is used.
    * @param message the message
    * @param roomId the room id
    */
-
   public static void broadcastLetter(String message, Integer roomId) {
     String[] variables = message.split(";");
     int x = Integer.valueOf(variables[1]);
@@ -277,10 +307,9 @@ public class Chat {
    * @param message the message
    * @param roomId the room id
    */
-
   public static void broadcastAnagram(String message, Integer roomId) {
-    
-    
+
+
     String[] variables = message.split(";");
     System.out.println("ANAGRAM ");
     int length = Integer.valueOf(variables[1]);
@@ -314,8 +343,6 @@ public class Chat {
    * @param message the message
    * @return the HTML element
    */
-
-  // Builds a HTML element with a sender-name, a message, and a timestamp,
   private static String createHtmlMessageFromSender(String sender,
       String message) {
     return article()

@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 /**
  * This class reads clues and words from a tab delimited .txt file and puts them
@@ -17,6 +18,10 @@ import java.sql.SQLException;
  */
 
 public class TXTReader {
+
+  private static final int day = 1;
+  private static final int month = 1;
+  private static final int year = 2009;
 
   /**
    * This method reads from the file, checking to make sure the word length and
@@ -36,6 +41,11 @@ public class TXTReader {
     InputStreamReader isr = new InputStreamReader(fis, "UTF8");
     BufferedReader reader = new BufferedReader(isr);
 
+    System.out.println("got here");
+
+    Calendar cutoff = Calendar.getInstance();
+    cutoff.set(year, month, day, 0, 0);
+
     String query = "INSERT OR IGNORE INTO "
         + "cluewords(word, length, clue) VALUES (?,?,?)";
     try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -48,6 +58,20 @@ public class TXTReader {
         if (row[1].length() <= 1) {
           continue;
         }
+
+        int m = Integer.parseInt(row[3]);
+        int y = Integer.parseInt(row[2]);
+
+        Calendar c = Calendar.getInstance();
+        c.set(y, m, day, 0, 0);
+
+        if (c.before(cutoff)) {
+          continue;
+        }
+
+        System.out.println("Adding clue: " + row[0] + " and answer: "
+            + row[1].toLowerCase());
+
         ps.setString(1, row[1].toLowerCase());
         ps.setInt(2, row[1].length());
         ps.setString(3, row[0]);

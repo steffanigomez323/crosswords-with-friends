@@ -1,5 +1,7 @@
 package edu.brown.cs.GROUP.chat;
 
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +10,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
 
 /**
  * This class handles the web socket in the situation where there is only one
@@ -61,6 +61,7 @@ public class OneChatWebSocketHandler {
 
   @OnWebSocketMessage
   public void onMessage(Session user, String message) {
+    System.out.println(message);
     if (message.startsWith("DATA")) {
       Chat.broadcastCorrect(message, userRoom.get(user));
     } else if (message.startsWith("LETTER")) {
@@ -68,6 +69,8 @@ public class OneChatWebSocketHandler {
     } else if (message.startsWith("ANAGRAM")) {
       System.out.println("in anagram web socket " + message);
       Chat.broadcastAnagram(message, userRoom.get(user));
+    } else if (message.startsWith("**ALL**")){
+      Chat.broadcastAll(user, userRoom.get(user));
     }
   }
 

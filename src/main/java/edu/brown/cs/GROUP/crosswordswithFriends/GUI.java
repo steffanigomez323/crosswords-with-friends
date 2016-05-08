@@ -91,6 +91,10 @@ public class GUI {
     return true;
   }
 
+  public static Crossword getCrossword(Integer roomId) {
+    return crosswordCache.get(roomId);
+  }
+
   /**
    * This method gets an anagram of the answer of the word located at that
    * x-index, y-index, and orientation and with the id.
@@ -101,7 +105,6 @@ public class GUI {
    * @param id the id
    * @return anagram string
    */
-
   public static String getAnagram(int length, int x, int y,
       Orientation orientation, Integer id) {
     if (!crosswordCache.containsKey(id)) {
@@ -222,7 +225,6 @@ public class GUI {
 
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
-      // System.out.println("length: " + originalList.size());
 
       return new Crossword(originalList, db);
     }

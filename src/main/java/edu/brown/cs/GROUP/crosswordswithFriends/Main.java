@@ -1,9 +1,5 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.words.CSVReader;
-import edu.brown.cs.GROUP.words.TXTReader;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +10,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
+import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.words.CSVReader;
+import edu.brown.cs.GROUP.words.TXTReader;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -117,6 +116,7 @@ public final class Main {
           for (String s : options.valuesOf(files)) {
             File filename = new File(s);
             if (filename.getName().endsWith(".txt")) {
+              System.out.println("here");
               txtreader.readtoDB(filename, db.getConnection());
             } else if (filename.getName().endsWith(".csv")) {
               csvreader.readtoDB(filename, db.getConnection());
