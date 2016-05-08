@@ -1,9 +1,5 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.words.CSVReader;
-import edu.brown.cs.GROUP.words.TXTReader;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +10,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
+import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.words.CSVReader;
+import edu.brown.cs.GROUP.words.TXTReader;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;

@@ -91,19 +91,18 @@ public class GUI {
     return true;
   }
 
-  public static Crossword getCrossword(Integer roomId){
+  public static Crossword getCrossword(Integer roomId) {
     return crosswordCache.get(roomId);
   }
 
-  public static void removeCrossword(Integer roomId){
+  public static void removeCrossword(Integer roomId) {
     crosswordCache.remove(roomId);
   }
-
 
   /**
    * This method gets an anagram of the answer of the word located at that
    * x-index, y-index, and orientation and with the id.
-   * @param word the word
+   * @param length the length of the word
    * @param x the x-index
    * @param y the y-index
    * @param orientation the orientation
@@ -230,7 +229,6 @@ public class GUI {
 
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
-      //System.out.println("length: " + originalList.size());
 
       return new Crossword(originalList, db);
     }
