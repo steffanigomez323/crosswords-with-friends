@@ -21,6 +21,12 @@ import java.util.List;
 public class CSVReader {
 
   /**
+   * Private instance variable for 3.
+   */
+
+  private static final int THREE = 3;
+
+  /**
    * This is the constructor that begins an instance of this class.
    */
 
@@ -57,7 +63,7 @@ public class CSVReader {
 
                 ps.setString(1, row[nameidx].toLowerCase());
                 ps.setInt(2, row[nameidx].length());
-                ps.setString(3, row[clueidx].toLowerCase());
+                ps.setString(THREE, row[clueidx].toLowerCase());
 
                 ps.addBatch();
 

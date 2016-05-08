@@ -68,7 +68,7 @@ public class Clue {
   public int getSize() {
     return size;
   }
-  
+
   @Override
   public String toString() {
     return this.clue;

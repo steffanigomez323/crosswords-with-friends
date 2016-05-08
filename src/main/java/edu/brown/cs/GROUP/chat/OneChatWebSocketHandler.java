@@ -1,7 +1,5 @@
 package edu.brown.cs.GROUP.chat;
 
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +8,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
 
 /**
  * This class handles the web socket in the situation where there is only one
@@ -22,7 +22,8 @@ public class OneChatWebSocketHandler {
    * This is a hashmap that maps the session id (user id) to the room.
    */
 
-  private static HashMap<Session, Integer> userRoom = new HashMap<Session, Integer>();
+  private static HashMap<Session, Integer> userRoom =
+      new HashMap<Session, Integer>();
 
   /**
    * This web socket connects the user to the chatroom.
@@ -32,11 +33,11 @@ public class OneChatWebSocketHandler {
 
   @OnWebSocketConnect
   public void onConnect(Session user) throws Exception {
-    int nextRoomNumber = GUI.onePlayerId.get() - 1;
+    int nextRoomNumber = GUI.ONEPLAYERID.get() - 1;
 
     List<Session> usersInRoom = new ArrayList<Session>();
     usersInRoom.add(user);
-    Chat.roomUsers.put(nextRoomNumber, usersInRoom);
+    Chat.getroomUsers().put(nextRoomNumber, usersInRoom);
 
     userRoom.put(user, nextRoomNumber);
   }
@@ -69,7 +70,7 @@ public class OneChatWebSocketHandler {
     } else if (message.startsWith("ANAGRAM")) {
       System.out.println("in anagram web socket " + message);
       Chat.broadcastAnagram(message, userRoom.get(user));
-    } else if (message.startsWith("**ALL**")){
+    } else if (message.startsWith("**ALL**")) {
       Chat.broadcastAll(user, userRoom.get(user));
     }
   }

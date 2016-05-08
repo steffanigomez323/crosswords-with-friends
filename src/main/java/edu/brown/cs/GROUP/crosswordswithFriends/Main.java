@@ -53,6 +53,12 @@ public final class Main {
   private static final int PORT = 9998;
 
   /**
+   * The argument length.
+   */
+
+  private static final int LENGTH = 3;
+
+  /**
    * This constructor takes the arguments from the command line and sets it to
    * the private instance variable.
    * @param args arguments from command line interface
@@ -71,8 +77,8 @@ public final class Main {
   private void run() throws IOException {
 
     OptionParser parser = new OptionParser();
-    OptionSpec<String> database = parser.accepts("db").withRequiredArg()
-        .ofType(String.class);
+    OptionSpec<String> database =
+        parser.accepts("db").withRequiredArg().ofType(String.class);
     OptionSpec<String> files = parser.nonOptions().ofType(String.class);
     OptionSet options;
     try {
@@ -103,7 +109,7 @@ public final class Main {
       }
     }
 
-    if (this.arguments.length < 3) {
+    if (this.arguments.length < LENGTH) {
       System.err.println("ERROR: Invalid number of arguments. USAGE: "
           + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
       throw new IOException();
@@ -111,7 +117,7 @@ public final class Main {
       CSVReader csvreader = new CSVReader();
       TXTReader txtreader = new TXTReader();
       if (!options.valuesOf(files).isEmpty()) {
-        assert (db != null);
+        assert db != null;
         try {
           for (String s : options.valuesOf(files)) {
             File filename = new File(s);
@@ -137,8 +143,8 @@ public final class Main {
           return;
         }
       } else {
-        System.err.println(
-            "ERROR: There must be at least one corpus file to start the program with.");
+        System.err.println("ERROR: There must be at least one corpus file "
+            + "to start the program with.");
         return;
       }
       new GUI(PORT, db);

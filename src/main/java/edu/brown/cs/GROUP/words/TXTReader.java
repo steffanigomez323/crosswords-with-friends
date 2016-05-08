@@ -21,9 +21,35 @@ import java.util.regex.Pattern;
 
 public class TXTReader {
 
-  private static final int day = 1;
-  private static final int month = 1;
-  private static final int year = 2009;
+  /**
+   * This is the day that clues before will be filtered out.
+   */
+
+  private static final int DAY = 1;
+
+  /**
+   * This is the month that clues before this will be filtered out.
+   */
+
+  private static final int MONTH = 1;
+
+  /**
+   * This is the year that clues before this will be filtered out.
+   */
+
+  private static final int YEAR = 2009;
+
+  /**
+   * Instance variable for three.
+   */
+
+  private static final int THREE = 3;
+
+  /**
+   * Instance variable for setting years 00-11 to 2000-2012.
+   */
+
+  private static final int TWELVE = 12;
 
   /**
    * This method reads from the file, checking to make sure the word length and
@@ -44,7 +70,7 @@ public class TXTReader {
     BufferedReader reader = new BufferedReader(isr);
 
     Calendar cutoff = Calendar.getInstance();
-    cutoff.set(year, month, day, 0, 0);
+    cutoff.set(YEAR, MONTH, DAY, 0, 0);
 
     String query = "INSERT OR IGNORE INTO "
         + "cluewords(word, length, clue) VALUES (?,?,?)";
@@ -69,7 +95,7 @@ public class TXTReader {
         }
 
         StringBuffer s = new StringBuffer("");
-        if (Integer.parseInt(row[2]) <= 12) {
+        if (Integer.parseInt(row[2]) <= TWELVE) {
           s.append("20");
         } else {
           s.append("19");
@@ -77,11 +103,11 @@ public class TXTReader {
         s.append(row[2]);
         row[2] = s.toString();
 
-        int m = Integer.parseInt(row[3]);
+        int m = Integer.parseInt(row[THREE]);
         int y = Integer.parseInt(row[2]);
 
         Calendar c = Calendar.getInstance();
-        c.set(y, m, day, 0, 0);
+        c.set(y, m, DAY, 0, 0);
 
         if (c.before(cutoff)) {
           continue;
@@ -89,7 +115,7 @@ public class TXTReader {
 
         ps.setString(1, row[1].toLowerCase());
         ps.setInt(2, row[1].length());
-        ps.setString(3, row[0]);
+        ps.setString(THREE, row[0]);
 
         ps.addBatch();
 
