@@ -268,14 +268,14 @@ public class Crossword {
    */
 
   public String getWord(int col, int row, Orientation o) {
-    String word = "";
+    StringBuffer s = new StringBuffer("");
     if (puzzle[row][col] == null) {
       return "";
     } else {
       while (!String.valueOf(puzzle[row][col].getLetter()).equals("-")) {
         System.out.println(
             String.valueOf(puzzle[row][col].getLetter()).equals("-"));
-        word = word + puzzle[row][col].getLetter();
+        s.append(puzzle[row][col].getLetter());
         if (o == Orientation.ACROSS) {
           col++;
         } else if (o == Orientation.DOWN) {
@@ -283,7 +283,7 @@ public class Crossword {
         }
       }
     }
-    return word;
+    return s.toString();
   }
 
   /**
