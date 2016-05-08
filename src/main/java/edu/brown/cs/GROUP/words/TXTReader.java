@@ -41,8 +41,6 @@ public class TXTReader {
     InputStreamReader isr = new InputStreamReader(fis, "UTF8");
     BufferedReader reader = new BufferedReader(isr);
 
-    System.out.println("got here");
-
     Calendar cutoff = Calendar.getInstance();
     cutoff.set(year, month, day, 0, 0);
 
@@ -51,6 +49,7 @@ public class TXTReader {
     try (PreparedStatement ps = conn.prepareStatement(query)) {
       String line;
       while ((line = reader.readLine()) != null) {
+        // System.out.println(line);
         String[] row = line.split("\t");
         if (row[0].length() == 0) {
           continue;
@@ -58,6 +57,15 @@ public class TXTReader {
         if (row[1].length() <= 1) {
           continue;
         }
+
+        StringBuffer s = new StringBuffer("");
+        if (Integer.parseInt(row[2]) <= 12) {
+          s.append("20");
+        } else {
+          s.append("19");
+        }
+        s.append(row[2]);
+        row[2] = s.toString();
 
         int m = Integer.parseInt(row[3]);
         int y = Integer.parseInt(row[2]);
@@ -69,8 +77,8 @@ public class TXTReader {
           continue;
         }
 
-        System.out.println("Adding clue: " + row[0] + " and answer: "
-            + row[1].toLowerCase());
+        // System.out.println("Adding clue: " + row[0] + " and answer: "
+        // + row[1].toLowerCase());
 
         ps.setString(1, row[1].toLowerCase());
         ps.setInt(2, row[1].length());
