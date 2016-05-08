@@ -35,7 +35,7 @@ public class Word {
 
   /** This is one constructor that sets the values of the word, the x-index, the
    * y-index, the orientation, and the score.
-   * 
+   *
    * @param w the word
    * @param x the x-index
    * @param y the y-index
@@ -50,8 +50,8 @@ public class Word {
     score = s;
   }
 
-  /** This is the other constructor that sets the word, the x-index, the y-index,
-   * the orientation, the score, and the clue values.
+  /** This is the other constructor that sets the word, the x-index,
+   *  the y-index, the orientation, the score, and the clue values.
    * @param w the word
    * @param x the x-index
    * @param y the y-index
@@ -69,7 +69,7 @@ public class Word {
   }
 
   /** This method returns the word.
-   * 
+   *
    * @return the word */
 
   public String getWord() {
@@ -77,7 +77,7 @@ public class Word {
   }
 
   /** This method returns the x-index of the word.
-   * 
+   *
    * @return the x-index */
 
   public int getXIndex() {
@@ -85,7 +85,7 @@ public class Word {
   }
 
   /** This method returns the y-index of the word.
-   * 
+   *
    * @return the y-index */
 
   public int getYIndex() {
@@ -93,7 +93,7 @@ public class Word {
   }
 
   /** This method returns the orientation of the word.
-   * 
+   *
    * @return the orientation */
 
   public Orientation getOrientation() {
@@ -101,7 +101,7 @@ public class Word {
   }
 
   /** This method returns the clue of the word.
-   * 
+   *
    * @return the clue */
 
   public String getClue() {
@@ -109,7 +109,7 @@ public class Word {
   }
 
   /** This method returns the score of the word.
-   * 
+   *
    * @return the score */
 
   public int getScore() {

@@ -18,10 +18,10 @@ public class Clue {
 
   private int size;
 
-  /** This constructor instantiates an instance of this class with a clue string,
-   * an orientation, and a size, which the private instance variables are set
-   * to.
-   * 
+  /** This constructor instantiates an instance of this class with
+   *  a clue string, an orientation, and a size, which the private
+   *   instance variables are set to.
+   *
    * @param c the clue
    * @param o the orientation
    * @param s the score */
@@ -33,7 +33,7 @@ public class Clue {
   }
 
   /** This method returns the clue string of this clue.
-   * 
+   *
    * @return the clue */
 
   public String getClue() {
@@ -41,7 +41,7 @@ public class Clue {
   }
 
   /** This method returns the orientation of this clue.
-   * 
+   *
    * @return the orientation */
 
   public Orientation getOrientation() {
@@ -49,7 +49,7 @@ public class Clue {
   }
 
   /** This method returns the size of this clue.
-   * 
+   *
    * @return the size */
 
   public int getSize() {

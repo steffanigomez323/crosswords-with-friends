@@ -175,9 +175,7 @@ public class GUI {
     return new FreeMarkerEngine(config);
   }
 
-  /** Runs the server. Organizes get and put requests.
-   *
-   * @throws IOException */
+  /** Runs the server. Organizes get and put requests. */
   private void runSparkServer() {
     Spark.externalStaticFileLocation("src/main/resources/static");
     try {

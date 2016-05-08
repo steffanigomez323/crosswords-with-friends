@@ -157,8 +157,8 @@ public final class Main {
                   csvreader.readtoDB(filename, db.getConnection());
                 } else {
                   System.err
-                      .println("ERROR: The given file must be either .txt file or "
-                          + "a .csv file");
+                      .println("ERROR: The given file must be either"
+                          + " .txt file or a .csv file");
                   return;
                 }
               } else {
@@ -168,11 +168,12 @@ public final class Main {
               }
             } catch (IOException e) {
               System.err
-                  .println("ERROR: The given file is not a file accessable by this "
-                      + "program.");
+                  .println("ERROR: The given file is not a file accessable "
+                      + "by this program.");
             } catch (SQLException e) {
               System.err
-                  .println("ERROR: The database was unable to be connected to.");
+                  .println("ERROR: The database was unable to be "
+                      + "connected to.");
               throw new IOException();
             }
           }
