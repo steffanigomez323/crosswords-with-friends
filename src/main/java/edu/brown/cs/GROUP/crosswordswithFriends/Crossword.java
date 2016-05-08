@@ -268,22 +268,32 @@ public class Crossword {
    */
 
   public String getWord(int col, int row, Orientation o) {
-    String word = "";
+    StringBuffer s = new StringBuffer("");
     if (puzzle[row][col] == null) {
       return "";
     } else {
-      while (!String.valueOf(puzzle[row][col].getLetter()).equals("-")) {
-        System.out.println(
-            String.valueOf(puzzle[row][col].getLetter()).equals("-"));
-        word = word + puzzle[row][col].getLetter();
+      while (String.valueOf(puzzle[row][col].getLetter()) != null) {
+        System.out.println(String.valueOf(puzzle[row][col].getLetter()));
+        //System.out.println(
+        //String.valueOf(puzzle[row][col].getLetter()).equals("-"));
+        s.append(puzzle[row][col].getLetter());
+
         if (o == Orientation.ACROSS) {
-          col++;
+          if (col + 1 < COLS) {
+            col++;
+          } else {
+            break;
+          }
         } else if (o == Orientation.DOWN) {
-          row++;
+          if (row + 1 < ROWS) {
+            row++;
+          } else {
+            break;
+          }
         }
       }
     }
-    return word;
+    return s.toString();
   }
 
   /**
@@ -319,7 +329,7 @@ public class Crossword {
               if (j - i >= 0) { // vertical placement
                 if (j - i + word.length() <= ROWS) {
                   coordList
-                      .add(new Word(word, k, j - i, Orientation.DOWN, 0));
+                  .add(new Word(word, k, j - i, Orientation.DOWN, 0));
                 }
               }
               if (k - i >= 0) { // horizontal placement
@@ -526,7 +536,7 @@ public class Crossword {
    * This method shuffles and sorts the words according to longest length.
    */
 
-  private void shuffleAndSortWords() {
+  public void shuffleAndSortWords() {
     Collections.shuffle(unusedWords);
     Collections.sort(unusedWords,
         (word1, word2) -> (word2.length() - word1.length()));

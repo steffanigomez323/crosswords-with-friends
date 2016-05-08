@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class reads clues and words from a tab delimited .txt file and puts them
@@ -17,6 +20,10 @@ import java.sql.SQLException;
  */
 
 public class TXTReader {
+
+  private static final int day = 1;
+  private static final int month = 1;
+  private static final int year = 2009;
 
   /**
    * This method reads from the file, checking to make sure the word length and
@@ -36,6 +43,9 @@ public class TXTReader {
     InputStreamReader isr = new InputStreamReader(fis, "UTF8");
     BufferedReader reader = new BufferedReader(isr);
 
+    Calendar cutoff = Calendar.getInstance();
+    cutoff.set(year, month, day, 0, 0);
+
     String query = "INSERT OR IGNORE INTO "
         + "cluewords(word, length, clue) VALUES (?,?,?)";
     try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -48,6 +58,35 @@ public class TXTReader {
         if (row[1].length() <= 1) {
           continue;
         }
+
+        String pattern = "([0-9]+)-Across|([0-9]+)-Down";
+
+        Pattern r = Pattern.compile(pattern);
+
+        Matcher matcher = r.matcher(line);
+        if (matcher.find()) {
+          continue;
+        }
+
+        StringBuffer s = new StringBuffer("");
+        if (Integer.parseInt(row[2]) <= 12) {
+          s.append("20");
+        } else {
+          s.append("19");
+        }
+        s.append(row[2]);
+        row[2] = s.toString();
+
+        int m = Integer.parseInt(row[3]);
+        int y = Integer.parseInt(row[2]);
+
+        Calendar c = Calendar.getInstance();
+        c.set(y, m, day, 0, 0);
+
+        if (c.before(cutoff)) {
+          continue;
+        }
+
         ps.setString(1, row[1].toLowerCase());
         ps.setInt(2, row[1].length());
         ps.setString(3, row[0]);

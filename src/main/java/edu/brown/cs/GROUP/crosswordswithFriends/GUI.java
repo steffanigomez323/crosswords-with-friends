@@ -1,11 +1,5 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import com.google.common.collect.ImmutableMap;
-
-import edu.brown.cs.GROUP.chat.Chat;
-import edu.brown.cs.GROUP.database.Database;
-import freemarker.template.Configuration;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +7,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.google.common.collect.ImmutableMap;
+
+import edu.brown.cs.GROUP.chat.Chat;
+import edu.brown.cs.GROUP.database.Database;
+import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -25,7 +24,7 @@ public class GUI {
 
   /** For converting to JSON. */
 
-  private static HashMap<Integer, Crossword> crosswordCache;
+  private static HashMap<Integer, Crossword> crosswordCache = new HashMap<Integer, Crossword>();
 
   /**
    * This is the database that holds the connection.
@@ -37,13 +36,13 @@ public class GUI {
    * This is the user id for the second player.
    */
 
-  public static AtomicInteger twoPlayerId;
+  public static AtomicInteger twoPlayerId = new AtomicInteger(1000);
 
   /**
    * This is the user id for the first player.
    */
 
-  public static AtomicInteger onePlayerId;
+  public static AtomicInteger onePlayerId = new AtomicInteger(1001);
 
   /**
    * Constructor starts server on instantiation.
@@ -54,10 +53,12 @@ public class GUI {
   public GUI(int port, Database d) {
     Spark.port(port);
     db = d;
-    twoPlayerId = new AtomicInteger(1000);
-    onePlayerId = new AtomicInteger(1001);
+    /*
+     * twoPlayerId = new AtomicInteger(1000); onePlayerId = new
+     * AtomicInteger(1001);
+     */
     runSparkServer();
-    crosswordCache = new HashMap<Integer, Crossword>();
+    /* crosswordCache = new HashMap<Integer, Crossword>(); */
   }
 
   /**
@@ -92,19 +93,18 @@ public class GUI {
     return true;
   }
 
-  public static Crossword getCrossword(Integer roomId){
+  public static Crossword getCrossword(Integer roomId) {
     return crosswordCache.get(roomId);
   }
 
-  public static void removeCrossword(Integer roomId){
+  public static void removeCrossword(Integer roomId) {
     crosswordCache.remove(roomId);
   }
-
 
   /**
    * This method gets an anagram of the answer of the word located at that
    * x-index, y-index, and orientation and with the id.
-   * @param word the word
+   * @param length the length of the word
    * @param x the x-index
    * @param y the y-index
    * @param orientation the orientation
@@ -118,10 +118,10 @@ public class GUI {
     }
     Crossword puzzle = crosswordCache.get(id);
     Box[][] crossword = puzzle.getArray();
-    String word = "";
+    StringBuffer word = new StringBuffer("");
     for (int i = 0; i < length; i++) {
       Box box = crossword[y][x];
-      word += String.valueOf(crossword[y][x].getLetter());
+      word.append(String.valueOf(crossword[y][x].getLetter()));
       if (orientation == Orientation.ACROSS) {
         x++;
       } else {
@@ -130,7 +130,7 @@ public class GUI {
     }
     System.out.println("word " + word);
     Random random = new Random();
-    String scrambled = word;
+    String scrambled = word.toString();
     char a[] = scrambled.toCharArray();
     for (int i = 0; i < a.length - 1; i++) {
       int j = random.nextInt(a.length - 1);
@@ -231,7 +231,6 @@ public class GUI {
 
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
-      //System.out.println("length: " + originalList.size());
 
       return new Crossword(originalList, db);
     }
@@ -289,7 +288,6 @@ public class GUI {
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
       int length = db.getAllUnderNineLength();
-      System.out.println("length: " + length);
       return new Crossword(originalList, db);
     }
 
