@@ -31,7 +31,7 @@
 </#list>
 <br>
 <div id = "hint1">Expose letter</div>
-<div id = "hint2">Get letters of word</div>
+<div id = "hint2">Get anagram</div>
 <ul id = "anagramList">
 <div class = "anagramChoice"></div>
 </ul>
