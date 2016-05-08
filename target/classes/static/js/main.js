@@ -290,7 +290,7 @@ function getNext(dir, i, j, word, classes){
 
 function startTimer(){
 	var stop = new Date();
-	stop.setMinutes(stop.getMinutes() + 5);
+	stop.setMinutes(stop.getMinutes() + 1);
 	var timer = setInterval(function(){
 		countdown(stop, timer);
 	}, 1000);
@@ -374,12 +374,16 @@ window.onload = function(response) {
                 anagramNum++;
             }
             $(".anagramChoice").append(anagramHtml);
+			console.log(anagramHtml);
             $("li").click(function() {
+                console.log("playerw word word" + $(playersWords[word]));
+                console.log("this val " +$(this).val());
                 var toSend = getAllPlayerWords($(playersWords[$(this).val()]).prev(), player, $(playersWords[$(this).val()]).text());
                 console.log(toSend);
                 webSocket.send(toSend);
             });
         } else {
+        	console.log("in one player");
             var playersWords = [];
             var dir = [];
             $(".numMarker").each(function() {
