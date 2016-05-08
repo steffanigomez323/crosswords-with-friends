@@ -217,11 +217,13 @@ button {
 
 li {
     margin: 5px 0;
+    list-style-type: none;
 }
 
 .hints{
 	color: white;
 	text-align: center;
+
 }
 
 #hint1:hover, #hint2:hover, #hint3:hover{
@@ -232,7 +234,19 @@ li {
 
 .anagramChoice{
 	color: white;
+	margin-top: 20px;
 }
+
+#anagramList{
+	text-align: center;
+	width: 300px;
+	color: white;
+}
+
+.anagramChoice li:hover{
+	color: #4CAF50; 
+	cursor: pointer;
+	}
 
 #hint1, #hint2, #hint3 {
     background-color: #4CAF50; /* Green */

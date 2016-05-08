@@ -60,6 +60,7 @@ function updateChat(msg) {
     	$(".c"+col+".r"+row).attr("disabled", "disabled");
     	$(".c"+col+".r"+row).addClass("inactive");
     	console.log("should have exposed letter ");
+    	
     } else if (msg.data.startsWith("ANAGRAM")) {
     	console.log("msg data " + msg.data);
     	var data = msg.data.split(";");
@@ -69,8 +70,9 @@ function updateChat(msg) {
     	var wordId = data[4];
     	var anagram = data[5];
     	$("#anagramList").hide();
-    	$("#hint2").html("the letters of " + orientation + " " + wordId + " are " + "'" + anagram + "'");
+    	$(".anagramChoice").text("the letters of " + orientation + " " + wordId + " are " + "'" + anagram + "'");
     	$("#hint2").off();
+    	$("#hint2").unbind('mouseenter mouseleave');
     	$("#hint2").css("background-color", "transparent");
     } else if (msg.data.startsWith("**ALL**")) {
     	console.log("showing all");

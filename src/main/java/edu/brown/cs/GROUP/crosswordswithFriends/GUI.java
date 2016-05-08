@@ -125,7 +125,6 @@ public class GUI {
    * @return anagram string */
   public static String getAnagram(int length, int x, int y,
       Orientation orientation, Integer id) {
-    System.out.println("id: " + id);
 
     if (!crosswordCache.containsKey(id)) {
       System.out.println("no crosswrd");
@@ -279,6 +278,7 @@ public class GUI {
       System.out.println(puzzle);
 
       crosswordCache.put(id2, puzzle);
+      System.out.println(puzzle);
 
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
@@ -334,6 +334,7 @@ public class GUI {
 
       Box[][] crossword = puzzle.getArray();
       crosswordCache.put(id2, puzzle);
+      System.out.println(puzzle);
 
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()

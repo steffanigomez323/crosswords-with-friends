@@ -344,6 +344,7 @@ window.onload = function(response) {
 	});
 	
     $("#hint2").click(function() {
+    	$("#hint2").toggle();
         if (players == "double") {
             console.log("doble");
             var player = $("#player").text();
@@ -357,10 +358,9 @@ window.onload = function(response) {
                 anagramHtml = anagramHtml + "<li value = " + anagramNum + " id =" + anagramNum + " >" + player + " " + $(playersWords[word]).text() + "</li><br>";
                 anagramNum++;
             }
-            $(".anagramChoice").append(anagramHtml);
+            $("#angramList").append(anagramHtml);
             $("li").click(function() {
                 var toSend = getAllPlayerWords($(playersWords[$(this).val()]).prev(), player, $(playersWords[$(this).val()]).text());
-                console.log(toSend);
                 webSocket.send(toSend);
             });
         } else {
@@ -368,22 +368,26 @@ window.onload = function(response) {
             var dir = [];
             $(".numMarker").each(function() {
                 playersWords.push(this);
-				console.log("this" + this);
             });
             var anagramHtml = "";
             var anagramNum = 0;
             console.log("playerwords " + playersWords);
             for (word in playersWords) {
             	var classes = $(playersWords[word]).attr("class").split(" ");
-            	var dir = classes[1];
-            	if (dir == ""){
-            		dir = "DOWN";
+            	console.log(classes);
+            	if (classes[1] != ""){
+            		var dir = "ACROSS";
+                	anagramHtml = anagramHtml + "<li value = " + anagramNum + " name = " + dir + " id =" + anagramNum + " >" + dir + " " + $(playersWords[word]).text() + "</li><br>";
+                    anagramNum++;
             	}
-            	anagramHtml = anagramHtml + "<li value = " + anagramNum + " name = " + dir + " id =" + anagramNum + " >" + dir + " " + $(playersWords[word]).text() + "</li><br>";
-                anagramNum++;
+            	if (classes[2] != ""){
+            		var dir = "DOWN";
+                	anagramHtml = anagramHtml + "<li value = " + anagramNum + " name = " + dir + " id =" + anagramNum + " >" + dir + " " + $(playersWords[word]).text() + "</li><br>";
+                    anagramNum++;
+            	}
             };
 
-            $(".anagramChoice").append(anagramHtml);
+            $("#anagramList").append(anagramHtml);
              $("li").click(function() {
                 var toSend = getAllPlayerWords($(playersWords[$(this).val()]).prev(), $(this).attr('name'), $(playersWords[$(this).val()]).text());
                 var correctToSend = toSend.split(";");
@@ -492,7 +496,12 @@ window.onload = function(response) {
 	        	}
 	        	break;
 	        case 8:
-	        	$(this).val("");
+	        	if ($(this).val()==""){
+	        		next(-1);
+	        	}else{
+	        		$(this).val("");
+	        	}
+	        
 	        default:
 	        	if (event.keyCode>64 && event.keyCode<91){
 	        		$(this).val(String.fromCharCode(event.keyCode));

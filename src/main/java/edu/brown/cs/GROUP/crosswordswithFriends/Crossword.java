@@ -241,7 +241,7 @@ public class Crossword {
     if (puzzle[row][col] == null) {
       return "";
     } else {
-      while (String.valueOf(puzzle[row][col].getLetter()) != null) {
+      while (String.valueOf(puzzle[row][col].getLetter()) != null && !String.valueOf(puzzle[row][col].getLetter()).equals("-") ) {
         s.append(puzzle[row][col].getLetter());
         if (o == Orientation.ACROSS) {
           if (col + 1 < COLS) {
