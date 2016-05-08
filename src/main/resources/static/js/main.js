@@ -34,7 +34,8 @@ function countdown(stop, timer){
 	var timeLeft = time(stop);
 	
 	$("#timer").text(n(timeLeft["minutes"])+":"+n(timeLeft["seconds"]));
-	if (timeLeft["minutes"]==0 && timeLeft["seconds"]==0){
+	if (timeLeft["minutes"]<=0 && timeLeft["seconds"]<=0){
+		$("#timer").text("00:00");
 		console.log("here");
 		clearInterval(timer);
 		timer = false;

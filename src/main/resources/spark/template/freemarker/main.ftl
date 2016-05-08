@@ -8,5 +8,12 @@
     <div id = "one_player"><a id="one" href="/one">one player</a></div>
     <div id = "ctitle"><a id= "crossword_title" href ="">crosswords<br> with <br>friends</a></div>
     <div id = "two_players"><a id="two" href="/two">two player</a></div>
+    <div id = "showInstructions"></div>
+    <div id = "instructions">
+    	<div id="instructionsText">
+	    	<div id="one_instructions"></div>
+	    	<div id="two_instructions"></div>
+    	</div>
+    </div>
     </div>
 </div>

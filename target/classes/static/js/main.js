@@ -1,9 +1,9 @@
 //TO DO
 //Dissallow one-player orientation switching when not possible
-//clear caches on exit?
-//when first player leaves before second player joins
 //points system
 //instruction box
+//fix hints
+//make all web socket maps concurrent
 
 //Establish the WebSocket connection and set up event handlers
 var players = $("#player").attr("class");
