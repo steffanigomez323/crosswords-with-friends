@@ -236,11 +236,11 @@ public class Crossword {
     for (int i = 0; i < word.length(); i++) {
       if (puzzle[row][col] == null) {
         if (i == 0) {
-          puzzle[row][col] = new Box(word.charAt(0), clue, o,
-              word.length());
+          puzzle[row][col] =
+              new Box(word.charAt(0), clue, o, word.length());
         } else if (i == word.length() - 1) {
-          puzzle[row][col] = new Box(word.charAt(i), null, o,
-              word.length());
+          puzzle[row][col] =
+              new Box(word.charAt(i), null, o, word.length());
         } else {
           setCell(col, row, word.charAt(i));
         }
@@ -274,8 +274,8 @@ public class Crossword {
     } else {
       while (String.valueOf(puzzle[row][col].getLetter()) != null) {
         System.out.println(String.valueOf(puzzle[row][col].getLetter()));
-        //System.out.println(
-        //String.valueOf(puzzle[row][col].getLetter()).equals("-"));
+        // System.out.println(
+        // String.valueOf(puzzle[row][col].getLetter()).equals("-"));
         s.append(puzzle[row][col].getLetter());
 
         if (o == Orientation.ACROSS) {
@@ -323,22 +323,19 @@ public class Crossword {
     for (int i = 0; i < word.length(); i++) {
       for (int j = 0; j < ROWS; j++) {
         for (int k = 0; k < COLS; k++) {
-          if (puzzle[j][k] != null) {
-            if (Character.toUpperCase(word.charAt(i)) == puzzle[j][k]
-                .getLetter()) {
-              if (j - i >= 0) { // vertical placement
-                if (j - i + word.length() <= ROWS) {
-                  coordList
-                  .add(new Word(word, k, j - i, Orientation.DOWN, 0));
-                }
-              }
-              if (k - i >= 0) { // horizontal placement
-                if (k - i + word.length() <= COLS) {
-                  coordList.add(
-                      new Word(word, k - i, j, Orientation.ACROSS, 0));
-                }
-              }
+          if (puzzle[j][k] != null && Character
+              .toUpperCase(word.charAt(i)) == puzzle[j][k].getLetter()) {
+            if (j - i >= 0 && j - i + word.length() <= ROWS) { // vertical
+                                                               // placement
+              coordList.add(new Word(word, k, j - i, Orientation.DOWN, 0));
+
             }
+            if (k - i >= 0 && k - i + word.length() <= COLS) { // horizontal
+                                                               // placement
+              coordList
+                  .add(new Word(word, k - i, j, Orientation.ACROSS, 0));
+            }
+
           }
         }
       }
@@ -375,8 +372,8 @@ public class Crossword {
                 Box nextBox = puzzle[row + 1][col];
                 if (nextBox != null) {
                   char nextLetterInPuzzle = nextBox.getLetter();
-                  char nextLetterInWord = Character
-                      .toUpperCase((word).charAt(i + 1));
+                  char nextLetterInWord =
+                      Character.toUpperCase((word).charAt(i + 1));
                   if (nextLetterInPuzzle == nextLetterInWord) {
                     return 0;
                   }
@@ -388,8 +385,8 @@ public class Crossword {
                 Box nextBox = puzzle[row][col + 1];
                 if (nextBox != null) {
                   char nextLetterInPuzzle = nextBox.getLetter();
-                  char nextLetterInWord = Character
-                      .toUpperCase((word).charAt(i + 1));
+                  char nextLetterInWord =
+                      Character.toUpperCase((word).charAt(i + 1));
                   if (nextLetterInPuzzle == nextLetterInWord) {
                     return 0;
                   }
@@ -401,109 +398,110 @@ public class Crossword {
         }
         if (o == Orientation.DOWN) {
           if (currBox.getLetter() != currLetter) {
-            if (col < COLS - 1) {
-              if (!isBoxEmpty(col + 1, row)) {
-                return 0;
-              }
+            if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+              // if (!isBoxEmpty(col + 1, row)) {
+              return 0;
+              // }
             }
-            if (col > 0) {
-              if (!isBoxEmpty(col - 1, row)) {
-                return 0;
-              }
-            }
-          }
-          if (letterCount == 1) {
-            if (row > 0) {
-              if (!isBoxEmpty(col, row - 1)) {
-                return 0;
-              }
+            if (col > 0 && !isBoxEmpty(col - 1, row)) {
+              // if (!isBoxEmpty(col - 1, row)) {
+              return 0;
+              // }
             }
           }
-          if (letterCount == word.length()) {
-            if (row < ROWS - 1) {
-              if (!isBoxEmpty(col, row + 1)) {
-                return 0;
-              }
-            }
+          if (letterCount == 1 && row > 0 && !isBoxEmpty(col, row - 1)) {
+            // if (row > 0) {
+            // if (!isBoxEmpty(col, row - 1)) {
+            return 0;
+            // }
+            // }
+          }
+          if (letterCount == word.length() && row < ROWS - 1
+              && !isBoxEmpty(col, row + 1)) {
+            // if (row < ROWS - 1) {
+            // if (!isBoxEmpty(col, row + 1)) {
+            return 0;
+            // }
+            // }
           }
         } else { // ACROSS
           if (currBox.getLetter() != currLetter) {
-            if (row > 0) {
-              if (!isBoxEmpty(col, row - 1)) {
-                return 0;
-              }
+            if (row > 0 && !isBoxEmpty(col, row - 1)) {
+              // if (!isBoxEmpty(col, row - 1)) {
+              return 0;
+              // }
             }
-            if (row < ROWS - 1) {
-              if (!isBoxEmpty(col, row + 1)) {
-                return 0;
-              }
+            if (row < ROWS - 1 && !isBoxEmpty(col, row + 1)) {
+              // if (!isBoxEmpty(col, row + 1)) {
+              return 0;
+              // }
             }
           }
           if (letterCount == 1) {
-            if (col > 0) {
-              if (!isBoxEmpty(col - 1, row)) {
-                return 0;
-              }
+            if (col > 0 && !isBoxEmpty(col - 1, row)) {
+              // if (!isBoxEmpty(col - 1, row)) {
+              return 0;
+              // }
             }
           }
           if (letterCount == word.length()) {
-            if (col < COLS - 1) {
-              if (!isBoxEmpty(col + 1, row)) {
-                return 0;
-              }
+            if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+              // if (!isBoxEmpty(col + 1, row)) {
+              return 0;
+              // }
             }
           }
         }
       } else {
         if (o == Orientation.DOWN) {
-          if (col < COLS - 1) {
-            if (!isBoxEmpty(col + 1, row)) {
-              return 0;
-            }
+          if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+            // if (!isBoxEmpty(col + 1, row)) {
+            return 0;
+            // }
           }
-          if (col > 0) {
-            if (!isBoxEmpty(col - 1, row)) {
-              return 0;
-            }
+          if (col > 0 && !isBoxEmpty(col - 1, row)) {
+            // if (!isBoxEmpty(col - 1, row)) {
+            return 0;
+            // }
           }
           if (letterCount == 1) {
-            if (row > 0) {
-              if (!isBoxEmpty(col, row - 1)) {
-                return 0;
-              }
+            if (row > 0 && !isBoxEmpty(col, row - 1)) {
+              // if (!isBoxEmpty(col, row - 1)) {
+              return 0;
+              // }
             }
           }
           if (letterCount == word.length()) {
-            if (row < ROWS - 1) {
-              if (!isBoxEmpty(col, row + 1)) {
-                return 0;
-              }
+            if (row < ROWS - 1 && !isBoxEmpty(col, row + 1)) {
+              // if (!isBoxEmpty(col, row + 1)) {
+              return 0;
+              // }
             }
           }
         } else { // ACROSS
-          if (row > 0) {
-            if (!isBoxEmpty(col, row - 1)) {
-              return 0;
-            }
+          if (row > 0 && !isBoxEmpty(col, row - 1)) {
+            // if (!isBoxEmpty(col, row - 1)) {
+            return 0;
+            // }
           }
-          if (row < ROWS - 1) {
-            if (!isBoxEmpty(col, row + 1)) {
-              return 0;
-            }
+          if (row < ROWS - 1 && !isBoxEmpty(col, row + 1)) {
+            // if (!isBoxEmpty(col, row + 1)) {
+            return 0;
+            // }
           }
 
           if (letterCount == 1) {
-            if (col > 0) {
-              if (!isBoxEmpty(col - 1, row)) {
-                return 0;
-              }
+            if (col > 0 && !isBoxEmpty(col - 1, row)) {
+              // if (!isBoxEmpty(col - 1, row)) {
+              return 0;
+              // }
             }
           }
           if (letterCount == word.length()) {
-            if (col < COLS - 1) {
-              if (!isBoxEmpty(col + 1, row)) {
-                return 0;
-              }
+            if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+              // if (!isBoxEmpty(col + 1, row)) {
+              return 0;
+              // }
             }
           }
         }
