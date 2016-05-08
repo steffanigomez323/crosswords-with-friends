@@ -27,30 +27,124 @@ import java.util.Set;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
 
-/** This class implements the creation of a chat between users. */
-public class Chat {
+/**
+ * This class implements the creation of a chat between users.
+ *
+ */
+public final class Chat {
 
-  /** This is a hashmap mapping sessions to usernames. */
-  static Map<Session, String> userUsernameMap = new HashMap<Session, String>();
+  /**
+   * Private instance variable for magic number.
+   */
 
-  /** This is a hashset of all the stop words, the words to definitely not
-   * censor. */
-  static Set<String> stopWords = new HashSet<String>();
+  private static final int THREE = 3;
 
-  /** This is a hashmap of room IDs to users, to handle multiple people messaging
-   * with different exclusive people. */
-  static Map<Integer, List<Session>> roomUsers =
+  /**
+   * Private instance variable for magic number.
+   */
+
+  private static final int FOUR = 4;
+
+  /**
+   * Private instance variable for magic number.
+   */
+
+  private static final int FIVE = 5;
+
+  /**
+   * Private instance variable for magic number.
+   */
+
+  private static final int SIX = 6;
+
+  /**
+   * This is a hashmap mapping sessions to usernames.
+   */
+  private static Map<Session, String> userUsernameMap =
+      new HashMap<Session, String>();
+
+  /**
+   * This is an accessor method for userUsernameMap.
+   * @return the map of users to usernames
+   */
+
+  public static Map<Session, String> getUserUsernameMap() {
+    return userUsernameMap;
+  }
+
+  /**
+   * This is a hashset of all the stop words, the words to definitely not
+   * censor.
+   */
+  private static Set<String> stopWords = new HashSet<String>();
+
+  /**
+   * This is an accessor method for stopWords.
+   * @return the set of stop words
+   */
+
+  public static Set<String> getStopWords() {
+    return stopWords;
+  }
+
+  /**
+   * This is a hashmap of room IDs to users, to handle multiple people messaging
+   * with different exclusive people.
+   */
+  private static Map<Integer, List<Session>> roomUsers =
       new HashMap<Integer, List<Session>>();
 
-  static Map<List<Session>, Integer> endGameData =
+  /**
+   * This is an accessor method for the hashmap of room IDs to users.
+   * @return the hashmap
+   */
+
+  public static Map<Integer, List<Session>> getRoomUsers() {
+    return roomUsers;
+  }
+
+  /**
+   * This is a hashmap of sessions to an integer indicating the state of the end
+   * of the game.
+   */
+
+  private static Map<List<Session>, Integer> endGameData =
       new HashMap<List<Session>, Integer>();
-  /** This is a hashmap of rooms to words to censor. */
-  static Map<Integer, Set<String>> wordsToCensor =
+
+  /**
+   * This is an accessor method for the hashmap of sessions to end game data.
+   * @return the hashmap
+   */
+
+  public static Map<List<Session>, Integer> getEndGameData() {
+    return endGameData;
+  }
+
+  /**
+   * This is a hashmap of rooms to words to censor.
+   */
+  private static HashMap<Integer, Set<String>> wordsToCensor =
       new HashMap<Integer, Set<String>>();
 
-  /** This constructor instantiates the chatroom and reads in the stop words from
-   * a stop words file and sets up two users to talk to each other.
-   * 
+  /**
+   * This is an accessor method for the hashmap of rooms to censored words.
+   * @return the hashmap
+   */
+
+  public static HashMap<Integer, Set<String>> getWordsToCensor() {
+    return wordsToCensor;
+  }
+
+  /**
+   * Private constructor.
+   */
+
+  private Chat() {
+  }
+
+  /** This constructor instantiates the chatroom and reads in the stop
+   * words from a stop words file and sets up two users to talk to each other.
+   *
    * @throws IOException in case the stop words file is unable to be opened. */
   public static void initChatroom() throws IOException {
     try (FileInputStream fis = new FileInputStream("cs032_stopwords.txt");
@@ -75,7 +169,7 @@ public class Chat {
 
   /** This method sets the words that need to be censored from the list of words
    * in the clues in the given room id.
-   * 
+   *
    * @param roomId the room id
    * @param toPass the words in the clues */
   public static void setCensorWords(Integer roomId, List<Word> toPass) {
@@ -96,13 +190,14 @@ public class Chat {
 
   /** This method actually censors the words, checking whether a word is in the
    * list of words to be censored, and if it is, the word is replaced by dashes.
-   * 
+   *
    * @param roomId the room id
    * @param message the message that was sent
    * @return the string that the other user will see, the censored string */
   public static String censorMessage(Integer roomId, String message) {
     Set<String> censorWords = wordsToCensor.get(roomId);
-    String cleanedMessage = message.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+    String cleanedMessage =
+        message.replaceAll("[^a-zA-Z ]", "").toLowerCase();
     String[] messageArray = cleanedMessage.split(" ");
     for (int i = 0; i < messageArray.length; i++) {
       if (censorWords.contains(messageArray[i])) {
@@ -132,7 +227,7 @@ public class Chat {
 
   /** This method sends a message from one user to all users, alone with a list
    * of current usernames.
-   * 
+   *
    * @param sender the user who sent the message
    * @param message the message
    * @param roomId the room id */
@@ -158,7 +253,7 @@ public class Chat {
 
   /** This method sends a message from one user to all users, along with a list
    * of current usernames.
-   * 
+   *
    * @param sender the user who sent the message
    * @param message the message
    * @param roomId the room id */
@@ -183,15 +278,15 @@ public class Chat {
 
   /** This method sends the correct word to the front end when all letters have
    * been filled out in a row or a column.
-   * 
+   *
    * @param message the message
    * @param roomId the room id */
   public static void broadcastCorrect(String message, Integer roomId) {
     String[] variables = message.split(";");
     int x = Integer.parseInt(variables[2]);
-    int y = Integer.parseInt(variables[3]);
-    Orientation o = Orientation.valueOf(variables[4]);
-    Integer id = Integer.valueOf(variables[5]);
+    int y = Integer.parseInt(variables[THREE]);
+    Orientation o = Orientation.valueOf(variables[FOUR]);
+    Integer id = Integer.valueOf(variables[FIVE]);
     boolean valid = GUI.checkValid(variables[1], x, y, o, id);
     if (valid) {
       try {
@@ -208,6 +303,12 @@ public class Chat {
     }
   }
 
+  /**
+   * This method broadcasts the crossword to the user in that room id.
+   * @param user the user
+   * @param roomId the room id
+   */
+
   public static void broadcastAll(Session user, Integer roomId) {
     Crossword crossword = GUI.getCrossword(roomId);
     String puzzle = "**ALL**:" + crossword.toString();
@@ -219,6 +320,13 @@ public class Chat {
       e.printStackTrace();
     }
   }
+
+  /**
+   * This method filters out the censored words from the message to that user
+   * from that room.
+   * @param user the user
+   * @param roomId the room id
+   */
 
   public static void broadcastConvert(Session user, Integer roomId) {
     Crossword crossword = GUI.getCrossword(roomId);
@@ -240,17 +348,26 @@ public class Chat {
     }
   }
 
+  /**
+   * This method decides whether or not to show the crossword answers to the
+   * user in that room id.
+   * @param message the message to send
+   * @param user the user
+   * @param roomId the room id
+   */
+
   // 0 first player decided to continue
   // 1 first player decided to show
   // 2 second player decided to continue
   // 3 second player decided to show
-  public static void broadcastEnd(String message, Session user, Integer roomId) {
+  public static void broadcastEnd(String message, Session user,
+      Integer roomId) {
     String toSend = "**END**:";
     String choice = message.split(":")[1];
     List<Session> room = roomUsers.get(roomId);
-    if (room != null) {
-
-    }
+    // if (room != null) {
+    // what is this supposed to be doing?
+    // }
     if (choice.equals("continue")) {
       // get other's choice
       Integer combined = endGameData.get(room);
@@ -265,7 +382,7 @@ public class Chat {
         if (combined == 2) {
 
           toSend += "continue";
-        } else if (combined == 3) {
+        } else if (combined == THREE) {
           toSend += "show";
         }
       } else {
@@ -287,14 +404,14 @@ public class Chat {
       if (!endGameData.containsKey(room)) {
         endGameData.put(room, 1);
       } else {
-        endGameData.put(room, 3);
+        endGameData.put(room, THREE);
       }
     }
   }
 
   /** This method broadcasts a letter to the front end when the "expose letter"
    * hint is used.
-   * 
+   *
    * @param message the message
    * @param roomId the room id */
   public static void broadcastLetter(String message, Integer roomId) {
@@ -306,7 +423,8 @@ public class Chat {
       if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
           if (session.isOpen()) {
-            String toSend = "LETTER;" + x + ";" + y + ";" + letter.toString();
+            String toSend =
+                "LETTER;" + x + ";" + y + ";" + letter.toString();
             session.getRemote().sendString(toSend);
           }
         }
@@ -317,7 +435,7 @@ public class Chat {
   }
 
   /** This method broadcasts an anagram of the answer to the chatroom.
-   * 
+   *
    * @param message the message
    * @param roomId the room id */
   public static void broadcastAnagram(String message, Integer roomId) {
@@ -325,10 +443,10 @@ public class Chat {
     String[] variables = message.split(";");
     int length = Integer.parseInt(variables[1]);
     int x = Integer.parseInt(variables[2]);
-    int y = Integer.parseInt(variables[3]);
-    Orientation o = Orientation.valueOf(variables[4]);
-    int wordId = Integer.parseInt(variables[5]);
-    Integer id = Integer.parseInt(variables[6]);
+    int y = Integer.parseInt(variables[THREE]);
+    Orientation o = Orientation.valueOf(variables[FOUR]);
+    int wordId = Integer.parseInt(variables[FIVE]);
+    Integer id = Integer.parseInt(variables[SIX]);
     String scrambled = GUI.getAnagram(length, x, y, o, id);
     try {
       if (roomUsers.get(roomId) != null) {
@@ -348,7 +466,7 @@ public class Chat {
 
   /** This method builds a HTML element with a sender-name, a message, and a
    * timestamp.
-   * 
+   *
    * @param sender the user who sent the message
    * @param message the message
    * @return the HTML element */

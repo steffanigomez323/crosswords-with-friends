@@ -34,11 +34,11 @@ public class GUI {
 
   /** This is the user id for the second player. */
 
-  public static AtomicInteger twoPlayerId = new AtomicInteger(1000);
+  public static final AtomicInteger TWOPLAYERID = new AtomicInteger(1000);
 
   /** This is the user id for the first player. */
 
-  public static AtomicInteger onePlayerId = new AtomicInteger(1001);
+  public static final AtomicInteger ONEPLAYERID = new AtomicInteger(1001);
 
   /** Constructor starts server on instantiation.
    *
@@ -81,9 +81,20 @@ public class GUI {
     return true;
   }
 
+  /**
+   * This method returns the crossword given the roomid from the cache.
+   * @param roomId the room id
+   * @return the crossword of that room
+   */
+
   public static Crossword getCrossword(Integer roomId) {
     return crosswordCache.get(roomId);
   }
+
+  /**
+   * This method removes the crossword of a room from the cache.
+   * @param roomId the room id
+   */
 
   public static void removeCrossword(Integer roomId) {
     crosswordCache.remove(roomId);
@@ -107,7 +118,6 @@ public class GUI {
     Box[][] crossword = puzzle.getArray();
     StringBuffer word = new StringBuffer("");
     for (int i = 0; i < length; i++) {
-      Box box = crossword[y][x];
       word.append(String.valueOf(crossword[y][x].getLetter()));
       if (orientation == Orientation.ACROSS) {
         x++;
@@ -117,7 +127,7 @@ public class GUI {
     }
     Random random = new Random();
     String scrambled = word.toString();
-    char a[] = scrambled.toCharArray();
+    char[] a = scrambled.toCharArray();
     for (int i = 0; i < a.length - 1; i++) {
       int j = random.nextInt(a.length - 1);
       char temp = a[i];
@@ -150,7 +160,8 @@ public class GUI {
   private static FreeMarkerEngine createEngine() {
 
     Configuration config = new Configuration();
-    File templates = new File("src/main/resources/spark/template/freemarker");
+    File templates =
+        new File("src/main/resources/spark/template/freemarker");
 
     try {
       config.setDirectoryForTemplateLoading(templates);
@@ -172,7 +183,6 @@ public class GUI {
     try {
       Chat.initChatroom();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     FreeMarkerEngine freeMarker = createEngine();
@@ -199,11 +209,26 @@ public class GUI {
   /** Handler for serving main page. */
   private static class TwoHandler implements TemplateViewRoute {
 
+    /**
+     * This is the private instance variable of the database for this class.
+     */
+
     private Database db;
 
-    public TwoHandler(Database db) {
-      this.db = db;
+    /**
+     * This is the constructor for this class which takes a database and sets it
+     * to the private instance variable.
+     * @param d the database
+     */
+
+    public TwoHandler(Database d) {
+      this.db = d;
     }
+
+    /**
+     * This method creates a new crossword object.
+     * @return the crossword
+     */
 
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
@@ -216,7 +241,7 @@ public class GUI {
 
       String player = "ACROSS";
 
-      Integer id2 = twoPlayerId.get();
+      Integer id2 = TWOPLAYERID.get();
 
       Crossword puzzle = crosswordCache.get(id2);
 
@@ -226,8 +251,8 @@ public class GUI {
       } else if (puzzle.getPlayers() != 2) {
         puzzle.addPlayer();
       } else {
-        twoPlayerId.set(onePlayerId.get());
-        id2 = twoPlayerId.get();
+        TWOPLAYERID.set(ONEPLAYERID.get());
+        id2 = TWOPLAYERID.get();
         puzzle = createCrossword();
         player = "DOWN";
       }
@@ -243,7 +268,8 @@ public class GUI {
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
               .put("crossword", crossword).put("id", id2.toString())
-              .put("player", player).put("roomNumber", id2.toString()).build();
+              .put("player", player).put("roomNumber", id2.toString())
+              .build();
 
       return new ModelAndView(variables, "crossword.ftl");
     }
@@ -253,25 +279,39 @@ public class GUI {
   /** Handler for serving main page. */
   private static class OneHandler implements TemplateViewRoute {
 
+    /**
+     * This is the private instance variable of the database for this class.
+     */
+
     private Database db;
 
-    public OneHandler(Database db) {
-      this.db = db;
+    /**
+     * This is the constructor for this class which takes a database and sets it
+     * to the private instance variable.
+     * @param d the database
+     */
+
+    public OneHandler(Database d) {
+      this.db = d;
     }
+
+    /**
+     * This method creates a new crossword object.
+     * @return returns the new crossword object
+     */
 
     private Crossword createCrossword() {
       List<String> originalList = db.getAllUnderNine();
-      int length = db.getAllUnderNineLength();
       return new Crossword(originalList, db);
     }
 
     @Override
     public ModelAndView handle(Request req, Response res) {
 
-      Integer id2 = onePlayerId.getAndIncrement();
+      Integer id2 = ONEPLAYERID.getAndIncrement();
 
       while (crosswordCache.containsKey(id2)) {
-        id2 = onePlayerId.getAndIncrement();
+        id2 = ONEPLAYERID.getAndIncrement();
       }
 
       Crossword puzzle = createCrossword();

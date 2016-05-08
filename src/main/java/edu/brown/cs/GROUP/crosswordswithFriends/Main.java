@@ -1,5 +1,9 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import edu.brown.cs.GROUP.database.Database;
+import edu.brown.cs.GROUP.words.CSVReader;
+import edu.brown.cs.GROUP.words.TXTReader;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,22 +14,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
-import edu.brown.cs.GROUP.database.Database;
-import edu.brown.cs.GROUP.words.CSVReader;
-import edu.brown.cs.GROUP.words.TXTReader;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 /** This class handles starting the program, the database, and the GUI.
- * 
+ *
  * @author smg1 */
 
 public final class Main {
 
   /** Initializes the program being run.
-   * 
+   *
    * @param args the arguments from the command line */
   public static void main(String[] args) {
     try {
@@ -46,8 +47,16 @@ public final class Main {
   private static final int PORT = 9998;
 
   /** This constructor takes the arguments from the command line and sets it to
+  /**
+   * The argument length.
+   */
+
+  private static final int LENGTH = 3;
+
+  /**
+   * This constructor takes the arguments from the command line and sets it to
    * the private instance variable.
-   * 
+   *
    * @param args arguments from command line interface */
 
   private Main(String[] args) {
@@ -56,7 +65,7 @@ public final class Main {
 
   /** This is the method that runs the program, starting the database and the
    * GUI.
-   * 
+   *
    * @throws IOException when the corpus file is cannot be opened */
 
   private void run() throws IOException {
@@ -93,7 +102,7 @@ public final class Main {
       }
     }
 
-    if (this.arguments.length < 3) {
+    if (this.arguments.length < LENGTH) {
       System.err.println("ERROR: Invalid number of arguments. USAGE: "
           + "./run --db <path_to_database> " + "<corpus1>...<corpusn>");
       throw new IOException();
@@ -101,7 +110,7 @@ public final class Main {
       CSVReader csvreader = new CSVReader();
       TXTReader txtreader = new TXTReader();
       if (!options.valuesOf(files).isEmpty()) {
-        assert (db != null);
+        assert db != null;
         try {
           for (String s : options.valuesOf(files)) {
             File filename = new File(s);
@@ -126,8 +135,8 @@ public final class Main {
           return;
         }
       } else {
-        System.err
-            .println("ERROR: There must be at least one corpus file to start the program with.");
+        System.err.println("ERROR: There must be at least one corpus file "
+            + "to start the program with.");
         return;
       }
       new GUI(PORT, db);

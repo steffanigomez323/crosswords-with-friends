@@ -1,12 +1,12 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import edu.brown.cs.GROUP.database.Database;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import edu.brown.cs.GROUP.database.Database;
 
 /** This class handles the notion of a "crossword", complete with the 2D array of
  * boxes, clues, words, players. This class also handles the construction of a
@@ -60,7 +60,7 @@ public class Crossword {
    * passed into the constructor. The other word lists are instantiated and the
    * unused word list is shuffled and sorted by length. Then fill puzzle is
    * called with the first word of that list, and fills the puzzle.
-   * 
+   *
    * @param originalList the list of words to consider when making the crossword
    * @param db the database variable that holds the connection to the database. */
 
@@ -79,7 +79,7 @@ public class Crossword {
 
   /** This method takes care of filling the puzzles, by fitting and adding each
    * possible word, until there are at least 4 down and 4 across.
-   * 
+   *
    * @param firstWord the first word to build puzzle off of */
 
   public void fillPuzzle(String firstWord) {
@@ -138,7 +138,7 @@ public class Crossword {
   }
 
   /** This method returns the number of players on the crossword.
-   * 
+   *
    * @return the number of players */
 
   public int getPlayers() {
@@ -154,7 +154,7 @@ public class Crossword {
   /** This method adds the word passed in as an argument to the usedWords list,
    * and then tries coordinates and orientations for the word to try to fit it
    * into the crossword puzzle.
-   * 
+   *
    * @param word the word to add to the crossword puzzle */
 
   public void fitAndAdd(String word) {
@@ -194,7 +194,7 @@ public class Crossword {
 
   /** This method sets the word into the boxes in the puzzle starting at the
    * given row, column, and orientation.
-   * 
+   *
    * @param col the column
    * @param row the row
    * @param o the orientation
@@ -206,9 +206,11 @@ public class Crossword {
     for (int i = 0; i < word.length(); i++) {
       if (puzzle[row][col] == null) {
         if (i == 0) {
-          puzzle[row][col] = new Box(word.charAt(0), clue, o, word.length());
+          puzzle[row][col] =
+              new Box(word.charAt(0), clue, o, word.length());
         } else if (i == word.length() - 1) {
-          puzzle[row][col] = new Box(word.charAt(i), null, o, word.length());
+          puzzle[row][col] =
+              new Box(word.charAt(i), null, o, word.length());
         } else {
           setCell(col, row, word.charAt(i));
         }
@@ -228,7 +230,7 @@ public class Crossword {
 
   /** This method returns the word located at that particular row, column, and
    * orientation.
-   * 
+   *
    * @param col the column
    * @param row the row
    * @param o the orientation
@@ -240,9 +242,6 @@ public class Crossword {
       return "";
     } else {
       while (String.valueOf(puzzle[row][col].getLetter()) != null) {
-        System.out.println(String.valueOf(puzzle[row][col].getLetter()));
-        // System.out.println(
-        // String.valueOf(puzzle[row][col].getLetter()).equals("-"));
         s.append(puzzle[row][col].getLetter());
 
         if (o == Orientation.ACROSS) {
@@ -265,7 +264,7 @@ public class Crossword {
 
   /** This method sets the row and column of the 2D box array to a new box with
    * character c at those indexes.
-   * 
+   *
    * @param col the column
    * @param row the row
    * @param c the character */
@@ -278,7 +277,7 @@ public class Crossword {
    * coordinates for the word that is passed in as an argument by checking to
    * see if the letters match up with letters that are already in the crossword
    * puzzles.
-   * 
+   *
    * @param word the word to suggest coordinates for
    * @return a list of words, complete with different row, columns, and
    * orientations */
@@ -288,21 +287,19 @@ public class Crossword {
     for (int i = 0; i < word.length(); i++) {
       for (int j = 0; j < ROWS; j++) {
         for (int k = 0; k < COLS; k++) {
-          if (puzzle[j][k] != null) {
-            if (Character.toUpperCase(word.charAt(i)) == puzzle[j][k]
-                .getLetter()) {
-              if (j - i >= 0) { // vertical placement
-                if (j - i + word.length() <= ROWS) {
-                  coordList.add(new Word(word, k, j - i, Orientation.DOWN, 0));
-                }
-              }
-              if (k - i >= 0) { // horizontal placement
-                if (k - i + word.length() <= COLS) {
-                  coordList
-                      .add(new Word(word, k - i, j, Orientation.ACROSS, 0));
-                }
-              }
+          if (puzzle[j][k] != null && Character
+              .toUpperCase(word.charAt(i)) == puzzle[j][k].getLetter()) {
+            if (j - i >= 0 && j - i + word.length() <= ROWS) { // vertical
+                                                               // placement
+              coordList.add(new Word(word, k, j - i, Orientation.DOWN, 0));
+
             }
+            if (k - i >= 0 && k - i + word.length() <= COLS) { // horizontal
+                                                               // placement
+              coordList
+                  .add(new Word(word, k - i, j, Orientation.ACROSS, 0));
+            }
+
           }
         }
       }
@@ -312,7 +309,7 @@ public class Crossword {
 
   /** This method checks to see if the word will fit in the given row, column,
    * and orientation in the crossword puzzle.
-   * 
+   *
    * @param col the column
    * @param row the row
    * @param o the orientation
@@ -364,109 +361,74 @@ public class Crossword {
         }
         if (o == Orientation.DOWN) {
           if (currBox.getLetter() != currLetter) {
-            if (col < COLS - 1) {
-              if (!isBoxEmpty(col + 1, row)) {
-                return 0;
-              }
+            if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+              return 0;
             }
-            if (col > 0) {
-              if (!isBoxEmpty(col - 1, row)) {
-                return 0;
-              }
+            if (col > 0 && !isBoxEmpty(col - 1, row)) {
+              return 0;
             }
           }
-          if (letterCount == 1) {
-            if (row > 0) {
-              if (!isBoxEmpty(col, row - 1)) {
-                return 0;
-              }
-            }
+          if (letterCount == 1 && row > 0 && !isBoxEmpty(col, row - 1)) {
+            return 0;
           }
-          if (letterCount == word.length()) {
-            if (row < ROWS - 1) {
-              if (!isBoxEmpty(col, row + 1)) {
-                return 0;
-              }
-            }
+          if (letterCount == word.length() && row < ROWS - 1
+              && !isBoxEmpty(col, row + 1)) {
+            return 0;
           }
         } else { // ACROSS
           if (currBox.getLetter() != currLetter) {
-            if (row > 0) {
-              if (!isBoxEmpty(col, row - 1)) {
-                return 0;
-              }
+            if (row > 0 && !isBoxEmpty(col, row - 1)) {
+              return 0;
             }
-            if (row < ROWS - 1) {
-              if (!isBoxEmpty(col, row + 1)) {
-                return 0;
-              }
+            if (row < ROWS - 1 && !isBoxEmpty(col, row + 1)) {
+              return 0;
             }
           }
           if (letterCount == 1) {
-            if (col > 0) {
-              if (!isBoxEmpty(col - 1, row)) {
-                return 0;
-              }
+            if (col > 0 && !isBoxEmpty(col - 1, row)) {
+              return 0;
             }
           }
           if (letterCount == word.length()) {
-            if (col < COLS - 1) {
-              if (!isBoxEmpty(col + 1, row)) {
-                return 0;
-              }
+            if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+              return 0;
             }
           }
         }
       } else {
         if (o == Orientation.DOWN) {
-          if (col < COLS - 1) {
-            if (!isBoxEmpty(col + 1, row)) {
-              return 0;
-            }
+          if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+            return 0;
           }
-          if (col > 0) {
-            if (!isBoxEmpty(col - 1, row)) {
-              return 0;
-            }
+          if (col > 0 && !isBoxEmpty(col - 1, row)) {
+            return 0;
           }
           if (letterCount == 1) {
-            if (row > 0) {
-              if (!isBoxEmpty(col, row - 1)) {
-                return 0;
-              }
+            if (row > 0 && !isBoxEmpty(col, row - 1)) {
+              return 0;
             }
           }
           if (letterCount == word.length()) {
-            if (row < ROWS - 1) {
-              if (!isBoxEmpty(col, row + 1)) {
-                return 0;
-              }
+            if (row < ROWS - 1 && !isBoxEmpty(col, row + 1)) {
+              return 0;
             }
           }
         } else { // ACROSS
-          if (row > 0) {
-            if (!isBoxEmpty(col, row - 1)) {
-              return 0;
-            }
+          if (row > 0 && !isBoxEmpty(col, row - 1)) {
+            return 0;
           }
-          if (row < ROWS - 1) {
-            if (!isBoxEmpty(col, row + 1)) {
-              return 0;
-            }
+          if (row < ROWS - 1 && !isBoxEmpty(col, row + 1)) {
+            return 0;
           }
 
           if (letterCount == 1) {
-            if (col > 0) {
-              if (!isBoxEmpty(col - 1, row)) {
-                return 0;
-              }
+            if (col > 0 && !isBoxEmpty(col - 1, row)) {
+              return 0;
             }
           }
           if (letterCount == word.length()) {
-            if (col < COLS - 1) {
-              if (!isBoxEmpty(col + 1, row)) {
-                return 0;
-              }
+            if (col < COLS - 1 && !isBoxEmpty(col + 1, row)) {
+              return 0;
             }
           }
         }
@@ -483,7 +445,7 @@ public class Crossword {
 
   /** This method returns whether at the given row and column there is a box or
    * not.
-   * 
+   *
    * @param col the column
    * @param row the row
    * @return a boolean */
@@ -503,7 +465,7 @@ public class Crossword {
   }
 
   /** This method return the final list of words in the crossword puzzle.
-   * 
+   *
    * @return the list of words */
 
   public List<Word> getFinalList() {
@@ -511,7 +473,7 @@ public class Crossword {
   }
 
   /** This method returns the 2D puzzle array of Boxes
-   * 
+   *
    * @return the 2D Box array */
 
   public Box[][] getArray() {

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.brown.cs.GROUP.words.ClueWordGetter;
+
 /**
  * This class handles the initialization of the database connection.
  * @author smg1
@@ -15,6 +17,12 @@ import java.util.List;
  */
 
 public class Database {
+
+  /**
+   * This is the length of the crossword, which is a 9x9 grid.
+   */
+
+  private static final int LENGTH = 9;
 
   /**
    * The connection to the database.
@@ -38,9 +46,9 @@ public class Database {
     Connection connect = DriverManager.getConnection(urlToDB);
     this.conn = connect;
 
-    String schema = "CREATE TABLE IF NOT EXISTS cluewords ("
-        + "word TEXT, " + "length INT, " + "clue TEXT, "
-        + "PRIMARY KEY (word));";
+    String schema =
+        "CREATE TABLE IF NOT EXISTS cluewords (" + "word TEXT, "
+            + "length INT, " + "clue TEXT, " + "PRIMARY KEY (word));";
     buildTable(schema);
 
   }
@@ -69,50 +77,60 @@ public class Database {
 
   }
 
+  /**
+   * This method returns all the words whose length is at most 9.
+   * @return the list
+   */
+
   public List<String> getAllUnderNine() {
     List<String> words = new ArrayList<String>();
-    String query = "SELECT * FROM cluewords WHERE length<=9 ORDER BY length DESC;";
-    try (PreparedStatement prep = conn.prepareStatement(query)) {
-      try (ResultSet rs = prep.executeQuery()) {
-        while (rs.next()) {
-          String word = rs.getString(1);
-          words.add(word);
-        }
-      }
+    ClueWordGetter getter = new ClueWordGetter();
+    try {
+      words = getter.getWords(LENGTH, conn);
     } catch (SQLException e) {
       System.out.println("ERROR: Problem querying the database");
     }
     return words;
   }
-  public int getAllUnderNineLength() {
-	int length = 0;
-	String query = "SELECT count(*) FROM cluewords WHERE length<=9 ORDER BY length DESC;";
-    try (PreparedStatement prep = conn.prepareStatement(query)) {
-    	try (ResultSet rs = prep.executeQuery()) {
-    		if (rs.next()) {
-    			length = rs.getInt(1);
-    		}
-    	}
-	    	
-	} catch (SQLException e) {
-	      System.out.println("ERROR: Problem querying the database");
-	}
-    return length;
-  }
 
-  public String getClue(String word) {
-    String clue = "";
-    String query = "SELECT clue FROM cluewords WHERE word=?;";
+  /**
+   * This method returns the number of all the words in the data whose length is
+   * at most 9.
+   * @return the length
+   */
+
+  public int getAllUnderNineLength() {
+    int length = 0;
+    String query = "SELECT count(*) FROM cluewords WHERE length<=" + LENGTH
+        + "ORDER BY length DESC;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
-      prep.setString(1, word);
       try (ResultSet rs = prep.executeQuery()) {
-        while (rs.next()) {
-          clue = rs.getString(1);
+        if (rs.next()) {
+          length = rs.getInt(1);
         }
       }
+
     } catch (SQLException e) {
       System.out.println("ERROR: Problem querying the database");
     }
+    return length;
+  }
+
+  /**
+   * This is the method that returns the clue for a given word.
+   * @param word the word
+   * @return the clue
+   */
+
+  public String getClue(String word) {
+    String clue = "";
+    ClueWordGetter getter = new ClueWordGetter();
+    try {
+      clue = getter.getClue(word, conn);
+    } catch (SQLException e) {
+      System.out.println("ERROR: Problem querying the database");
+    }
+
     return clue;
 
   }

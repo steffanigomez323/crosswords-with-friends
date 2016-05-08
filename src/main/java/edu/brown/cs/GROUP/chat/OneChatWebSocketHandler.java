@@ -12,8 +12,10 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-/** This class handles the web socket in the situation where there is only one
- * player. */
+/**
+ * This class handles the web socket in the situation where there is only one
+ * player.
+ */
 @WebSocket
 public class OneChatWebSocketHandler {
 
@@ -23,23 +25,23 @@ public class OneChatWebSocketHandler {
       new HashMap<Session, Integer>();
 
   /** This web socket connects the user to the chatroom.
-   * 
+   *
    * @param user the user
    * @throws Exception in case it break */
 
   @OnWebSocketConnect
   public void onConnect(Session user) throws Exception {
-    int nextRoomNumber = GUI.onePlayerId.get() - 1;
+    int nextRoomNumber = GUI.ONEPLAYERID.get() - 1;
 
     List<Session> usersInRoom = new ArrayList<Session>();
     usersInRoom.add(user);
-    Chat.roomUsers.put(nextRoomNumber, usersInRoom);
+    Chat.getRoomUsers().put(nextRoomNumber, usersInRoom);
 
     userRoom.put(user, nextRoomNumber);
   }
 
   /** This method returns the room number given a user id.
-   * 
+   *
    * @param user the user id
    * @return the room id */
 
@@ -50,7 +52,7 @@ public class OneChatWebSocketHandler {
   /** This function determines what message to send to the chatroom depending on
    * whether the user requested data, a letter, or an anagram by clicking on the
    * buttons.
-   * 
+   *
    * @param user the user id
    * @param message the message */
 
