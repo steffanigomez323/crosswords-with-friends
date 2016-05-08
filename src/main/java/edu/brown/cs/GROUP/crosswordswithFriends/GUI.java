@@ -1,5 +1,11 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
+import com.google.common.collect.ImmutableMap;
+
+import edu.brown.cs.GROUP.chat.Chat;
+import edu.brown.cs.GROUP.database.Database;
+import freemarker.template.Configuration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,11 +13,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.common.collect.ImmutableMap;
-
-import edu.brown.cs.GROUP.chat.Chat;
-import edu.brown.cs.GROUP.database.Database;
-import freemarker.template.Configuration;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -24,53 +25,40 @@ public class GUI {
 
   /** For converting to JSON. */
 
-  private static HashMap<Integer, Crossword> crosswordCache = new HashMap<Integer, Crossword>();
+  private static HashMap<Integer, Crossword> crosswordCache =
+      new HashMap<Integer, Crossword>();
 
-  /**
-   * This is the database that holds the connection.
-   */
+  /** This is the database that holds the connection. */
 
   private Database db;
 
-  /**
-   * This is the user id for the second player.
-   */
+  /** This is the user id for the second player. */
 
   public static AtomicInteger twoPlayerId = new AtomicInteger(1000);
 
-  /**
-   * This is the user id for the first player.
-   */
+  /** This is the user id for the first player. */
 
   public static AtomicInteger onePlayerId = new AtomicInteger(1001);
 
-  /**
-   * Constructor starts server on instantiation.
+  /** Constructor starts server on instantiation.
    *
    * @param port Port number specified by command line or 4567 by default
-   * @param d Database connection path
-   */
+   * @param d Database connection path */
   public GUI(int port, Database d) {
     Spark.port(port);
     db = d;
-    /*
-     * twoPlayerId = new AtomicInteger(1000); onePlayerId = new
-     * AtomicInteger(1001);
-     */
     runSparkServer();
-    /* crosswordCache = new HashMap<Integer, Crossword>(); */
   }
 
-  /**
-   * This method checks whether the given word at the x-index, y-index,
+  /** This method checks whether the given word at the x-index, y-index,
    * orientation and user id is correct.
+   *
    * @param word the word
    * @param x x-index
    * @param y y-index
    * @param orientation the orientation
    * @param id the id
-   * @return boolean boolean
-   */
+   * @return boolean boolean */
 
   public static boolean checkValid(String word, int x, int y,
       Orientation orientation, Integer id) {
@@ -101,16 +89,15 @@ public class GUI {
     crosswordCache.remove(roomId);
   }
 
-  /**
-   * This method gets an anagram of the answer of the word located at that
+  /** This method gets an anagram of the answer of the word located at that
    * x-index, y-index, and orientation and with the id.
+   *
    * @param length the length of the word
    * @param x the x-index
    * @param y the y-index
    * @param orientation the orientation
    * @param id the id
-   * @return anagram string
-   */
+   * @return anagram string */
   public static String getAnagram(int length, int x, int y,
       Orientation orientation, Integer id) {
     if (!crosswordCache.containsKey(id)) {
@@ -128,7 +115,6 @@ public class GUI {
         y++;
       }
     }
-    System.out.println("word " + word);
     Random random = new Random();
     String scrambled = word.toString();
     char a[] = scrambled.toCharArray();
@@ -141,36 +127,30 @@ public class GUI {
     return new String(a);
   }
 
-  /**
-   * This method returns the letter at x-index, y-index, and with that id.
+  /** This method returns the letter at x-index, y-index, and with that id.
+   *
    * @param x x-index
    * @param y y-index
    * @param id cache id
-   * @return the letter
-   */
+   * @return the letter */
 
   public static char getLetter(int x, int y, Integer id) {
     if (!crosswordCache.containsKey(id)) {
-      System.out.println(crosswordCache.keySet());
       return '-';
     }
-    // System.out.println("letter letter : ");
     Crossword puzzle = crosswordCache.get(id);
     Box[][] crossword = puzzle.getArray();
     Box box = crossword[y][x];
     return box.getLetter();
   }
 
-  /**
-   * Creates engine for server.
+  /** Creates engine for server.
    *
-   * @return FreeMarker engine.
-   */
+   * @return FreeMarker engine. */
   private static FreeMarkerEngine createEngine() {
 
     Configuration config = new Configuration();
-    File templates = new File(
-        "src/main/resources/spark/template/freemarker");
+    File templates = new File("src/main/resources/spark/template/freemarker");
 
     try {
       config.setDirectoryForTemplateLoading(templates);
@@ -184,10 +164,9 @@ public class GUI {
     return new FreeMarkerEngine(config);
   }
 
-  /**
-   * Runs the server. Organizes get and put requests.
-   * @throws IOException
-   */
+  /** Runs the server. Organizes get and put requests.
+   *
+   * @throws IOException */
   private void runSparkServer() {
     Spark.externalStaticFileLocation("src/main/resources/static");
     try {
@@ -202,18 +181,15 @@ public class GUI {
     Spark.get("/one", new OneHandler(db), freeMarker);
   }
 
-  /**
-   * This class handles the front end of the main page.
-   *
-   */
+  /** This class handles the front end of the main page. */
 
   private static class FrontHandler implements TemplateViewRoute {
 
     @Override
     public ModelAndView handle(Request req, Response res) {
 
-      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .build();
+      ImmutableMap<String, Object> variables =
+          new ImmutableMap.Builder<String, Object>().build();
 
       return new ModelAndView(variables, "home.ftl");
     }
@@ -245,14 +221,11 @@ public class GUI {
       Crossword puzzle = crosswordCache.get(id2);
 
       if (puzzle == null) {
-        System.out.println("A");
         puzzle = createCrossword();
         player = "DOWN";
       } else if (puzzle.getPlayers() != 2) {
-        System.out.println("B");
         puzzle.addPlayer();
       } else {
-        System.out.println("C");
         twoPlayerId.set(onePlayerId.get());
         id2 = twoPlayerId.get();
         puzzle = createCrossword();
@@ -267,9 +240,10 @@ public class GUI {
 
       crosswordCache.put(id2, puzzle);
 
-      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("crossword", crossword).put("id", id2.toString())
-          .put("player", player).put("roomNumber", id2.toString()).build();
+      ImmutableMap<String, Object> variables =
+          new ImmutableMap.Builder<String, Object>()
+              .put("crossword", crossword).put("id", id2.toString())
+              .put("player", player).put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword.ftl");
     }
@@ -303,17 +277,13 @@ public class GUI {
       Crossword puzzle = createCrossword();
       puzzle.addPlayer();
 
-      System.out.println("1 player");
-      System.out.println(id2);
-
       Box[][] crossword = puzzle.getArray();
-      System.out.println(puzzle);
-
       crosswordCache.put(id2, puzzle);
 
-      ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
-          .put("crossword", crossword).put("id", id2.toString())
-          .put("roomNumber", id2.toString()).build();
+      ImmutableMap<String, Object> variables =
+          new ImmutableMap.Builder<String, Object>()
+              .put("crossword", crossword).put("id", id2.toString())
+              .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword_single.ftl");
     }

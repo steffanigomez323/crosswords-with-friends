@@ -18,18 +18,15 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-/**
- * This class handles starting the program, the database, and the GUI.
- * @author smg1
- *
- */
+/** This class handles starting the program, the database, and the GUI.
+ * 
+ * @author smg1 */
 
 public final class Main {
 
-  /**
-   * Initializes the program being run.
-   * @param args the arguments from the command line
-   */
+  /** Initializes the program being run.
+   * 
+   * @param args the arguments from the command line */
   public static void main(String[] args) {
     try {
       new Main(args).run();
@@ -39,40 +36,34 @@ public final class Main {
 
   }
 
-  /**
-   * This is the private instance variable of the arguments from the command
-   * line.
-   */
+  /** This is the private instance variable of the arguments from the command
+   * line. */
 
   private String[] arguments;
 
-  /**
-   * That is the port number.
-   */
+  /** That is the port number. */
 
   private static final int PORT = 9998;
 
-  /**
-   * This constructor takes the arguments from the command line and sets it to
+  /** This constructor takes the arguments from the command line and sets it to
    * the private instance variable.
-   * @param args arguments from command line interface
-   */
+   * 
+   * @param args arguments from command line interface */
 
   private Main(String[] args) {
     this.arguments = args;
   }
 
-  /**
-   * This is the method that runs the program, starting the database and the
+  /** This is the method that runs the program, starting the database and the
    * GUI.
-   * @throws IOException when the corpus file is cannot be opened
-   */
+   * 
+   * @throws IOException when the corpus file is cannot be opened */
 
   private void run() throws IOException {
 
     OptionParser parser = new OptionParser();
-    OptionSpec<String> database = parser.accepts("db").withRequiredArg()
-        .ofType(String.class);
+    OptionSpec<String> database =
+        parser.accepts("db").withRequiredArg().ofType(String.class);
     OptionSpec<String> files = parser.nonOptions().ofType(String.class);
     OptionSet options;
     try {
@@ -90,15 +81,14 @@ public final class Main {
         path = options.valueOf(database);
 
       } catch (Exception e) {
-        System.out
-            .println("ERROR: Please provide a valid argument to --db");
+        System.out.println("ERROR: Please provide a valid argument to --db");
         throw new FileNotFoundException();
       }
       try {
         db = new Database(path);
       } catch (ClassNotFoundException | SQLException e) {
-        System.err.println(
-            "ERROR: The database file was unable to be connected to.");
+        System.err
+            .println("ERROR: The database file was unable to be connected to.");
         return;
       }
     }
@@ -120,8 +110,8 @@ public final class Main {
             } else if (filename.getName().endsWith(".csv")) {
               csvreader.readtoDB(filename, db.getConnection());
             } else {
-              System.err.println(
-                  "ERROR: The given file must be either .txt file or "
+              System.err
+                  .println("ERROR: The given file must be either .txt file or "
                       + "a .csv file");
               return;
             }
@@ -132,13 +122,12 @@ public final class Main {
               .println("ERROR: Cannot write information to the database.");
           return;
         } catch (IOException e) {
-          System.err
-              .println("ERROR: Cannot read from the corpus file given.");
+          System.err.println("ERROR: Cannot read from the corpus file given.");
           return;
         }
       } else {
-        System.err.println(
-            "ERROR: There must be at least one corpus file to start the program with.");
+        System.err
+            .println("ERROR: There must be at least one corpus file to start the program with.");
         return;
       }
       new GUI(PORT, db);
@@ -158,23 +147,23 @@ public final class Main {
                 } else if (filename.getName().endsWith(".csv")) {
                   csvreader.readtoDB(filename, db.getConnection());
                 } else {
-                  System.err.println(
-                      "ERROR: The given file must be either .txt file or "
+                  System.err
+                      .println("ERROR: The given file must be either .txt file or "
                           + "a .csv file");
                   return;
                 }
               } else {
-                System.err.println(
-                    "ERROR: The file entered is not a file accessable "
+                System.err
+                    .println("ERROR: The file entered is not a file accessable "
                         + "by this program.");
               }
             } catch (IOException e) {
-              System.err.println(
-                  "ERROR: The given file is not a file accessable by this "
+              System.err
+                  .println("ERROR: The given file is not a file accessable by this "
                       + "program.");
             } catch (SQLException e) {
-              System.err.println(
-                  "ERROR: The database was unable to be connected to.");
+              System.err
+                  .println("ERROR: The database was unable to be connected to.");
               throw new IOException();
             }
           }

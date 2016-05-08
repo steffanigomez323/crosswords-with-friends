@@ -1,7 +1,6 @@
 //TO DO
 //Dissallow one-player orientation switching when not possible
 //points system
-//instruction box
 //fix hints
 //make all web socket maps concurrent
 
