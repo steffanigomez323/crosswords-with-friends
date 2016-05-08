@@ -75,6 +75,10 @@ public class GUI {
     }
     Crossword puzzle = crosswordCache.get(id);
     Box[][] crossword = puzzle.getArray();
+    String wordInPuzzle = puzzle.getWord(x, y, orientation);
+    if (word.length() != wordInPuzzle.length()) {
+      return false;
+    }
     for (int i = 0; i < word.length(); i++) {
       Box box = crossword[y][x];
       if (!box.checkVal(word.charAt(i))) {
@@ -86,6 +90,8 @@ public class GUI {
         y++;
       }
     }
+
+
     return true;
   }
 
@@ -108,6 +114,10 @@ public class GUI {
     crosswordCache.remove(roomId);
   }
 
+  public static HashMap<Integer, Crossword> getCrosswordCache() {
+    return crosswordCache;
+  }
+
   /**
    * This method gets an anagram of the answer of the word located at that
    * x-index, y-index, and orientation and with the id.
@@ -120,7 +130,10 @@ public class GUI {
    */
   public static String getAnagram(int length, int x, int y,
       Orientation orientation, Integer id) {
+    System.out.println("id: " + id);
+
     if (!crosswordCache.containsKey(id)) {
+      System.out.println("no crosswrd");
       return "";
     }
     Crossword puzzle = crosswordCache.get(id);
@@ -287,9 +300,9 @@ public class GUI {
 
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
-              .put("crossword", crossword).put("id", id2.toString())
-              .put("player", player).put("roomNumber", id2.toString())
-              .build();
+          .put("crossword", crossword).put("id", id2.toString())
+          .put("player", player).put("roomNumber", id2.toString())
+          .build();
 
       return new ModelAndView(variables, "crossword.ftl");
     }
@@ -347,8 +360,8 @@ public class GUI {
 
       ImmutableMap<String, Object> variables =
           new ImmutableMap.Builder<String, Object>()
-              .put("crossword", crossword).put("id", id2.toString())
-              .put("roomNumber", id2.toString()).build();
+          .put("crossword", crossword).put("id", id2.toString())
+          .put("roomNumber", id2.toString()).build();
 
       return new ModelAndView(variables, "crossword_single.ftl");
     }

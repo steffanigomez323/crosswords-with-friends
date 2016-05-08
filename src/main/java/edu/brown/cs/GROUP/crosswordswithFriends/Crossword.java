@@ -273,11 +273,7 @@ public class Crossword {
       return "";
     } else {
       while (String.valueOf(puzzle[row][col].getLetter()) != null) {
-        System.out.println(String.valueOf(puzzle[row][col].getLetter()));
-        // System.out.println(
-        // String.valueOf(puzzle[row][col].getLetter()).equals("-"));
         s.append(puzzle[row][col].getLetter());
-
         if (o == Orientation.ACROSS) {
           if (col + 1 < COLS) {
             col++;

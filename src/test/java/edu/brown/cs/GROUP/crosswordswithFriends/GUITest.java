@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -17,14 +16,12 @@ public class GUITest {
   private static Database db;
   private static int port = 9997;
   private static GUI g;
-  private static HashMap<Integer, Crossword> crosswordCache;
   private static List<String> unusedWords;
   private static Crossword cw;
 
   @BeforeClass
   public static void setUpClass() throws Exception {
     // (Optional) Code to run before any tests begin goes here
-    crosswordCache = new HashMap<Integer, Crossword>();
     g = new GUI(port, db);
 
     try {
@@ -32,9 +29,7 @@ public class GUITest {
       unusedWords = db.getAllUnderNine();
       cw = new Crossword(unusedWords, db);
       System.out.println(cw);
-      crosswordCache.put(1000, cw);
-
-
+      GUI.getCrosswordCache().put(1000, cw);
     } catch (ClassNotFoundException e) {
       System.out.println("Class not found");
     } catch (SQLException e) {
@@ -45,9 +40,7 @@ public class GUITest {
   @Test
   public void getAnagramTest() {
     String firstWord = cw.getWord(0, 0, Orientation.ACROSS);
-    System.out.println("firstWord: " + firstWord);
     String anagram = GUI.getAnagram(9, 0, 0, Orientation.ACROSS, 1000);
-    System.out.println("anagram: " + anagram);
     assertTrue(isAnagram(firstWord, anagram));
 
   }
@@ -62,11 +55,16 @@ public class GUITest {
 
   @Test
   public void checkValidTest() {
-
+    String firstWord = cw.getWord(0, 0, Orientation.ACROSS);
+    String substring = firstWord.substring(0, 5);
+    assertTrue(!GUI.checkValid(substring, 0, 0, Orientation.ACROSS, 1000));
+    assertTrue(GUI.checkValid(firstWord, 0, 0, Orientation.ACROSS, 1000));
   }
 
   @Test
   public void getLetterTest() {
-
+    char firstLetter = cw.getWord(0, 0, Orientation.ACROSS).charAt(0);
+    assertTrue(GUI.getLetter(0, 0, 1000) != 0);
+    assertTrue(firstLetter == GUI.getLetter(0, 0, 1000));
   }
 }
