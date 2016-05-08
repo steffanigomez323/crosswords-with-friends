@@ -215,7 +215,7 @@ public class GUI {
       ImmutableMap<String, Object> variables = new ImmutableMap.Builder<String, Object>()
           .build();
 
-      return new ModelAndView(variables, "main.ftl");
+      return new ModelAndView(variables, "home.ftl");
     }
 
   }

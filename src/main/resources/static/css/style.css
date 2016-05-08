@@ -53,6 +53,7 @@ body{
 
 #end:hover, #end2:hover{
 	background-color: rgba(0,0,0,0.8);
+	cursor: pointer;
 }
 
 .crossword{
@@ -127,10 +128,12 @@ body{
 	display: none;
 }
 
+#waitText, #winText, #newGame, #loseText{
+	text-transform: lowercase;
+}
 
 #waitText, #winText, #newGame, #loseText, #instructionsText{
 	color: white;
-	text-transform: lowercase;
 	letter-spacing: 5px;
 	position: absolute;
 	margin: auto;
@@ -224,6 +227,7 @@ li {
 #hint1:hover, #hint2:hover, #hint3:hover{
 	background-color: #c9edc3;
 	color: black;
+	cursor: pointer;
 }
 
 .anagramChoice{
@@ -437,6 +441,62 @@ b{
 
 #two{
 	right: 0;
+}
+
+#showInstructions{
+	margin: auto;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 350px;
+	width: 200px;
+	text-transform: uppercase;
+	background-color: rgba(0,0,0,0.6);
+	text-align: center;
+	letter-spacing: 2px;
+	font-size: 12px;
+	padding: 10px;
+	height: 35px;
+	line-heigth: 35px;
+}
+
+#showInstructions:hover{
+	background-color: black;
+	cursor: pointer;
+}
+
+#instructionsText{
+	width: 600px;
+	height: 300px;
+	position: absolute;
+	text-align: center;
+	background-color: rgba(255, 221, 27, 0.6);	
+}
+
+#one_instructions{
+	float: left;
+	width: 300px;
+	height: 300px;
+	padding-top: 20px;
+	border: 1px dashed white;
+}
+
+#one_instructions p, #two_instructions p {
+	font-size: 12px;
+	width: 250px;
+	margin: auto;
+	left: 0;
+	right: 0;
+	margin-top: 20px;
+	letter-spacing: 0px;
+}
+
+#two_instructions{
+	float: right;
+	width: 300px;
+	border: 1px dashed white;
+	height: 300px;
+	padding-top: 20px;
 }
 
 
