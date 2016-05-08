@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class reads clues and words from a tab delimited .txt file and puts them
@@ -49,12 +51,20 @@ public class TXTReader {
     try (PreparedStatement ps = conn.prepareStatement(query)) {
       String line;
       while ((line = reader.readLine()) != null) {
-        // System.out.println(line);
         String[] row = line.split("\t");
         if (row[0].length() == 0) {
           continue;
         }
         if (row[1].length() <= 1) {
+          continue;
+        }
+
+        String pattern = "([0-9]+)-Across|([0-9]+)-Down";
+
+        Pattern r = Pattern.compile(pattern);
+
+        Matcher matcher = r.matcher(line);
+        if (matcher.find()) {
           continue;
         }
 
@@ -76,9 +86,6 @@ public class TXTReader {
         if (c.before(cutoff)) {
           continue;
         }
-
-        // System.out.println("Adding clue: " + row[0] + " and answer: "
-        // + row[1].toLowerCase());
 
         ps.setString(1, row[1].toLowerCase());
         ps.setInt(2, row[1].length());

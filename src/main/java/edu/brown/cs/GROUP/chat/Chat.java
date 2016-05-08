@@ -6,10 +6,6 @@ import static j2html.TagCreator.p;
 import static j2html.TagCreator.span;
 import static spark.Spark.init;
 import static spark.Spark.webSocket;
-import edu.brown.cs.GROUP.crosswordswithFriends.Crossword;
-import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
-import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
-import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -26,6 +22,11 @@ import java.util.Set;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
+
+import edu.brown.cs.GROUP.crosswordswithFriends.Crossword;
+import edu.brown.cs.GROUP.crosswordswithFriends.GUI;
+import edu.brown.cs.GROUP.crosswordswithFriends.Orientation;
+import edu.brown.cs.GROUP.crosswordswithFriends.Word;
 
 /**
  * This class implements the creation of a chat between users.
@@ -62,16 +63,15 @@ public class Chat {
    * @throws IOException in case the stop words file is unable to be opened.
    */
   public static void initChatroom() throws IOException {
-    try (FileInputStream fis = new FileInputStream(
-      "cs032_stopwords.txt");
-      InputStreamReader isr = new InputStreamReader(fis, "UTF8");
-      BufferedReader reader = new BufferedReader(isr)) {
+    try (FileInputStream fis = new FileInputStream("cs032_stopwords.txt");
+        InputStreamReader isr = new InputStreamReader(fis, "UTF8");
+        BufferedReader reader = new BufferedReader(isr)) {
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-          stopWords.add(line);
-        }
-        reader.close();
+      String line;
+      while ((line = reader.readLine()) != null) {
+        stopWords.add(line);
+      }
+      reader.close();
 
     } catch (FileNotFoundException e) {
       System.err
@@ -160,7 +160,8 @@ public class Chat {
           if (session.isOpen()) {
             session.getRemote()
                 .sendString(String.valueOf(new JSONObject()
-                    .put("userMessage", createHtmlMessageFromSender(sender, censorMessage(roomId, message)))));
+                    .put("userMessage", createHtmlMessageFromSender(sender,
+                        censorMessage(roomId, message)))));
           }
         }
       }
@@ -195,15 +196,15 @@ public class Chat {
   }
 
   /**
-   * This method sends the correct word to the front end when
-   * all letters have been filled out in a row or a column.
+   * This method sends the correct word to the front end when all letters have
+   * been filled out in a row or a column.
    * @param message the message
    * @param roomId the room id
    */
   public static void broadcastCorrect(String message, Integer roomId) {
     String[] variables = message.split(";");
-    int x = Integer.valueOf(variables[2]);
-    int y = Integer.valueOf(variables[3]);
+    int x = Integer.parseInt(variables[2]);
+    int y = Integer.parseInt(variables[3]);
     Orientation o = Orientation.valueOf(variables[4]);
     Integer id = Integer.valueOf(variables[5]);
     boolean valid = GUI.checkValid(variables[1], x, y, o, id);
@@ -222,15 +223,14 @@ public class Chat {
     }
   }
 
-
   public static void broadcastAll(Session user, Integer roomId) {
 
     Crossword crossword = GUI.getCrossword(roomId);
-    String puzzle = "**ALL**:"+crossword.toString();
+    String puzzle = "**ALL**:" + crossword.toString();
     try {
-        if (user.isOpen()) {
-          user.getRemote().sendString(puzzle);
-        }
+      if (user.isOpen()) {
+        user.getRemote().sendString(puzzle);
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -238,58 +238,61 @@ public class Chat {
 
   public static void broadcastConvert(Session user, Integer roomId) {
     Crossword crossword = GUI.getCrossword(roomId);
-    String toSend = "**CONVERT**/:/";
+    StringBuffer toSendBuffer = new StringBuffer("**CONVERT**/:/");
 
     List<Word> words = crossword.getFinalList();
-    for (Word w : words){
-      toSend+=w.getXIndex()+";"+w.getYIndex()+";"+w.getOrientation()+";"+w.getClue()+"/:/";
+    for (Word w : words) {
+      toSendBuffer.append(w.getXIndex()).append(";").append(w.getYIndex())
+          .append(";").append(w.getOrientation()).append(";")
+          .append(w.getClue()).append("/:/");
     }
 
     try {
-        if (user.isOpen()) {
-          user.getRemote().sendString(toSend);
-        }
+      if (user.isOpen()) {
+        user.getRemote().sendString(toSendBuffer.toString());
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  //0 first player decided to continue
-  //1 first player decided to show
-  //2 second player decided to continue
-  //3 second player decided to show
-  public static void broadcastEnd(String message, Session user, Integer roomId) {
+  // 0 first player decided to continue
+  // 1 first player decided to show
+  // 2 second player decided to continue
+  // 3 second player decided to show
+  public static void broadcastEnd(String message, Session user,
+      Integer roomId) {
     String toSend = "**END**:";
     String choice = message.split(":")[1];
     System.out.println(choice);
     List<Session> room = roomUsers.get(roomId);
-    if (room != null){
+    if (room != null) {
 
     }
-    if (choice.equals("continue")){
-      //get other's choice
+    if (choice.equals("continue")) {
+      // get other's choice
       Integer combined = endGameData.get(room);
-      if (combined == null){
+      if (combined == null) {
         endGameData.put(room, 0);
-        while (true){
+        while (true) {
           combined = endGameData.get(room);
-          if (combined!=0){
+          if (combined != 0) {
             break;
           }
         }
-        if (combined == 2){
+        if (combined == 2) {
           System.out.println("2");
           toSend += "continue";
-        } else if (combined==3) {
+        } else if (combined == 3) {
           System.out.println("3");
           toSend += "show";
         }
       } else {
         endGameData.put(room, 2);
-        if (combined == 0){
+        if (combined == 0) {
           System.out.println("0");
           toSend += "continue";
-        } else if (combined==1) {
+        } else if (combined == 1) {
           System.out.println("1");
           toSend += "show";
         }
@@ -301,8 +304,8 @@ public class Chat {
       } catch (Exception e) {
         e.printStackTrace();
       }
-    } else if (choice.equals("show")){
-      if (!endGameData.containsKey(room)){
+    } else if (choice.equals("show")) {
+      if (!endGameData.containsKey(room)) {
         System.out.println("first player showing");
         endGameData.put(room, 1);
       } else {
@@ -313,15 +316,15 @@ public class Chat {
   }
 
   /**
-   * This method broadcasts a letter to the front end when the
-   * "expose letter" hint is used.
+   * This method broadcasts a letter to the front end when the "expose letter"
+   * hint is used.
    * @param message the message
    * @param roomId the room id
    */
   public static void broadcastLetter(String message, Integer roomId) {
     String[] variables = message.split(";");
-    int x = Integer.valueOf(variables[1]);
-    int y = Integer.valueOf(variables[2]);
+    int x = Integer.parseInt(variables[1]);
+    int y = Integer.parseInt(variables[2]);
     // Integer id = Integer.valueOf(variables[3]);
     Character letter = GUI.getLetter(x, y, roomId);
     try {
@@ -347,23 +350,22 @@ public class Chat {
    */
   public static void broadcastAnagram(String message, Integer roomId) {
 
-
     String[] variables = message.split(";");
     System.out.println("ANAGRAM ");
-    int length = Integer.valueOf(variables[1]);
-    int x = Integer.valueOf(variables[2]);
-    int y = Integer.valueOf(variables[3]);
+    int length = Integer.parseInt(variables[1]);
+    int x = Integer.parseInt(variables[2]);
+    int y = Integer.parseInt(variables[3]);
     Orientation o = Orientation.valueOf(variables[4]);
-    int wordId = Integer.valueOf(variables[5]);
-    Integer id = Integer.valueOf(variables[6]);
+    int wordId = Integer.parseInt(variables[5]);
+    Integer id = Integer.parseInt(variables[6]);
     String scrambled = GUI.getAnagram(length, x, y, o, id);
     System.out.println("scrambled " + scrambled);
     try {
       if (roomUsers.get(roomId) != null) {
         for (Session session : roomUsers.get(roomId)) {
           if (session.isOpen()) {
-            String toSend = "ANAGRAM;" + x + ";" + y + ";" + o + ";" + wordId
-                + ";" + scrambled;
+            String toSend = "ANAGRAM;" + x + ";" + y + ";" + o + ";"
+                + wordId + ";" + scrambled;
             System.out.println(toSend);
             session.getRemote().sendString(toSend);
           }

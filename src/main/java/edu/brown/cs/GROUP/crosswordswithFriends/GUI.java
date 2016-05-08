@@ -24,7 +24,7 @@ public class GUI {
 
   /** For converting to JSON. */
 
-  private static HashMap<Integer, Crossword> crosswordCache;
+  private static HashMap<Integer, Crossword> crosswordCache = new HashMap<Integer, Crossword>();
 
   /**
    * This is the database that holds the connection.
@@ -36,13 +36,13 @@ public class GUI {
    * This is the user id for the second player.
    */
 
-  public static AtomicInteger twoPlayerId;
+  public static AtomicInteger twoPlayerId = new AtomicInteger(1000);
 
   /**
    * This is the user id for the first player.
    */
 
-  public static AtomicInteger onePlayerId;
+  public static AtomicInteger onePlayerId = new AtomicInteger(1001);
 
   /**
    * Constructor starts server on instantiation.
@@ -53,10 +53,12 @@ public class GUI {
   public GUI(int port, Database d) {
     Spark.port(port);
     db = d;
-    twoPlayerId = new AtomicInteger(1000);
-    onePlayerId = new AtomicInteger(1001);
+    /*
+     * twoPlayerId = new AtomicInteger(1000); onePlayerId = new
+     * AtomicInteger(1001);
+     */
     runSparkServer();
-    crosswordCache = new HashMap<Integer, Crossword>();
+    /* crosswordCache = new HashMap<Integer, Crossword>(); */
   }
 
   /**
@@ -116,10 +118,10 @@ public class GUI {
     }
     Crossword puzzle = crosswordCache.get(id);
     Box[][] crossword = puzzle.getArray();
-    String word = "";
+    StringBuffer word = new StringBuffer("");
     for (int i = 0; i < length; i++) {
       Box box = crossword[y][x];
-      word += String.valueOf(crossword[y][x].getLetter());
+      word.append(String.valueOf(crossword[y][x].getLetter()));
       if (orientation == Orientation.ACROSS) {
         x++;
       } else {
@@ -128,7 +130,7 @@ public class GUI {
     }
     System.out.println("word " + word);
     Random random = new Random();
-    String scrambled = word;
+    String scrambled = word.toString();
     char a[] = scrambled.toCharArray();
     for (int i = 0; i < a.length - 1; i++) {
       int j = random.nextInt(a.length - 1);
