@@ -243,7 +243,6 @@ public class Crossword {
     } else {
       while (String.valueOf(puzzle[row][col].getLetter()) != null) {
         s.append(puzzle[row][col].getLetter());
-
         if (o == Orientation.ACROSS) {
           if (col + 1 < COLS) {
             col++;
