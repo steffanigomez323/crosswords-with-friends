@@ -20,7 +20,6 @@ function time(stop){
 	  var t = Date.parse(stop) - Date.parse(new Date());
 	  var seconds = Math.floor((t/1000)%60);
 	  var minutes = Math.floor((t/1000/60)%60);
-	  console.log(seconds, minutes);
 	  return {
 	    'minutes': minutes,
 	    'seconds': seconds
@@ -33,7 +32,7 @@ function n(n){
 
 function countdown(stop, timer){
 	var timeLeft = time(stop);
-	console.log(timeLeft);
+	
 	$("#timer").text(n(timeLeft["minutes"])+":"+n(timeLeft["seconds"]));
 	if (timeLeft["minutes"]==0 && timeLeft["seconds"]==0){
 		console.log("here");
@@ -290,13 +289,10 @@ function getNext(dir, i, j, word, classes){
 
 function startTimer(){
 	var stop = new Date();
-	console.log(stop.getMinutes());
 	stop.setMinutes(stop.getMinutes() + 1);
-	console.log(stop.getMinutes());
 	var timer = setInterval(function(){
 		countdown(stop, timer);
 	}, 1000);
-	console.log(timer);
 	return timer;
 }
 
@@ -373,8 +369,7 @@ window.onload = function(response) {
             var anagramHtml = "";
             var anagramNum = 0;
             for (word in playersWords) {
-                anagramHtml = anagramHtml + "<li value = " + anagramNum + " id =" + anagramNum + " >" 
-                	+ player + " " + $(playersWords[word]).text() + "</li><br>";
+                anagramHtml = anagramHtml + "<li value = " + anagramNum + " id =" + anagramNum + " >" + player + " " + $(playersWords[word]).text() + "</li><br>";
                 anagramNum++;
             }
             $(".anagramChoice").append(anagramHtml);
@@ -403,8 +398,7 @@ window.onload = function(response) {
             	if (dir == ""){
             		dir = "DOWN";
             	}
-            	anagramHtml = anagramHtml + "<li value = " + anagramNum + " name = " 
-            		+ dir + " id =" + anagramNum + " >" + dir + " " + $(playersWords[word]).text() + "</li><br>";
+            	anagramHtml = anagramHtml + "<li value = " + anagramNum + " name = " + dir + " id =" + anagramNum + " >" + dir + " " + $(playersWords[word]).text() + "</li><br>";
                 anagramNum++;
             };
 
@@ -466,7 +460,6 @@ window.onload = function(response) {
 		
 		$("textarea").attr("disabled", false);
 		timerGlobal = startTimer();
-		console.log(timerGlobal);
 	}
 	
 	$("textarea").click(function(){
