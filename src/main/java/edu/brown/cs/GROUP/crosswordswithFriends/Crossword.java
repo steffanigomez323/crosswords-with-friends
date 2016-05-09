@@ -1,12 +1,12 @@
 package edu.brown.cs.GROUP.crosswordswithFriends;
 
-import edu.brown.cs.GROUP.database.Database;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import edu.brown.cs.GROUP.database.Database;
 
 /** This class handles the notion of a "crossword", complete with the 2D array of
  * boxes, clues, words, players. This class also handles the construction of a
@@ -65,6 +65,7 @@ public class Crossword {
    * @param db the database variable that holds the connection to the database. */
 
   public Crossword(List<String> originalList, Database db) {
+
     usedWords = new HashSet<String>();
     finalList = new ArrayList<Word>();
     puzzle = new Box[ROWS][COLS];
@@ -75,6 +76,7 @@ public class Crossword {
     players = 1;
     String firstWord = unusedWords.remove(0);
     fillPuzzle(firstWord);
+
   }
 
   /** This method takes care of filling the puzzles, by fitting and adding each
@@ -84,7 +86,7 @@ public class Crossword {
 
   public void fillPuzzle(String firstWord) {
 
-    Collections.shuffle(unusedWords);
+    // Collections.shuffle(unusedWords);
     fitAndAdd(firstWord);
     usedWords.add(firstWord);
 
@@ -93,11 +95,16 @@ public class Crossword {
         fitAndAdd(word);
       }
     }
+    // System.out.println("after first fill");
+    // System.out.println(usedWords);
+
     for (String word : unusedWords) {
       if (!usedWords.contains(word)) {
         fitAndAdd(word);
       }
     }
+    // System.out.println("after second fill");
+
     int acrossCount = 0;
     int downCount = 0;
     for (int i = 0; i < finalList.size(); i++) {
@@ -107,9 +114,10 @@ public class Crossword {
         downCount += 1;
       }
     }
-    if (acrossCount < 4 || downCount < 4) {
+    if (acrossCount < 6 || downCount < 6) {
       refill();
     }
+    // System.out.println(usedWords);
 
     for (int j = 0; j < COLS; j++) {
       for (int i = 0; i < ROWS; i++) {
@@ -158,9 +166,9 @@ public class Crossword {
    * @param word the word to add to the crossword puzzle */
 
   public void fitAndAdd(String word) {
-    usedWords.add(word);
+
+
     boolean fit = false;
-    int count = 0;
     while (!fit) {
       if (finalList.size() == 0) {
         Orientation o = Orientation.ACROSS;
@@ -175,19 +183,25 @@ public class Crossword {
         if (coordList.size() == 0) {
           break;
         }
+        for (int i = 0; i < coordList.size(); i++) {
+          Word w = coordList.get(i);
+          int row = w.getYIndex();
+          int col = w.getXIndex();
+          Orientation o = w.getOrientation();
+          String currWord = w.getWord();
+          if (checkFit(col, row, o, currWord) > 0) {
+            usedWords.add(word);
+            fit = true;
 
-        Word w = coordList.get(count);
-        int row = w.getYIndex();
-        int col = w.getXIndex();
-        Orientation o = w.getOrientation();
-        String currWord = w.getWord();
-        if (checkFit(col, row, o, currWord) > 0) {
-          fit = true;
+            setWord(col, row, o, currWord);
+            break;
+          }
 
-          setWord(col, row, o, currWord);
-        } else {
+        }
+        if (!fit) {
           break;
         }
+
       }
     }
   }
@@ -289,14 +303,14 @@ public class Crossword {
           if (puzzle[j][k] != null && Character
               .toUpperCase(word.charAt(i)) == puzzle[j][k].getLetter()) {
             if (j - i >= 0 && j - i + word.length() <= ROWS) { // vertical
-                                                               // placement
+              // placement
               coordList.add(new Word(word, k, j - i, Orientation.DOWN, 0));
 
             }
             if (k - i >= 0 && k - i + word.length() <= COLS) { // horizontal
-                                                               // placement
+              // placement
               coordList
-                  .add(new Word(word, k - i, j, Orientation.ACROSS, 0));
+              .add(new Word(word, k - i, j, Orientation.ACROSS, 0));
             }
 
           }
@@ -326,6 +340,7 @@ public class Crossword {
         if (currBox.getLetter() != currLetter) {
           return 0;
         }
+
 
         if (currBox.getLetter() == currLetter) {
           if (i + 1 < length) {

@@ -19,7 +19,6 @@ public class CrosswordTest {
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    // (Optional) Code to run before any tests begin goes here
 
     try {
       db = new Database("data/cluewords.sqlite3");
