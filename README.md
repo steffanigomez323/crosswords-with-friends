@@ -6,9 +6,9 @@ Steffani was in charge of clue generation. This consisted of finding the corpus,
 
 Elbert was in charge of crossword generation which involved using the words and clues from the database to rearrange words in different formats until no more words could be fit in the crossword.
 
-Melody implemented the chatroom, using web sockets, censoring out words from the clues that were important, and leaving those that aren't important, stop words. After we realized that our game was too difficult after user testing, she aslo implemented hints.
+Melody implemented the chatroom, using web sockets, censoring out words from the clues that were important, and leaving those that aren't important, stop words. After we realized that our game was too difficult after user testing, she also implemented hints.
 
-Avery took care of the front end game design and overall user experience, by actually graphically displaying the crossword. 
+Avery took care of the front end game design and overall user experience, by actually graphically displaying the crossword, and also used web sockets toconvey game status information. 
 
 
 #Goals of the Project
